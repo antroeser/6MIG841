@@ -1,0 +1,55 @@
+{
+  "_provenance": {
+    "description": "Toutes les valeurs numeriques des trois planificateurs du Lab 1 (plan06). Fichier separe de ihr_config.json : l'application matplotlib du Lab 1 ne depend pas de la configuration du robot (spec.md, workflow.md R7).",
+    "date": "2026-09-20",
+    "sources": {
+      "grille": "Alignee le 2026-09-20 sur la reference en lecture seule C:\\Users\\m3otis\\solution_robot_dimension\\config.json (\"grid\": {\"cols\": 64, \"rows\": 64, \"cell_size\": 1.0}), decision de l'enseignant : une grille seize fois plus grande que l'ancienne (12x10, retiree) revele mieux un defaut de ligne de vue ou de replanification incrementale. Remplace la valeur du 2026-09-18.",
+      "depart_but": "Alignes le 2026-09-20 sur la meme reference (\"start\": {\"cell\": [1, 1]}, \"goal\": {\"cell\": [62, 62]}). Remplace depart (0,0)/but (11,0) du 2026-09-18.",
+      "obstacle_initial": "Alignee le 2026-09-20 sur la meme reference (\"obstacle\": {\"center_cols\": 3, \"center_rows\": 3}). La reference (world.py, lignes 25-31) derive le rectangle par obs_min = taille_grille//2 - largeur//2, obs_max = taille_grille//2 + largeur//2 : pour une grille 64x64 et un obstacle 3x3, cela donne colonnes 31-33, lignes 31-33 (centre sur (32, 32), le centre de la grille), directement sur la diagonale depart-but. Remplace le rectangle colonnes 4-7/lignes 0-6 du 2026-09-18, mesure sur l'ancienne grille et desormais sans objet.",
+      "obstacle_replanification": "Rectangle colonnes 1-2, ligne 2 : bloque deux cellules diagonalement adjacentes au depart (1,1), meme principe geometrique que le choix du 2026-09-18 (bloquer pres du depart plutot que loin, pour que D*-Lite n'ait a reexaminer qu'un petit voisinage). Remesure le 2026-09-20 sur la grille 64x64 par planif.compare apres correction de la regression Theta*/D*-Lite : voir Lab1/tutoriel.md pour les chiffres actuels (le tableau du 2026-09-18, 12x10, est remplace).",
+      "affichage": "Couleurs et cadence choisies par l'enseignant le 2026-09-18 pour l'application matplotlib du Lab 1 (etape 7 de plan06) : obstacle en noir comme l'exige l'enonce, une couleur distincte par planificateur pour que les trois chemins restent identifiables sur le meme graphique. Inchangees le 2026-09-20."
+    }
+  },
+  "grille": {
+    "largeur_cellules": 64,
+    "hauteur_cellules": 64,
+    "taille_cellule": 1.0,
+    "origine_x": 0.0,
+    "origine_y": 0.0
+  },
+  "depart": {
+    "colonne": 1,
+    "ligne": 1
+  },
+  "but": {
+    "colonne": 62,
+    "ligne": 62
+  },
+  "obstacle_initial": {
+    "colonne_min": 31,
+    "colonne_max": 33,
+    "ligne_min": 31,
+    "ligne_max": 33
+  },
+  "obstacle_replanification": {
+    "colonne_min": 1,
+    "colonne_max": 2,
+    "ligne_min": 2,
+    "ligne_max": 2
+  },
+  "affichage": {
+    "couleur_obstacle": "black",
+    "couleur_grille": "lightgray",
+    "couleur_depart": "tab:green",
+    "couleur_but": "tab:red",
+    "couleur_triangle": "tab:orange",
+    "couleur_chemin_astar": "tab:blue",
+    "couleur_chemin_thetastar": "tab:purple",
+    "couleur_chemin_dstarlite": "tab:brown",
+    "taille_triangle": 0.35,
+    "largeur_figure": 7.0,
+    "hauteur_figure": 6.0,
+    "dpi_figure": 100,
+    "intervalle_teleportation_ms": 500
+  }
+}

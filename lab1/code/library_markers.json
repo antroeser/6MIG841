@@ -1,0 +1,210 @@
+{
+  "_comment": "Table de correspondance module Python importe -> distribution PyPI a installer. Donnee, pas code (workflow.md R7 / R6). Un module de la bibliotheque standard porte pypi_name = null et n'est jamais installe. Un module local au depot (paquet portant un __init__.py sous Lab1/code, Devoir1/code, Devoir2/code ou Projet/code, ou fichier .py voisin importe par son nom) n'a pas non plus besoin d'entree ici : Lab1/test/test_dependances_completes.py le deduit directement du disque plutot que d'exiger une entree par fichier.",
+  "_date": "2026-09-19",
+  "_ajouts_2026-09-19": "faster_whisper, huggingface_hub, matplotlib et ihr_6mig841_interfaces ajoutes (.sdd/6mig841-ameliorations/lab1-dependances-report.md) : reellement importes par Devoir2/code/voice.py, Devoir2/code/diagnostic_micro.py, Projet/code et Devoir2/code (messages ROS2 generes), Lab1/code/planif/app.py et compare.py, mais absents de cette table avant ce jour. pyttsx3 etait deja present.",
+  "modules": {
+    "cv2": {
+      "pypi_name": "opencv-python",
+      "role": "vision",
+      "note": "Capture camera, affichage, dessin des annotations."
+    },
+    "mediapipe": {
+      "pypi_name": "mediapipe",
+      "role": "vision",
+      "note": "MediaPipe Hands : 21 points cles de la main."
+    },
+    "numpy": {
+      "pypi_name": "numpy",
+      "role": "vision",
+      "note": "Calcul vectoriel sur les coordonnees de landmarks."
+    },
+    "ultralytics": {
+      "pypi_name": "ultralytics",
+      "role": "objets",
+      "note": "Modeles YOLO pour la detection d'objets du Projet."
+    },
+    "torch": {
+      "pypi_name": "torch",
+      "role": "objets",
+      "note": "Dependance d'ultralytics, installee automatiquement."
+    },
+    "rclpy": {
+      "pypi_name": null,
+      "role": "ros2",
+      "note": "Fourni par l'installation ROS2, jamais par pip."
+    },
+    "geometry_msgs": {
+      "pypi_name": null,
+      "role": "ros2",
+      "note": "Messages ROS2 : Twist. Fourni par l'installation ROS2."
+    },
+    "turtlesim": {
+      "pypi_name": null,
+      "role": "ros2",
+      "note": "Messages ROS2 : Pose. Fourni par l'installation ROS2."
+    },
+    "nav2_simple_commander": {
+      "pypi_name": null,
+      "role": "ros2",
+      "note": "API BasicNavigator de la pile Nav2, importee par Lab1/code/ihr_ros/backends/nav2.py (Nav2Backend, dorsale de PRODUCTION, jamais requise pour les travaux du cours qui restent sur turtlesim). Fournie par l'installation ROS2/Nav2 (canal conda robostack ou apt), jamais par pip. describe_environment() (ihr_ros/turtle_io.py) sonde sa presence et retombe sur une autre dorsale si absente."
+    },
+    "ihr_6mig841_interfaces": {
+      "pypi_name": null,
+      "role": "ros2",
+      "note": "Paquet d'interfaces ROS2 (Step, Interpret, ExecutePlan, Cible, Commande) genere par 'colcon build' depuis ros2_ws/src, jamais installe par pip. Importe par Devoir2/code et Projet/code (dialogue_manager_node.py, llm_node.py, motion_node.py, arbiter_node.py, gesture_node.py, object_node.py)."
+    },
+    "std_msgs": {
+      "pypi_name": null,
+      "role": "ros2",
+      "note": "Messages ROS2 de base. Fourni par l'installation ROS2."
+    },
+    "ollama": {
+      "pypi_name": "ollama",
+      "role": "llm",
+      "note": "Client Python du demon Ollama local."
+    },
+    "speech_recognition": {
+      "pypi_name": "SpeechRecognition",
+      "role": "voix",
+      "note": "Reconnaissance vocale, moteur Google Web Speech."
+    },
+    "pyaudio": {
+      "pypi_name": "PyAudio",
+      "role": "voix",
+      "note": "Acces au microphone, requis par SpeechRecognition."
+    },
+    "pyttsx3": {
+      "pypi_name": "pyttsx3",
+      "role": "voix",
+      "note": "Synthese vocale hors ligne par SAPI5. Depuis le 2026-09-20, ce n'est plus le moteur par defaut mais le REPLI de Devoir2/code/voice.py::SortieVocale : sur la machine de l'enseignant SAPI5 n'expose qu'une voix en-US, et le francais y etait prononce par un moteur anglais."
+    },
+    "winrt": {
+      "pypi_name": "winrt-Windows.Media.SpeechSynthesis",
+      "role": "voix",
+      "note": "Liaisons Python de Windows.Media.SpeechSynthesis, ajoutees le 2026-09-20. Donnent acces aux voix Speech_OneCore que SAPI5 n'expose pas, dont les trois voix French (Canada) deja presentes sur le poste, SANS droits administrateur. Importe par Devoir2/code/voice.py::MoteurWinRT. Les paquets winrt-runtime, winrt-Windows.Foundation, winrt-Windows.Foundation.Collections et winrt-Windows.Storage.Streams sont epingles avec lui dans requirements.txt : ils sont necessaires a l'execution (mesure le 2026-09-20, sans Windows.Foundation l'appel leve ModuleNotFoundError) mais ne sont jamais importes sous ces noms dans le code."
+    },
+    "faster_whisper": {
+      "pypi_name": "faster-whisper",
+      "role": "voix",
+      "note": "Transcription vocale LOCALE (modele 'small'), remplace recognize_google. Ajoute le 2026-09-19 (.sdd/6mig841-ameliorations/stt-local-report.md). Depend de ctranslate2, epingle separement dans requirements.txt pour la reproductibilite ; en mode devoir2.speech_device='cuda', a besoin en plus des paquets de Lab1/code/requirements-cuda.txt (optionnels, voir Devoir2/code/voice.py::_ajouter_repertoires_dll_cuda)."
+    },
+    "huggingface_hub": {
+      "pypi_name": "huggingface-hub",
+      "role": "voix",
+      "note": "Dependance de faster-whisper, importee directement par Devoir2/code/voice.py pour nommer le repertoire de cache des modeles Whisper dans un message d'erreur (R3)."
+    },
+    "matplotlib": {
+      "pypi_name": "matplotlib",
+      "role": "planification",
+      "note": "Figures de comparaison des planificateurs A*/Theta*/D*-Lite (Lab1/code/planif/app.py, compare.py). Deja installee comme dependance transitive avant ce jour (2026-09-19), jamais declaree pour elle-meme."
+    },
+    "re": {
+      "pypi_name": null,
+      "role": "stdlib",
+      "note": "Bibliotheque standard : extraction des nombres de la reponse du LLM."
+    },
+    "math": {
+      "pypi_name": null,
+      "role": "stdlib",
+      "note": "Bibliotheque standard : angles, distances."
+    },
+    "time": {
+      "pypi_name": null,
+      "role": "stdlib",
+      "note": "Bibliotheque standard : temporisations."
+    },
+    "os": {
+      "pypi_name": null,
+      "role": "stdlib",
+      "note": "Bibliotheque standard."
+    },
+    "sys": {
+      "pypi_name": null,
+      "role": "stdlib",
+      "note": "Bibliotheque standard."
+    },
+    "json": {
+      "pypi_name": null,
+      "role": "stdlib",
+      "note": "Bibliotheque standard."
+    },
+    "ctypes": {
+      "pypi_name": null,
+      "role": "stdlib",
+      "note": "Bibliotheque standard : utilise par un groupe pour museler ALSA sous Linux."
+    },
+    "turtle": {
+      "pypi_name": null,
+      "role": "stdlib",
+      "note": "Bibliotheque standard. Importe par un groupe mais JAMAIS utilise : c'est le module tortue de Python, sans rapport avec turtlesim."
+    },
+    "threading": {
+      "pypi_name": null,
+      "role": "stdlib",
+      "note": "Bibliotheque standard."
+    },
+    "dataclasses": {
+      "pypi_name": null,
+      "role": "stdlib",
+      "note": "Bibliotheque standard."
+    },
+    "pathlib": {
+      "pypi_name": null,
+      "role": "stdlib",
+      "note": "Bibliotheque standard."
+    },
+    "argparse": {
+      "pypi_name": null,
+      "role": "stdlib",
+      "note": "Bibliotheque standard."
+    },
+    "setuptools": {
+      "pypi_name": "setuptools",
+      "role": "build",
+      "note": "Construction du paquet ament_python."
+    },
+    "ament_copyright": {
+      "pypi_name": null,
+      "role": "ros2",
+      "note": "Test ament standard d'un paquet ROS2 : verifie les en-tetes de licence. Fourni par l'installation ROS2."
+    },
+    "ament_flake8": {
+      "pypi_name": null,
+      "role": "ros2",
+      "note": "Test ament standard : style PEP8. Fourni par l'installation ROS2."
+    },
+    "ament_pep257": {
+      "pypi_name": null,
+      "role": "ros2",
+      "note": "Test ament standard : docstrings PEP257. Fourni par l'installation ROS2."
+    },
+    "pytest": {
+      "pypi_name": "pytest",
+      "role": "test",
+      "note": "Cadre de test des trois travaux."
+    }
+  },
+  "prose_aliases": {
+    "_comment": "Noms tels qu'ils apparaissent dans la PROSE des rapports, ou les etudiants ecrivent rarement le nom du module exact.",
+    "opencv": "cv2",
+    "opencv2": "cv2",
+    "opencv-python": "cv2",
+    "open cv": "cv2",
+    "media pipe": "mediapipe",
+    "mediapipe hands": "mediapipe",
+    "yolo": "ultralytics",
+    "ultralytics yolo": "ultralytics",
+    "rlcpy": "rclpy",
+    "ros2": "rclpy",
+    "ros 2": "rclpy",
+    "twist": "geometry_msgs",
+    "geometry_msgs.msg": "geometry_msgs",
+    "pose": "turtlesim",
+    "turtlesim.msg": "turtlesim",
+    "speech_recognition": "speech_recognition",
+    "speechrecognition": "speech_recognition",
+    "reconnaissance vocale": "speech_recognition",
+    "llama3.2": "ollama",
+    "llama 3.2": "ollama"
+  }
+}

@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ihr-ros"
+version = "1.0.0"
+description = "Socle commun du solutionnaire 6MIG841 - interaction humain-robot"
+requires-python = ">=3.11"
+dependencies = []
+
+[tool.setuptools]
+packages = ["ihr_ros", "ihr_ros.backends"]
+
+[tool.setuptools.package-data]
+ihr_ros = ["../ihr_config.json"]

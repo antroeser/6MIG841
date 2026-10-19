@@ -1,0 +1,62 @@
+The files in this directory are copied from the 'superpowers' skill
+collection and are redistributed here under the licence below.
+Nothing else in this kit is covered by it.
+
+Source: superpowers 6.3.0
+
+TWO OF THEM HAVE BEEN MODIFIED, and this notice says so rather than
+claiming otherwise. The MIT licence permits modification; it requires
+the copyright and permission notice below to travel with the files,
+which it does. Stating the change is not a licence requirement but it
+is the honest thing to do, since a reader comparing these against
+upstream would otherwise think the difference was corruption.
+
+Modified, 2026-09-05, to fit a context budget. Whole sections were
+REMOVED; not one word was rewritten, so every sentence still present
+is the author's own:
+
+  test-driven-development/SKILL.md            2219 -> 1589 tokens
+      removed: 'Common Rationalizations', 'Example: Bug Fix',
+               'Debugging Integration'
+  test-driven-development/writing-good-tests.md  1774 -> 838 tokens
+      removed: the prose of 'Principle 1: Name the Break' and
+               'Principle 2: Exercise the Real Thing'
+      kept:    both of their 'Gate Function' blocks, gathered under a
+               'Gate functions' heading
+
+Why: these files are read into a local model's context window on every
+call, and on a 6 GB card every token of context is paid for in model
+weights that no longer fit on the GPU. The removed sections argue for
+the practice; this harness enforces it instead, because a test gate
+stops the run. The gate functions were kept for the same reason: they
+are checks the model applies, not arguments it has to be persuaded by.
+
+Unmodified:
+  code-reviewer.md, receiving-code-review.md
+
+The upstream originals are at the source above if you want the full
+text, and it is worth reading.
+
+----------------------------------------------------------------------
+
+MIT License
+
+Copyright (c) 2025 Jesse Vincent
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

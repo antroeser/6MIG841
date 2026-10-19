@@ -1,0 +1,1 @@
+The audit reopened this plan. In the '## plan6.md' section of progress.md, address every line still marked '- [ ]', including the ones beginning 'audit:'. Fix the code and its tests, then tick each line you resolved. Mark '- [!]' with one line of reason only if a fix is genuinely impossible. Do not read or act on any other plan, and do not move or rename any file.

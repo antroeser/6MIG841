@@ -1,0 +1,646 @@
+{
+  "genere_par": "Lab1/code/extract_libs.py",
+  "racine": "C:\\Martin Otis\\OutilsLogiciels\\6MIG841-Lab",
+  "documents_lus": 30,
+  "documents_illisibles": [],
+  "modules": [
+    {
+      "module": "ament_copyright",
+      "pypi_name": null,
+      "role": "ros2",
+      "note": "Test ament standard d'un paquet ROS2 : verifie les en-tetes de licence. Fourni par l'installation ROS2.",
+      "travaux": [
+        "Devoir2"
+      ],
+      "preuve": [
+        "import"
+      ]
+    },
+    {
+      "module": "ament_flake8",
+      "pypi_name": null,
+      "role": "ros2",
+      "note": "Test ament standard : style PEP8. Fourni par l'installation ROS2.",
+      "travaux": [
+        "Devoir2"
+      ],
+      "preuve": [
+        "import"
+      ]
+    },
+    {
+      "module": "ament_pep257",
+      "pypi_name": null,
+      "role": "ros2",
+      "note": "Test ament standard : docstrings PEP257. Fourni par l'installation ROS2.",
+      "travaux": [
+        "Devoir2"
+      ],
+      "preuve": [
+        "import"
+      ]
+    },
+    {
+      "module": "ctypes",
+      "pypi_name": null,
+      "role": "stdlib",
+      "note": "Bibliotheque standard : utilise par un groupe pour museler ALSA sous Linux.",
+      "travaux": [
+        "Devoir2"
+      ],
+      "preuve": [
+        "import"
+      ]
+    },
+    {
+      "module": "cv2",
+      "pypi_name": "opencv-python",
+      "role": "vision",
+      "note": "Capture camera, affichage, dessin des annotations.",
+      "travaux": [
+        "Devoir1",
+        "Projet"
+      ],
+      "preuve": [
+        "import",
+        "prose"
+      ]
+    },
+    {
+      "module": "geometry_msgs",
+      "pypi_name": null,
+      "role": "ros2",
+      "note": "Messages ROS2 : Twist. Fourni par l'installation ROS2.",
+      "travaux": [
+        "Devoir2",
+        "Projet"
+      ],
+      "preuve": [
+        "import",
+        "prose"
+      ]
+    },
+    {
+      "module": "math",
+      "pypi_name": null,
+      "role": "stdlib",
+      "note": "Bibliotheque standard : angles, distances.",
+      "travaux": [
+        "Projet"
+      ],
+      "preuve": [
+        "import"
+      ]
+    },
+    {
+      "module": "mediapipe",
+      "pypi_name": "mediapipe",
+      "role": "vision",
+      "note": "MediaPipe Hands : 21 points cles de la main.",
+      "travaux": [
+        "Devoir1",
+        "Projet"
+      ],
+      "preuve": [
+        "import",
+        "prose"
+      ]
+    },
+    {
+      "module": "numpy",
+      "pypi_name": "numpy",
+      "role": "vision",
+      "note": "Calcul vectoriel sur les coordonnees de landmarks.",
+      "travaux": [
+        "Devoir1"
+      ],
+      "preuve": [
+        "import"
+      ]
+    },
+    {
+      "module": "ollama",
+      "pypi_name": "ollama",
+      "role": "llm",
+      "note": "Client Python du demon Ollama local.",
+      "travaux": [
+        "Devoir2"
+      ],
+      "preuve": [
+        "import",
+        "prose"
+      ]
+    },
+    {
+      "module": "os",
+      "pypi_name": null,
+      "role": "stdlib",
+      "note": "Bibliotheque standard.",
+      "travaux": [
+        "Devoir2"
+      ],
+      "preuve": [
+        "import"
+      ]
+    },
+    {
+      "module": "pytest",
+      "pypi_name": "pytest",
+      "role": "test",
+      "note": "Cadre de test des trois travaux.",
+      "travaux": [
+        "Devoir2"
+      ],
+      "preuve": [
+        "import"
+      ]
+    },
+    {
+      "module": "rclpy",
+      "pypi_name": null,
+      "role": "ros2",
+      "note": "Fourni par l'installation ROS2, jamais par pip.",
+      "travaux": [
+        "Devoir2",
+        "Projet"
+      ],
+      "preuve": [
+        "import",
+        "prose"
+      ]
+    },
+    {
+      "module": "re",
+      "pypi_name": null,
+      "role": "stdlib",
+      "note": "Bibliotheque standard : extraction des nombres de la reponse du LLM.",
+      "travaux": [
+        "Devoir2"
+      ],
+      "preuve": [
+        "import"
+      ]
+    },
+    {
+      "module": "setuptools",
+      "pypi_name": "setuptools",
+      "role": "build",
+      "note": "Construction du paquet ament_python.",
+      "travaux": [
+        "Devoir2"
+      ],
+      "preuve": [
+        "import"
+      ]
+    },
+    {
+      "module": "speech_recognition",
+      "pypi_name": "SpeechRecognition",
+      "role": "voix",
+      "note": "Reconnaissance vocale, moteur Google Web Speech.",
+      "travaux": [
+        "Devoir2"
+      ],
+      "preuve": [
+        "import",
+        "prose"
+      ]
+    },
+    {
+      "module": "sys",
+      "pypi_name": null,
+      "role": "stdlib",
+      "note": "Bibliotheque standard.",
+      "travaux": [
+        "Devoir2"
+      ],
+      "preuve": [
+        "import"
+      ]
+    },
+    {
+      "module": "time",
+      "pypi_name": null,
+      "role": "stdlib",
+      "note": "Bibliotheque standard : temporisations.",
+      "travaux": [
+        "Projet"
+      ],
+      "preuve": [
+        "import"
+      ]
+    },
+    {
+      "module": "turtle",
+      "pypi_name": null,
+      "role": "stdlib",
+      "note": "Bibliotheque standard. Importe par un groupe mais JAMAIS utilise : c'est le module tortue de Python, sans rapport avec turtlesim.",
+      "travaux": [
+        "Projet"
+      ],
+      "preuve": [
+        "import"
+      ]
+    },
+    {
+      "module": "turtlesim",
+      "pypi_name": null,
+      "role": "ros2",
+      "note": "Messages ROS2 : Pose. Fourni par l'installation ROS2.",
+      "travaux": [
+        "Projet"
+      ],
+      "preuve": [
+        "import",
+        "prose"
+      ]
+    },
+    {
+      "module": "ultralytics",
+      "pypi_name": "ultralytics",
+      "role": "objets",
+      "note": "Modeles YOLO pour la detection d'objets du Projet.",
+      "travaux": [
+        "Projet"
+      ],
+      "preuve": [
+        "import",
+        "prose"
+      ]
+    }
+  ],
+  "a_installer_par_pip": [
+    "SpeechRecognition",
+    "mediapipe",
+    "numpy",
+    "ollama",
+    "opencv-python",
+    "pytest",
+    "setuptools",
+    "ultralytics"
+  ],
+  "fournis_par_ros2": [
+    "ament_copyright",
+    "ament_flake8",
+    "ament_pep257",
+    "geometry_msgs",
+    "rclpy",
+    "turtlesim"
+  ],
+  "modules_inconnus": [],
+  "documents": [
+    {
+      "travail": "Devoir1",
+      "fichier": "Devoir1/rapport_etudiants/Devoir 1 - Interactions humain-robot - Amélie EVIN, Julie CHAMPAGNE, Yanran CHEN.pdf",
+      "type": "rapport",
+      "statut": "ok",
+      "modules_importes": [],
+      "modules_en_prose": [
+        "cv2"
+      ]
+    },
+    {
+      "travail": "Devoir1",
+      "fichier": "Devoir1/rapport_etudiants/Devoir1-1/Devoir 1.pdf",
+      "type": "rapport",
+      "statut": "ok",
+      "modules_importes": [],
+      "modules_en_prose": [
+        "cv2",
+        "mediapipe"
+      ]
+    },
+    {
+      "travail": "Devoir1",
+      "fichier": "Devoir1/rapport_etudiants/Devoir1-1/projet1.py",
+      "type": "code",
+      "statut": "ok",
+      "modules_importes": [
+        "cv2",
+        "mediapipe",
+        "numpy"
+      ],
+      "modules_en_prose": []
+    },
+    {
+      "travail": "Devoir1",
+      "fichier": "Devoir1/rapport_etudiants/Devoir1-1.pdf",
+      "type": "rapport",
+      "statut": "ok",
+      "modules_importes": [],
+      "modules_en_prose": [
+        "mediapipe"
+      ]
+    },
+    {
+      "travail": "Devoir1",
+      "fichier": "Devoir1/rapport_etudiants/Devoir1-2/Code Source.py",
+      "type": "code",
+      "statut": "ok",
+      "modules_importes": [
+        "cv2",
+        "mediapipe"
+      ],
+      "modules_en_prose": []
+    },
+    {
+      "travail": "Devoir1",
+      "fichier": "Devoir1/rapport_etudiants/Devoir1-2/Rapport IHR.pdf",
+      "type": "rapport",
+      "statut": "ok",
+      "modules_importes": [],
+      "modules_en_prose": [
+        "cv2"
+      ]
+    },
+    {
+      "travail": "Devoir1",
+      "fichier": "Devoir1/rapport_etudiants/Interaction_humain_robot_TP.pdf",
+      "type": "rapport",
+      "statut": "ok",
+      "modules_importes": [
+        "cv2",
+        "mediapipe"
+      ],
+      "modules_en_prose": []
+    },
+    {
+      "travail": "Devoir1",
+      "fichier": "Devoir1/rapport_etudiants/ProjetPouce_TitouanAline_MateoFeller_NicolasPeresse.pdf",
+      "type": "rapport",
+      "statut": "ok",
+      "modules_importes": [],
+      "modules_en_prose": []
+    },
+    {
+      "travail": "Devoir1",
+      "fichier": "Devoir1/rapport_etudiants/Rapport de devoir  Détection du nombre de pouces.pdf",
+      "type": "rapport",
+      "statut": "ok",
+      "modules_importes": [],
+      "modules_en_prose": [
+        "cv2"
+      ]
+    },
+    {
+      "travail": "Devoir1",
+      "fichier": "Devoir1/rapport_etudiants/Rapport_Devoir1_humains_robots_VENTURA_BROHAN_BENOIT-GONIN (1).pdf",
+      "type": "rapport",
+      "statut": "ok",
+      "modules_importes": [],
+      "modules_en_prose": [
+        "mediapipe"
+      ]
+    },
+    {
+      "travail": "Devoir2",
+      "fichier": "Devoir2/rapport_etudiants/Devoir 2-1/setup.py",
+      "type": "code",
+      "statut": "ok",
+      "modules_importes": [
+        "setuptools"
+      ],
+      "modules_en_prose": []
+    },
+    {
+      "travail": "Devoir2",
+      "fichier": "Devoir2/rapport_etudiants/Devoir 2-1/test/test_copyright.py",
+      "type": "code",
+      "statut": "ok",
+      "modules_importes": [
+        "ament_copyright",
+        "pytest"
+      ],
+      "modules_en_prose": []
+    },
+    {
+      "travail": "Devoir2",
+      "fichier": "Devoir2/rapport_etudiants/Devoir 2-1/test/test_flake8.py",
+      "type": "code",
+      "statut": "ok",
+      "modules_importes": [
+        "ament_flake8",
+        "pytest"
+      ],
+      "modules_en_prose": []
+    },
+    {
+      "travail": "Devoir2",
+      "fichier": "Devoir2/rapport_etudiants/Devoir 2-1/test/test_pep257.py",
+      "type": "code",
+      "statut": "ok",
+      "modules_importes": [
+        "ament_pep257",
+        "pytest"
+      ],
+      "modules_en_prose": []
+    },
+    {
+      "travail": "Devoir2",
+      "fichier": "Devoir2/rapport_etudiants/Devoir2-1.pdf",
+      "type": "rapport",
+      "statut": "ok",
+      "modules_importes": [],
+      "modules_en_prose": [
+        "geometry_msgs",
+        "speech_recognition"
+      ]
+    },
+    {
+      "travail": "Devoir2",
+      "fichier": "Devoir2/rapport_etudiants/Devoir2-2/devoir2.py",
+      "type": "code",
+      "statut": "ok",
+      "modules_importes": [
+        "geometry_msgs",
+        "ollama",
+        "os",
+        "rclpy",
+        "re",
+        "speech_recognition",
+        "sys"
+      ],
+      "modules_en_prose": []
+    },
+    {
+      "travail": "Devoir2",
+      "fichier": "Devoir2/rapport_etudiants/Devoir2-2.pdf",
+      "type": "rapport",
+      "statut": "ok",
+      "modules_importes": [],
+      "modules_en_prose": [
+        "geometry_msgs",
+        "rclpy",
+        "speech_recognition"
+      ]
+    },
+    {
+      "travail": "Devoir2",
+      "fichier": "Devoir2/rapport_etudiants/Devoir2-3/Devoir2MateoFellerNicolasPeresseTitouanAline.pdf",
+      "type": "rapport",
+      "statut": "ok",
+      "modules_importes": [],
+      "modules_en_prose": [
+        "geometry_msgs",
+        "rclpy",
+        "speech_recognition"
+      ]
+    },
+    {
+      "travail": "Devoir2",
+      "fichier": "Devoir2/rapport_etudiants/Devoir2-3/devoir2MateoFellerNicolasPeresseTitouanAline.py",
+      "type": "code",
+      "statut": "ok",
+      "modules_importes": [
+        "ctypes",
+        "geometry_msgs",
+        "ollama",
+        "rclpy",
+        "re",
+        "speech_recognition"
+      ],
+      "modules_en_prose": []
+    },
+    {
+      "travail": "Devoir2",
+      "fichier": "Devoir2/rapport_etudiants/Devoir2-3.pdf",
+      "type": "rapport",
+      "statut": "ok",
+      "modules_importes": [],
+      "modules_en_prose": [
+        "geometry_msgs",
+        "rclpy"
+      ]
+    },
+    {
+      "travail": "Devoir2",
+      "fichier": "Devoir2/rapport_etudiants/Devoir2-4.pdf",
+      "type": "rapport",
+      "statut": "ok",
+      "modules_importes": [],
+      "modules_en_prose": [
+        "geometry_msgs",
+        "rclpy"
+      ]
+    },
+    {
+      "travail": "Devoir2",
+      "fichier": "Devoir2/rapport_etudiants/Devoir2-5.pdf",
+      "type": "rapport",
+      "statut": "ok",
+      "modules_importes": [],
+      "modules_en_prose": [
+        "geometry_msgs",
+        "rclpy",
+        "speech_recognition"
+      ]
+    },
+    {
+      "travail": "Projet",
+      "fichier": "Projet/rapport_etudiants/6MIG841_Projet_BENOIT-GONIN_BROHAN_VENTURA.pdf",
+      "type": "rapport",
+      "statut": "ok",
+      "modules_importes": [],
+      "modules_en_prose": [
+        "cv2",
+        "geometry_msgs",
+        "rclpy",
+        "turtlesim",
+        "ultralytics"
+      ]
+    },
+    {
+      "travail": "Projet",
+      "fichier": "Projet/rapport_etudiants/Projet - Interactions humain-robot - Amélie EVIN, Julie CHAMPAGNE, Yanran CHEN.pdf",
+      "type": "rapport",
+      "statut": "ok",
+      "modules_importes": [],
+      "modules_en_prose": [
+        "cv2",
+        "geometry_msgs",
+        "rclpy",
+        "ultralytics"
+      ]
+    },
+    {
+      "travail": "Projet",
+      "fichier": "Projet/rapport_etudiants/Projet de conception SZKY19120300_WAVD10100300.pdf",
+      "type": "rapport",
+      "statut": "ok",
+      "modules_importes": [],
+      "modules_en_prose": [
+        "cv2",
+        "geometry_msgs",
+        "turtlesim",
+        "ultralytics"
+      ]
+    },
+    {
+      "travail": "Projet",
+      "fichier": "Projet/rapport_etudiants/Projet1/projetYOLO_BENOIT-GONIN_BROHAN_VENTURA.py",
+      "type": "code",
+      "statut": "ok",
+      "modules_importes": [
+        "cv2",
+        "geometry_msgs",
+        "math",
+        "mediapipe",
+        "rclpy",
+        "time",
+        "turtle",
+        "turtlesim",
+        "ultralytics"
+      ],
+      "modules_en_prose": []
+    },
+    {
+      "travail": "Projet",
+      "fichier": "Projet/rapport_etudiants/Projet2/banano.py",
+      "type": "code",
+      "statut": "ok",
+      "modules_importes": [
+        "cv2",
+        "geometry_msgs",
+        "math",
+        "mediapipe",
+        "rclpy",
+        "turtlesim",
+        "ultralytics"
+      ],
+      "modules_en_prose": []
+    },
+    {
+      "travail": "Projet",
+      "fichier": "Projet/rapport_etudiants/Projet3/Code Source.py",
+      "type": "code",
+      "statut": "ok",
+      "modules_importes": [
+        "cv2",
+        "mediapipe"
+      ],
+      "modules_en_prose": []
+    },
+    {
+      "travail": "Projet",
+      "fichier": "Projet/rapport_etudiants/Projet3/Rapport IHR.pdf",
+      "type": "rapport",
+      "statut": "ok",
+      "modules_importes": [],
+      "modules_en_prose": [
+        "cv2"
+      ]
+    },
+    {
+      "travail": "Projet",
+      "fichier": "Projet/rapport_etudiants/RapportProjetFinalHumainRobot_Feller_Peresse_Aline.pdf",
+      "type": "rapport",
+      "statut": "ok",
+      "modules_importes": [],
+      "modules_en_prose": [
+        "geometry_msgs",
+        "turtlesim",
+        "ultralytics"
+      ]
+    }
+  ]
+}

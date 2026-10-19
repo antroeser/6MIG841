@@ -1,0 +1,389 @@
+{
+  "_provenance": {
+    "description": "Toutes les valeurs numeriques du solutionnaire 6MIG841. Aucune constante en dur dans le code (workflow.md R7).",
+    "date": "2026-09-18",
+    "sources": {
+      "turtlesim": "Dimensions et pose initiale mesurees sur turtlesim (ROS2), canevas 11.088 x 11.088 unites, tortue au centre.",
+      "devoir1": "Seuils issus des rapports etudiants Devoir1-1 (ANGLE_SEUIL 25, SEUIL_ANGLE_POUCE 30, REQUIRED_FERMES 4) et Devoir1-2 (threshold_thumb 0.08, threshold_finger 0.1).",
+      "devoir2": "Vitesses issues des prompts etudiants Devoir2-2 (2.0 / 1.6) et Devoir2-3 (2.0 / 1.5). Valeur retenue 1.6.",
+      "projet": "Gain k=0.5 et seuils issus de Projet2 (banano.py) et Projet1 (turn/move seuil 0.5).",
+      "devoir1_ajouts": "debounce_frames, min_hand_scale_px et thumb_margin_ratio sont des AJOUTS du solutionnaire, absents des rendus etudiants : aucun des quatre groupes ne filtrait temporellement, donc leur compteur clignotait d'une trame a l'autre. Valeurs choisies le 2026-09-18 par l'enseignant, a ajuster en seance.",
+      "devoir1_emotion": "Section devoir1.emotion ajoutee le 2026-09-22, extension demandee par l'enseignant : reconnaissance d'emotion faciale, inspiree de deux depots consultes (github.com/Life-Experimentalist/Facial-Emotion-Detector et github.com/MekhyW/Facial-Emotion-Classification), tous deux bases sur MediaPipe. Les deux entrainent un classifieur sur des images ou des coordonnees de points ; celui retenu ici est la troisieme approche documentee par MekhyW ('SVM using Blendshapes'), qui n'entraine RIEN : le modele face_landmarker de MediaPipe rend directement des scores 'blendshapes' de style ARKit (mouthSmileLeft, browDownLeft, jawOpen, ...), deja normalises dans [0, 1] et invariants a la pose. Voir Devoir1/code/emotion_detector.py pour la regle de decision (moyenne de blendshapes par categorie, seuil, categorie de score maximal). max_num_faces=1, min_face_detection_confidence=0.5, min_face_presence_confidence=0.5 et min_tracking_confidence=0.5 reprennent les seuils deja retenus pour les mains (devoir1.min_detection_confidence, min_tracking_confidence) faute de mesure propre au visage. min_score=0.35 et debounce_frames=3 sont CHOISIS par l'enseignant, non mesures sur des visages reels : a ajuster en seance devant la camera, exactement comme devoir1_ajouts le dit deja pour les seuils de la main. debounce_frames reprend la valeur des mains (3) pour la meme raison (une decision affichee ne doit pas clignoter, EmotionStabilizer suit le meme principe que ThumbCounter).",
+      "devoir2_actions": "Table d'actions derivee des prompts etudiants Devoir2-2 (avance 2.0/0.0, gauche 0.0/1.6) et Devoir2-3 (gauche 0.0/1.5). Valeur 1.6 retenue. Les champs duree_s et exemples sont des AJOUTS du solutionnaire : les rendus etudiants publiaient UN message Twist et rien de plus, or turtlesim oublie sa consigne au bout d'une seconde, donc la tortue s'arretait seule. Mesure le 2026-09-18. MODIFIE le 2026-09-19 (plan04, amelioration A) : tourner_gauche et tourner_droite fusionnent en 'tourner' plus un booleen is_clockwise (ontologie ROSGPT move/rotate), le catalogue passant de cinq a quatre entrees. Les cles 'linear'/'angular' deviennent 'linear_speed'/'angular_speed' (grandeurs NON SIGNEES desormais, le signe etant decide par state_machine.signer() a partir de is_forward/is_clockwise, jamais par la configuration ni par le modele). Chaque entree gagne aussi distance_m et angle_deg, la grandeur PAR DEFAUT appliquee quand le modele ne precise pas de magnitude : distance_m=2.0 pour avancer/reculer reprend exactement linear_speed(2.0)*duree_s(1.0) de l'ancienne table, sans changement de comportement ; angle_deg=90.0 pour tourner est un choix de l'agent executant plan04, arrondi du produit angular_speed(1.6 rad/s)*duree_s(1.0 s)=1.6 rad=91.7 degres a un quart de tour rond, qui correspond aux exemples 'quart de tour' deja presents dans evaluation/code/commands_fr.json. `is_forward_defaut: false` ajoute a 'reculer' le 2026-09-19, apres remesure sur llama3.2 (evaluation/resultats/2026-09-19-llama3.2-apres-plan04.json) : le modele omet systematiquement is_forward pour une commande simple ('{\"action\": \"reculer\"}' seul), se fiant au nom de l'action, et le defaut global unique (vrai) donnait alors une vitesse lineaire POSITIVE pour reculer. Les autres actions n'ont pas besoin de ce champ, le defaut vrai/faux du code leur convenant deja.",
+      "devoir2_bornes": "Section ajoutee le 2026-09-19 (plan04, amelioration A, etape 1) : distance_m_max=5.0, angle_deg_max=180.0, linear_speed_max=2.0, angular_speed_max=2.0, sequence_max_etapes=8, valeurs dictees par plan04.md sans marge de decision laissee a l'agent executant. Le schema JSON impose au modele borne deja ces memes valeurs (construire_schema), et action_depuis_config borne A NOUVEAU cote code (R9) : rien ne garantit qu'un appelant direct (les tests, par exemple) respecte le schema.",
+      "devoir2_historique": "devoir2.historique_tours=3 ajoute le 2026-09-19 (plan04, amelioration B) : fenetre bornee des tours de dialogue transmis au modele pour l'anaphore ('et maintenant tourne a droite'). Valeur dictee par plan04.md. Une fenetre non bornee ferait grandir l'invite a chaque tour jusqu'a depasser la fenetre de contexte du modele, qu'Ollama tronque en silence plutot que de lever (voir .claude/rules/code-style.md, limites de taille).",
+      "devoir2_sous_ensembles": "Section ajoutee le 2026-09-19 (plan04, amelioration D, etape 10), pour mesurer la degradation d'un modele 4B selon la taille du catalogue expose. 'minimal' (2 actions, avancer/arreter) et 'primitives' (4 actions, le catalogue complet sans la capacite de sequence) sont des LISTES de noms d'action filtrant devoir2.actions. 'complet' (5 membres) est le catalogue complet PLUS le membre litteral 'sequence', qui n'est pas une entree de devoir2.actions mais active la capacite de sequence (amelioration C) dans le schema construit par LlmInterpreter : c'est la lecture de 'complet cinq' de plan04.md (quatre actions reelles plus la capacite sequence). Un appelant qui ne precise aucun sous-ensemble (sous_ensemble=None) recoit exactement le comportement 'complet' (controle negatif exige par plan04.md etape 10 : aucun changement pour les appelants existants).",
+      "projet_modalites": "Priorites et peremptions sont un AJOUT du solutionnaire. Les trois rendus etudiants arbitraient les modalites par un if/elif implicite : dans banano.py (Projet2), la presence d'une main coupait purement le suivi de banane, sans que rien ne le dise, et aucune commande ne perimait, donc une detection d'objet d'il y a dix secondes pilotait encore la tortue. Valeurs choisies le 2026-09-18 par l'enseignant, a ajuster en seance.",
+      "sim_fenetre": "premieres_passes_fenetre ajoute le 2026-09-18. Tk cree la fenetre sans la mapper a l'ecran tant qu'aucune passe d'evenements n'a lieu : winfo_ismapped() rendait 0 apres trois secondes, puis 1 apres le premier pump. Trois passes suffisent a la mapper. Valeur choisie par l'enseignant.",
+      "ros2": "Section ajoutee par plan01 le 2026-09-18. ros_domain_id_default choisi par l'enseignant pour isoler le graphe ROS2 de ce poste, parametrable par ros2_env.ps1. ros_localhost_only=1 est OBLIGATOIRE, mesure le 2026-09-18 : sans elle, Fast DDS emet en multicast, le pare-feu Windows reclame les droits administrateur pour turtlesim_node.exe et python.exe, et dans une salle de classe DDS decouvre tout le monde sur le sous-reseau, si bien que la commande d'un etudiant pilote la tortue d'un autre. rmw_implementation et ros_distro/ros_version sont les valeurs par defaut de ROS2 Humble sur le canal robostack-humble, verifiees le 2026-09-18 (rmw_fastrtps_cpp.dll present dans envs/ihr/Library/bin, ROS_DISTRO=humble et ROS_VERSION=2 poses par le paquet ros_environment).",
+      "topics": "Section ajoutee par plan02 le 2026-09-18, pour le decoupage du Devoir 2 en six noeuds ROS2 (enonce.md, 'Six noeuds, et non un programme'). Les quatre noms de canal reprennent exactement le graphe de plan02.md (transcription, interpretation, parole, execution). queue_depth reprend la meme profondeur que turtlesim.queue_depth (10, deja mesuree et en service) : aucune des deux structures ne justifie une profondeur differente a ce stade. voice_input_timer_period_s (0.1 s) est la periode de la minuterie qui VIDE la file remplie par le fil d'ecoute bloquant (piege 1 de plan02.md) : plus courte que devoir2.command_period_s (0.2 s, republication d'une consigne de vitesse) puisqu'ici il s'agit seulement de sonder une file en memoire, une operation bien moins couteuse qu'une publication de commande ; choisie par l'agent executant plan02, a ajuster en seance si la latence percue au premier mot transcrit s'avere genante.",
+      "devoir2_llm_model": "Decision prise par plan03 (2026-09-18) puis REPRISE le 2026-09-19 par la correction de methode (.sdd/6mig841-ameliorations/bench-methode-report.md), conformement a la regle 3 de plan03.md etape 7 qui prevoyait explicitement de reprendre la decision apres plan04, le correctif de signe (is_clockwise) pouvant changer le classement. Mesure du 2026-09-18 (jeu evaluation/code/commands_fr.json A CINQ actions, tourner_gauche/tourner_droite ; jeu depuis remplace EN PLACE par plan04, NON comparable au jeu actuel, aucun version_jeu a l'epoque) : llama3.2 75.0% global, Qwen3-4B 75.0% global, ecart nul -> regle 2 (plus rapide) -> llama3.2 adopte (rapports evaluation/resultats/2026-09-18-llama3.2.json, 2026-09-18-qwen3-4b.json). Mesure du 2026-09-19 sur le jeu QUATRE actions + is_clockwise (version_jeu 4actions-booleen-2026-09-19, identique pour les deux modeles, appel jete d'avance separant chargement et inference, residence GPU relevee par ollama ps + nvidia-smi) : llama3.2 62.5% global (20/32, 87.5/75.0/87.5/0.0% par niveau 1-4), latence moyenne 1.49 s, residence ~64%/36% CPU/GPU (4227816488/11594838833 octets) ; hf.co/unsloth/Qwen3-4B-Instruct-2507-GGUF:Q4_K_M 90.6% global (29/32, 100/100/100/62.5% par niveau 1-4), latence moyenne 5.93 s, residence ~85%/15% CPU/GPU (3815013088/25852630792 octets, 3.55 Gio sur les 6144 Mio de la carte). Regle appliquee (plan03.md etape 7, dans l'ordre) : ecart de taux global de 28.1 points (90.6% - 62.5%) EXCEDE 5 points -> regle 1 declenchee -> le meilleur est adopte -> hf.co/unsloth/Qwen3-4B-Instruct-2507-GGUF:Q4_K_M. Niveau 4 (sequence, capacite ajoutee par plan04) : llama3.2 ne choisit jamais action=sequence de lui-meme (0.0%, limite du modele mesuree par plan04, pas du code) ; Qwen3-4B choisit sequence et reussit cinq cas sur huit (62.5%), les trois echecs rendant action=sequence SANS le champ etapes exploitable (schema respecte partiellement, pas ignore) -- nettement meilleur sur la capacite precise que plan04 a ajoutee, sans etre parfait. Comparabilite des deux rapports 2026-09-19 verifiee par evaluate_interpreter.py --comparer (meme version_jeu, EXIT 0). Rapports complets dans evaluation/resultats/2026-09-19-llama3.2-apres-plan04-requis.json et evaluation/resultats/2026-09-19-qwen3-4b-apres-plan04.json.",
+      "cinematique": "Section ajoutee par plan05 (la cinematique du Devoir 2), 2026-09-19 (date corrigee : le fichier portait par erreur 2026-09-18, recopie du reste de ce document, alors que la date de modification mesuree du fichier est 2026-09-19 09:41, et que la reprise de plan05 se fait le 2026-09-19), pour remplacer la consigne de vitesse constante de motion_node par un profil trapezoidal (montee/plateau/descente). Valeurs choisies par l'agent executant plan05 : acceleration_max=16.0 (unites turtlesim/s pour l'axe lineaire, rad/s pour l'axe angulaire, une seule valeur partagee par les deux profils puisque l'enonce du plan ne demande qu'une acceleration maximale, pas une par axe) donne une rampe de 0.146 s pour l'action 'avancer' (distance 2.0 = linear 2.0 * duree_s 1.0) et de 0.113 s pour 'tourner_gauche/droite' (distance 1.6 rad = angular 1.6 * duree_s 1.0), verifie par calcul direct (racine du polynome du second degre v_crete^2 - acceleration_max*duree_totale*v_crete + acceleration_max*distance = 0) : les deux restent largement sous les bornes vitesse_lineaire_max=3.0 (v_crete calculee 2.343) et vitesse_angulaire_max=2.4 (v_crete calculee 1.803), qui sont fixees au-dessus des vitesses historiques de devoir2.actions (linear 2.0, angular 1.6) pour laisser la place a la rampe : une vitesse plafond EGALE a la vitesse historique rendrait toute action a duree_s inchangee marginalement irrealisable (une acceleration finie exige toujours un pic legerement superieur a distance/duree pour compenser le temps passe en rampe). resolution_echantillonnage_s=0.02 (50 Hz) est la finesse a laquelle l'arc est integre et teste contre un obstacle ; periode_publication_s=0.05 (20 Hz) est la cadence a laquelle motion_node republie la consigne de vitesse courante a la tortue, plus fine que l'ancienne command_period_s=0.2 de devoir2 (qui reste utilisee telle quelle par voice_turtle.py, application separee non touchee par plan05) puisqu'une consigne qui rampe doit etre rafraichie plus souvent qu'une consigne constante pour paraitre progressive. tolerance_collision=0.1 (unites turtlesim) est la marge ajoutee au rayon de l'obstacle avant de declarer une collision, du meme ordre de grandeur que la taille affichee de la tortue par defaut dans turtlesim.",
+      "plan07_topics": "topics.gesture_topic, topics.target_topic et topics.voice_intent_topic ajoutes par plan07 (2026-09-19), pour les trois nouveaux noeuds du Projet (enonce.md, table des trois noeuds ajoutes). Meme convention de nommage que les quatre canaux de plan02 (prefixe /ihr/). voice_intent_topic porte l'intention publiee par dialogue_manager quand un arbitre est present (plan07, 'Qui commande la tortue'), au lieu d'un appel direct a l'action execute_action.",
+      "plan07_projet_arbitrage": "projet.control_period_seconds (deja present, jusque-la non lu par aucun code) est repris par plan07 comme periode de la minuterie de gesture_node, object_node et arbiter_node : c'est la meme cadence de perception que projet_turtle.py appliquait implicitement a la boucle video, rendue explicite et partagee par les trois noeuds separes.",
+      "plan07_regleur": "projet.regleur.parametres ajoute par plan07 (2026-09-19) : la liste FERMEE des parametres de navigator.py ouverts au reglage par le LLM (idee du MPCxLLM de ForzaETH, spec.md). Bornes choisies par l'agent executant plan07, encadrant large la valeur actuelle de chaque parametre (ihr_config.json, section projet) sans permettre une valeur degenree (gain nul, tolerance nulle, alpha hors ]0,1]) : angular_gain [0.1, 1.5] autour de 0.5, linear_speed [0.2, 2.0] autour de 1.0, goal_tolerance [0.1, 1.0] autour de 0.5, suivi_lisse_alpha [0.05, 1.0] autour de 0.4 (borne haute a 1.0, la limite deja imposee par LisseurCible). Aucun parametre de securite (arret d'urgence, priorites d'arbitrage) n'est dans cette liste : elle ne porte que des parametres de confort de navigation, jamais un parametre de securite (plan07.md, 'Le LLM regle le controleur').",
+      "plan07_chemin_sans_nav2": "projet.planificateur_defaut et projet.aller_a_pose_max_iterations ajoutes par plan07 (2026-09-19), suite au complement de l'orchestrateur demandant de cabler reellement l'arete PLAN --> NAV d'enonce.md (jusque-la vraie seulement en prose). planificateur_defaut='theta_star' : enonce.md mesure Theta* a 4 points de passage contre 18 pour A* sur la meme grille (Lab 1, plan06), donc 14 rotations de moins et autant de derive d'odometrie evitee, l'argument meme que l'enonce avance pour le Projet ; D*-Lite (palier 3) n'est pas un choix valide ici, son API etant une classe a etat (DStarLite) plutot que la fonction 'planifier' partagee par astar/thetastar (limite documentee dans chemin_sans_nav2.py). aller_a_pose_max_iterations=200 borne la boucle d'asservissement par point de passage (R10, aucune boucle non bornee) : a control_period_seconds=0.1 s, cela laisse 20 s pour atteindre un seul point de passage avant d'abandonner en le nommant, largement au-dessus du temps de convergence mesure en test (quelques dizaines d'iterations pour une distance de quelques unites turtlesim avec les gains par defaut).",
+      "devoir2_obstacle": "Section devoir2.obstacle ajoutee le 2026-09-19 (decision de l'enseignant, .sdd/6mig841-ameliorations/obstacle-devoir2-report.md) : jusqu'ici motion_node.obstacle valait None par defaut et ni devoir2.launch.py ni cette configuration n'en passaient un, si bien que le mecanisme de refus de collision de plan05 (arcs.echantillonner_arc, motion_node.verifier_etape_libre) n'etait jamais exerce qu'en test. L'obstacle est desormais une CELLULE de la grille de planification du Lab 1 (Lab1/code/planif_config.json, section 'grille' : largeur_cellules=12, hauteur_cellules=10, taille_cellule=1.0), convertie en unites turtlesim par Lab1/code/planif/world.py (World.vers_unites, jamais une arithmetique recopiee), pour que la cellule du planificateur et la position de la tortue parlent du meme monde. cellule_colonne=6, cellule_ligne=7 : cellule choisie par l'agent executant cette tache, verifiee PROGRAMMATIQUEMENT (script jetable, meme methode que Devoir2/test/test_arcs.py::test_arc_dont_le_segment_etait_libre_est_refuse) pour que la commande catalogue 'tourner' (angle_deg=90, is_clockwise=false, antihoraire) suivie de 'avancer' (distance_m=2.0), depuis la pose initiale turtlesim.start_x/start_y/start_theta=(5.544,5.544,0.0), produise un ARC qui heurte cet obstacle (collision detectee a t=0.52 s dans l'etape 'avancer', position mesuree (5.5456,6.5667)) alors que le SEGMENT DIRECT que Theta* validerait (ligne droite (5.544,5.544)->(7.544,5.544), cap initial inchange, sans la rotation) en reste a 1.386 unites, largement hors de portee du seuil rayon+tolerance_collision=0.6. echelle_grille_vers_turtlesim=0.924 = turtlesim.canvas_width(11.088) / grille.largeur_cellules(12) exactement : la largeur totale de la grille du Lab 1 (12 cellules de 1.0) correspond exactement a la largeur du canevas turtlesim, sans deformation puisque les cellules sont carrees des deux cotes. Cellule (6,7) -> World.vers_unites=(6.5,7.5) grille -> turtlesim=(6.006,6.93). rayon=0.5 : mesure le 2026-09-19 sur l'installation ROS2 Humble de cette machine (envs/ihr/Library/share/turtlesim/images/humble.png, 45x45 px, System.Drawing.Image), rapportee a l'echelle px/unite du canevas turtlesim (sim.window_pixels=500 / turtlesim.canvas_width=11.088 = 45.09 px/unite) : diametre de la tortue = 45/45.09 = 0.998 unite, soit un rayon de 0.499, arrondi a 0.5. nom_tortue='obstacle' est l'identifiant turtlesim de la seconde tortue engendree par /spawn (devoir2.launch.py), jamais commandee. spawn_timeout_par_tentative_s=2.0 et spawn_tentatives_max=5 (R10, aucune attente non bornee) : /spawn n'existe qu'une fois turtlesim_node demarre, le noeud de production attend donc le service par tentatives bornees (2 s x 5 = 10 s au pire, largement au-dessus du delai de demarrage mesure de turtlesim_node) plutot que de supposer le service deja la.",
+      "devoir2_quadrillage": "Section devoir2.quadrillage ajoutee le 2026-09-19, RETIREE le 2026-09-20 (.sdd/6mig841-ameliorations/trois-defauts-report.md) : tracait un quadrillage dans turtlesim par une tortue de service, sur une mauvaise lecture d'une demande de l'enseignant. Turtlesim n'a AUCUN lien avec ce grillage, qui appartient deja a l'application matplotlib du Lab 1 (render_map.py, grille tracee par axvline/axhline). Section, noeud (spawn_quadrillage_node.py), enveloppe ROS2 (devoir2_spawn_quadrillage_node.py) et point d'entree ('quadrillage') retires entierement ; spawn_obstacle, qui demarrait a la SORTIE de ce noeud, demarre desormais directement (il attend lui-meme /spawn).",
+      "devoir2_microphone": "devoir2.microphone_device_index ajoute le 2026-09-19 (diagnostic .sdd/6mig841-ameliorations/diagnostic-micro-report.md, panne 'parole non comprise' signalee par l'enseignant) : null par defaut, c'est-a-dire le peripherique d'entree par defaut de Windows, exactement le comportement d'avant ce diagnostic. Mesure du 2026-09-19 sur la machine de l'enseignant (HP ZBook Power 15.6 G10) : un WAV synthetique (pyttsx3) rejoue par recognize_google(language='fr-FR') est CORRECTEMENT reconnu (bissection, chemin reconnaissance/langue/reseau sain), alors que le peripherique d'entree par defaut ('Reseau de microphones (Intel(R) Smart Sound Technology for Digital Microphones)', index 1 sous l'API hote MME) rend une amplitude crete de 0 a 2 sur 32767 et une valeur RMS de 0.00 a 0.48, mesure a trois reprises et sur deux API hote differentes (MME et WASAPI) : un silence numerique, quel que soit le moment ou la calibration d'ambiance a lieu (ce qui INFIRME l'hypothese d'une calibration unique trop rapprochee du demarrage de ROS2 : le signal est proche de zero en tout temps mesure, donc recalibrer plus souvent n'y changerait rien). Ni Windows (acces microphone = Allow pour les applications de bureau, verifie dans le registre) ni une session a distance (session console locale, pas RDP) n'expliquent ce silence. Ce champ permet de designer un AUTRE peripherique par son index (voir Devoir2/code/diagnostic_micro.py --lister) sans toucher au code, transmis par ouvrir_entree() et expose comme parametre ROS2 'microphone_device_index' de voice_input (sentinelle -1 = aucun index, cote ROS2 qui ne type pas les entiers optionnels). devoir2.diagnostic_micro (meme diagnostic) : duree_mesure_secondes=3.0 et phrase_test_defaut='avance' sont des defauts d'ergonomie CHOISIS par ce diagnostic le 2026-09-19 (une phrase courte et frequente du catalogue devoir2.actions, une duree assez longue pour distinguer un bruit ponctuel d'un signal soutenu), pas des mesures. seuil_silence_numerique_rms=50.0 est aussi un CHOIX, pas une mesure calibree sur de la vraie parole (cette session d'outils ne peut pas parler dans un micro) : les trois mesures reelles de silence sur cette machine donnent une amplitude RMS de 0.00 a 0.48 sur un maximum possible de 32767, donc 50.0 separe confortablement ce silence numerique d'un signal de parole reel (dont l'amplitude se compte generalement en centaines ou milliers), a affiner si une mesure future avec de la vraie parole le justifie.",
+      "devoir2_microphone_device_index": "Mesure le 2026-09-19 par Devoir2/code/diagnostic_micro.py. Le peripherique d'entree par defaut de Windows sur cette machine (index 1) rend un SILENCE NUMERIQUE : crete 6, rms 0.681 sur 32767, pour un seuil d'energie de 118.95, d'ou le symptome 'parole non comprise' signale par l'enseignant. La bissection du meme script a reconnu un WAV synthetique, donc la reconnaissance, la langue fr-FR et le reseau etaient sains : la panne etait bien dans la capture. Index 5 retenu, 'Reseau de microphones (Intel Smart Sound Technology for Digital Microphones)', mesure a crete 28832 et rms 1588.885. L'index 4, 'Pilote de capture audio principal', mesure plus fort (rms 2247.765) mais c'est un pilote generique de remappage, non un peripherique nomme. Valeur a reajuster sur une autre machine : relancer le diagnostic. CORRIGE le 2026-09-20 : index 5 RETIRE, valeur remise a null (defaut systeme). La mesure du 2026-09-19 s'est fait pieger par un peripherique dont le read() NE BLOQUE PAS. Mesure du 2026-09-20, meme machine, debit de lecture compare au temps reel (SAMPLE_RATE=44100, SAMPLE_WIDTH=2, soit 88200 o/s attendus) : index 5 rend 3 575 231 719 o/s, soit 40535 fois le temps reel, tandis que l'index 1 (defaut systeme) rend 80039 o/s, soit 0.9 fois, et None rend 80411 o/s. Un flux qui ne bloque pas ne capte rien : il recopie de la memoire non initialisee, dont le RMS eleve (17568 mesure le 2026-09-20, crete 32762) a ete lu a tort comme un signal fort le 2026-09-19, alors que l'index 1, correctement lu a 0.80 fois le temps reel, donne rms 62 et crete 452, c'est-a-dire un vrai bruit de piece. Consequence observee par l'enseignant le 2026-09-20 : MemoryError dans le fil _lire_audio de voice.py apres accumulation de 4 112 306 176 octets, le garde-fou microphone_duree_max_ecoute_s=600 etant inoperant puisque 600 s a ce debit font 1882 Go. null est prefere a 1 parce que les index de peripheriques different d'une machine a l'autre : un entier en dur serait faux sur chaque poste etudiant.",
+      "devoir2_mots_confirmation": "affirmative_words : 'accepte' ajoute le 2026-09-20, mesure sur l'enregistrement CommandeAccepte.m4a fourni par l'enseignant pour eprouver la machine d'etats. Transcrit par faster-whisper small en 'J'accepte.', il tombait en INDECIS, donc la confirmation ne pouvait jamais aboutir. Deux causes distinctes, corrigees ensemble : le mot 'accepte' manquait au catalogue, ET interpreter_reponse cherchait ' oui ' encadre d'espaces dans le texte brut, si bien que la PONCTUATION suffisait a tout casser -- mesure le meme jour, 'oui' donnait accord mais 'oui.' donnait INDECIS, alors que faster-whisper ponctue TOUJOURS. C'est donc une cause de boucle de confirmation independante du microphone, et elle restait invisible tant que les reponses etaient tapees au clavier. state_machine._normaliser_pour_comparaison replie desormais accents et ponctuation des DEUX cotes de la comparaison ; 'accepte' seul suffit alors a couvrir 'j'accepte', 'on accepte' et 'accepte', et 'd'accord', deja au catalogue, devient enfin reconnaissable a l'oral.",
+      "devoir2_microphone_seuil": "Mesure le 2026-09-19, en trois temps. (1) Le peripherique par defaut de Windows rendait un silence numerique, rms 0.681 sur 32767 : corrige par microphone_device_index=5. (2) La calibration unique du constructeur tombait pendant `ros2 launch` et fixait un seuil de 1428 contre 618.9 au repos, jamais franchi par la parole. (3) Recalibrer avant CHAQUE ecoute a aggrave les choses : combinee a dynamic_energy_threshold, la recalibration fait CLIQUET, chaque passe se calibrant sur le bruit de la precedente, et le seuil observe est monte a 22324 en quelques tours. D'ou le reglage retenu : seuil FIGE a 2000 et adaptation dynamique desactivee, recalibration par ecoute desactivee. 2000 est place entre le bruit propre mesure du micro (rms 903.9 au repos) et sa crete mesuree (21499), donc au-dessus du bruit sans etre hors d'atteinte de la parole. Valeur a reajuster par Devoir2/code/diagnostic_micro.py --device N --ecouter sur une autre machine, ou sur celle-ci si la parole reste non comprise. Reajuste a 300 le 2026-09-19 : a 2000 le symptome etait WaitTimeoutError, la parole n'atteignant jamais le seuil. Le bruit propre mesure du peripherique est rms 70 sur deux passes de trois, donc 300 laisse une marge de plus de quatre fois le bruit tout en restant tres en dessous de la parole. La troisieme passe, rms 5427 avec crete 32768, etait une saturation AGC transitoire et non le plancher de bruit. RETIRE le 2026-09-19 (.sdd/6mig841-ameliorations/stt-local-report.md) : microphone_energy_threshold et microphone_recalibrer_chaque_ecoute ne reglent plus rien depuis que MicrophoneInput n'utilise plus de detection de fin de parole par seuil d'energie (voir devoir2_stt_local). L'historique ci-dessus reste utile pour la saturation AGC du micro Intel Smart Sound (materielle, hors perimetre), mesuree independamment de tout seuil.",
+      "devoir2_microphone_pause": "Mesure le 2026-09-19. `VoiceInputNode._ecouter_en_boucle` rappelait `ecouter()` immediatement des qu'elle rendait une chaine vide, sans aucune pause. Sur un micro muet ou avec un seuil d'energie trop haut, cela produit une boucle serree qui inonde le journal entrelace de `ros2 launch` et masque les cinq autres noeuds, symptome signale par l'enseignant. 2.0 s laisse le journal lisible sans rendre le systeme inerte. L'attente passe par l'evenement d'arret, donc Ctrl+C reste immediat.",
+      "devoir2_stt_local": "Remplacement de recognize_google (SpeechRecognition, reconnaissance vocale en nuage chez Google) par faster-whisper en local, decision de l'enseignant du 2026-09-19 (.sdd/6mig841-ameliorations/stt-local-report.md) : l'appel reseau contredisait l'architecture du cours (spec.md budgete STT 1,5 Go sur le Jetson Orin NX cible, ce qui n'a de sens que pour un moteur local ; le LLM est deja local via Ollama ; ROS_LOCALHOST_ONLY garde DDS sur loopback), exigeait Internet en salle de cours, subissait les limites du point d'acces gratuit de Google, et faisait sortir la voix des etudiants de l'universite vers un tiers. speech_model_size='small' et speech_compute_type='int8' : decision de l'enseignant, aucune autre alternative comparee (ni Vosk, ni openai-whisper, ni Sphinx) : environ 0,5 Go et deux a quatre fois plus rapide que l'implementation de reference sur CPU en int8, tient largement sous le budget de 1,5 Go alors que Qwen3-4B (LLM, Ollama) occupe deja environ 2,5 Go des 6144 Mio de la carte de developpement de l'enseignant. speech_device='cpu' : choix de l'enseignant pour ne pas disputer la VRAM deja engagee par Ollama sur cette machine de developpement ; a reevaluer pour le Jetson Orin NX, dont la memoire est UNIFIEE entre processeur et GPU (spec.md, 'Le robot cible') : rien n'empeche 'cuda' la-bas, mais aucune mesure n'a ete faite sur cette cible et ce champ reste donc a 'cpu' tant que ce n'est pas mesure. speech_language ('fr-FR') reste la meme cle que pour l'ancien moteur ; faster-whisper attend un code de langue court ('fr'), derive par le code (voice.charger_transcripteur_whisper, langue.split('-')[0]), jamais duplique en configuration. Le modele se telecharge au premier lancement dans le cache Hugging Face habituel (HF_HOME, generalement ~/.cache/huggingface/hub) : annonce a l'ecran plutot que silencieux, et une erreur explicite nomme le modele attendu et ce repertoire si le modele est absent du cache ET le reseau injoignable. Chargement mesure le 2026-09-19 sur la machine de l'enseignant (HP ZBook Power 15.6 G10, CPU) avec un script Python jetable : 122,97 s au tout premier appel (telechargement du modele compris), 2,23 s ensuite (modele deja en cache).\n\nCONCEPTION REPRISE le 2026-09-19, deux fois dans la meme soiree, par l'enseignant. D'abord : aucune detection de fin de parole par seuil d'energie. La machine d'etat le prevoyait depuis l'origine ('le micro ecoute et transcrit le texte entendu, l'etudiant appuie sur Entree pour envoyer le message') : c'est l'etudiant qui decide de la fin de la phrase, jamais une heuristique de silence. Retires en consequence, ne reglant plus rien : microphone_energy_threshold, microphone_recalibrer_chaque_ecoute, speech_timeout_seconds (bornait l'attente AVANT le debut de la parole, listen(timeout=...)), speech_phrase_limit_seconds (bornait la duree APRES le debut, phrase_time_limit) ; ambient_noise_seconds SURVIT, mais uniquement comme lecteur de diagnostic_micro.mesurer_amplitude (mesure independante, jamais lue par MicrophoneInput). Ensuite, precision du meme soir : la transcription est PROGRESSIVE, pas differee. Pendant que l'etudiant parle, le tampon audio COMPLET (jamais un fragment isole, Whisper degradant mal sur un extrait coupe au milieu d'un mot) est retranscrit en entier a intervalle regulier et affiche des qu'il CHANGE, en reecrivant la ligne courante (\\r) pour ne pas noyer le journal entrelace de ros2 launch (meme defaut de journal signale par l'enseignant le 2026-09-19 pour l'ancienne conception, corrige une fois pour toutes ici). Entree fige ce texte et le publie ; une transcription vide ne se publie jamais. speech_rafraichissement_secondes=3.0 : compromis mesure le 2026-09-19 avec un script Python jetable (modele 'small' int8 CPU, apres l'echauffement du tout premier appel qui est nettement plus lent) : transcrire un tampon de 4 s ou de 8 s coute 1,44-1,46 s dans les deux cas (le cout est domine par une charge fixe sur des tampons aussi courts, pas par leur duree). 3,0 s laisse une marge large au-dessus de ce cout mesure pour ne jamais faire chevaucher deux transcriptions (le fil de rafraichissement attend PUIS transcrit, sequentiellement : la cadence reelle d'affichage est donc speech_rafraichissement_secondes plus le temps de transcription, soit environ 4,5 s ici), tout en restant assez court pour que l'etudiant voie vite que le micro le capte. A raccourcir si la latence percue gene en seance, en sachant que cela chauffe la carte pour rien si trop court (compromis explicitement demande par l'enseignant, jamais cache). microphone_arret_fil_timeout_s=2.0 : garde defensive (R10, aucune attente non bornee) sur l'arret des deux fils de fond apres l'appui sur Entree ; chaque fil verifie l'evenement d'arret a chaque lecture de trame ou a chaque reveil d'attente (de l'ordre de quelques dizaines de ms), donc 2.0 s est une marge tres large avant de conclure a un fil bloque anormalement, du meme ordre que spawn_timeout_par_tentative_s ailleurs dans ce fichier. Capture audio brute : PyAudio (via sr.Microphone, deja une dependance epinglee du depot) plutot que sounddevice, choix de l'enseignant pour ne pas ajouter de dependance quand l'une des deux est deja en place.",
+      "topics_ecoute_active": "Ajoute le 2026-09-19. Le Devoir 2 est une MACHINE D'ETAT : le micro ne doit ecouter que dans les etats qui attendent une phrase (ECOUTE et les deux confirmations), jamais pendant INTERPRETATION ni EXECUTION. `voice_input` ecoutait en continu, independamment de l'etat, donc il reimprimait 'Commande ?' pendant que la tortue bougeait et inondait le journal entrelace du launch. `dialogue_manager` publie donc un booleen a chaque changement d'etat, et `voice_input` n'ecoute que porte ouverte. Latch par profondeur de file : un noeud demarre apres le gestionnaire recoit quand meme le dernier etat.",
+      "check_env_gpu": "Section check_env.nvidia_smi_timeout_seconds ajoutee le 2026-09-19 (.sdd/6mig841-ameliorations/lab1-dependances-report.md) : delai borne (R10) pour l'appel a nvidia-smi dans Lab1/code/check_env.py::gpu_state. 3.0 s est une marge large au-dessus du temps de reponse habituel de nvidia-smi (quelques dizaines a quelques centaines de ms) ; une machine sans pilote NVIDIA n'attend pas ce delai, shutil.which('nvidia-smi') rendant None immediatement.",
+      "devoir2_vram_residence": "Correctif du 2026-09-19 (.sdd/6mig841-ameliorations/vram-residence-report.md), exigence de spec.md section 'Le robot cible' (budget 4,3 Go visant une residence VRAM complete, qui vaut deja sur cette carte de developpement de 6144 Mio, pas seulement pour le portage Jetson) qui n'avait jamais ete verifiee. Deux defauts mesures. (1) devoir2.llm_num_ctx=16384 est un AJOUT : `ollama ps` rendait CONTEXT 262144 (OLLAMA_CONTEXT_LENGTH, le defaut du demon, jamais fixe par ce depot), dont le cache cle-valeur qui en decoule portait l'empreinte du modele a 25 Go et forcait Ollama a repousser 85% des poids sur le processeur (une carte de 6144 Mio ne pouvant recevoir l'ensemble). Valeur MESUREE, pas devinee : balayage par `optimize_ollama.evaluate_rung` (loop-engineer, la meme fonction que la competence opt-local-vram-llm reutilise par import plutot que de la dupliquer, R2) sur le tag reel, deux passes par palier, a OLLAMA_KV_CACHE_TYPE=q8_0 (deja la valeur du demon, mesuree par vram_probe.daemon_settings, axe non balaye ici). Resultats le 2026-09-19 : 4096 -> 100% GPU, 3145 Mio libres ; 8192 -> 100% GPU, 2835 Mio libres ; 16384 -> 100% GPU, residency_ratio 1.0, 2199 Mio libres, 54.07 jetons/s ; 32768 -> residency_ratio 0.751, 25%/75% CPU/GPU (ollama ps confirme 'CONTEXT 32768'). 16384 est le plus grand palier ADMISSIBLE (100% GPU) sous un seuil local de 2048 Mio libres, plus strict que le plancher par defaut du module (300 Mio) parce que la carte doit aussi loger Whisper apres coup : 2199 Mio restants couvrent largement le budget STT de 1,5 Go de spec.md. La competence opt-local-vram-llm elle-meme n'a PAS ete invoquee pour ce palier : son `--role` est un enum ferme {writer, coder} lie au registre ResearchTools/.claude/local-models.json (vram_optimizer.py, argparse), et cet interprete de commandes du Devoir 2 n'a aucun role dans ce registre ; lui emprunter 'coder' ou 'writer' aurait declare un tag hors sujet dans un registre partage par d'autres depots. La mesure a donc reutilise le meme moteur de mesure (evaluate_rung) sans passer par la declaration de candidat ni par la construction d'un tag derive '-gpu', et sans redemarrer le demon (aucun axe kv_cache balaye). Transmis par options.num_ctx a chaque appel `client.generate()` dans llm_interpreter.py (pas de tag Ollama derive : un parametre de requete suffit et reste lisible pour l'etudiant). (2) devoir2.speech_device passe de 'cpu' a 'cuda' et devoir2.speech_compute_type de 'int8' (type pense pour le processeur, ctranslate2) a 'float16' (type natif GPU, la recommandation par defaut de faster-whisper/ctranslate2 pour CUDA) : un agent precedent avait mis speech_device a 'cpu' par choix explicite documente dans devoir2_stt_local, motive par la VRAM deja engagee par Ollama au contexte par defaut, ce qui n'a plus lieu d'etre une fois (1) applique. Empreintes conjointes mesurees le 2026-09-19 sur cette machine (HP ZBook, RTX A1000 Laptop 6144 Mio) et sortie brute dans vram-residence-report.md.",
+      "devoir2_fenetre_voix": "Section devoir2.fenetre_voix ajoutee le 2026-09-20 (plan09.md), suite a un defaut mesure le 2026-09-19 : sous `ros2 launch`, les noeuds partagent un terminal dont le stdin ne leur est PAS rattache, donc l'attente d'Entree de voice.MicrophoneInput.ecouter() (auparavant input()) bloquait INDEFINIMENT ; et le journal entrelace de six noeuds ne peut de toute facon pas afficher un texte qui se reecrit, alors que l'enonce exige que la transcription apparaisse au fur et a mesure. Remplace par une fenetre tkinter (voice_window.VoiceWindow) : aucune dependance nouvelle, tkinter etant deja utilise par ihr_ros.backends.sim._TkView (meme technique de fenetre optionnelle pompee par un fil de fond, decision arretee de plan09.md, deux autres voies ecartees : une console dediee par Node(prefix=...) se detache sous Windows et casse l'arret propre de ros2 launch, et sortir voice_input du launch ferait perdre le lancement unique). titre, largeur_pixels, hauteur_pixels, police_nom, police_taille : choisis par l'agent executant plan09, sans mesure particuliere, assez grands pour une phrase de quelques mots sans deborder (wraplength = largeur_pixels - 20 dans voice_window.VoiceWindow). intervalle_pompe_s=0.05 (20 Hz) reprend l'ordre de grandeur de sim.tick_seconds (0.05, deja en service pour pomper _TkView) : assez frequent pour qu'une fenetre Windows reste receptive (pas de gel), sans charger le processeur pour rien.",
+      "devoir2_vram_et_transcription": "Trois defauts mesures par l'enseignant le 2026-09-20 et corriges le meme jour (.sdd/6mig841-ameliorations/vram-et-transcription-report.md). (1) devoir2.microphone_duree_max_ecoute_s=600.0 (10 min) est un AJOUT : sans detection de fin de parole (devoir2_stt_local), rien ne bornait la duree d'une ecoute, et une fenetre jamais confirmee (processus laisse ouvert plusieurs heures, mode de travail mesure sur ce depot) accumulait un tampon PCM jusqu'a depasser le champ 4 octets non signe du format WAV dans sr.AudioData.get_wav_data() : struct.error 'L' format requires 0 <= number <= 4294967295, reproduit hors ROS2 a ~4,29 Go (~13,5 h a 44100 Hz/16 bits mono). 600 s est tres au-dessus de toute phrase reelle et tres en-dessous de ce seuil de depassement mesure. (2) devoir2.llm_keep_alive=-1 est un AJOUT : la VRAM mesuree VIDE au demarrage venait du chargement PARESSEUX d'Ollama (le modele ne charge qu'au premier /api/generate) combine a son keep_alive de demon par defaut (5 min d'inactivite avant dechargement, jamais fixe par ce depot). -1 (garder charge indefiniment, convention Ollama pour tout nombre negatif) est transmis a CHAQUE appel generate() de llm_interpreter.py (le defaut du demon ne suffit pas : keep_alive du corps de la requete l'ECRASE a chaque appel), et LlmInterpreter.demarrer() (appele par LlmNode.__init__) force un premier appel de mise en train des la construction du noeud plutot que d'attendre la premiere commande. (3) Le meme defaut de chargement paresseux existe cote Whisper : ctranslate2 charge les POIDS au constructeur de WhisperModel mais ne compile/alloue les noyaux cuBLAS/cuDNN qu'au PREMIER calcul reel (deja note par _ajouter_repertoires_dll_cuda pour le chargement des DLL elles-memes). voice.charger_modele_whisper() force desormais ce calcul (silence numerique d'une seconde, transcrit et jete) immediatement apres le chargement, avant que l'etudiant ne parle. Mesure du 2026-09-20 (RTX A1000 Laptop 6144 Mio, apres les deux correctifs, AVANT toute parole) : `ollama ps` et `nvidia-smi` bruts dans le rapport ci-dessus, les deux modeles residents. Une quatrieme mesure du meme jour a INFIRME l'hypothese initiale du defaut 'fenetre figee' (plan09-report.md, reserve non corrigee, 6,9-8,9 s attribues a ctranslate2 qui ne libererait pas le GIL) : cette mesure anterieure appelait transcribe() DEPUIS le fil qu'elle chronometrait, ce qui bloque trivialement ce fil pour la duree de l'appel sans rien dire du GIL. Remesure ici avec transcribe() dans un fil de TRAVAIL pendant qu'un fil distinct simule le pompage (battement 0.05 s, cadence de fenetre_voix.intervalle_pompe_s) : ecart maximal mesure 0.051 s sur plusieurs appels reels (0,25 a 0,95 s chacun, a froid comme a chaud, silence comme discours synthetise par pyttsx3), soit AUCUN affamement du GIL observe. L'architecture existante (fil de travail pour la transcription, fil principal pour rclpy.spin_once()+fenetre.pump()) est donc suffisante : aucun sous-processus requis, aucun code touche pour ce troisieme point.",
+      "devoir2_openmp": "Ajoute le 2026-09-20. `voice_input` mourait au demarrage avec `OMP: Error #15: Initializing libomp.dll, but found libiomp5md.dll already initialized`, code de sortie 3, sans que la fenetre de saisie ne s'ouvre. Deux runtimes OpenMP dans un meme processus : `ctranslate2`, moteur de faster-whisper, apporte libomp.dll, et numpy compile avec MKL apporte libiomp5md.dll. Le conflit est devenu systematique le jour ou Whisper est charge AU DEMARRAGE, exigence de residence en VRAM. Valeur TRUE, contournement documente par Intel, applique au seul noeud concerne par `additional_env` du launch. RISQUE CONNU ET ASSUME : Intel avertit que deux runtimes coexistants peuvent produire des resultats faux ou un plantage. Le correctif propre serait d'eliminer un des deux runtimes, par exemple un numpy sans MKL dans l'environnement conda, ce qui n'a pas ete mesure ici.",
+      "devoir2_grille": "devoir2.grille ajoutee le 2026-09-20, decision de l'enseignant : afficher pendant le Devoir 2 le vrai quadrillage 64x64 du Lab 1, celui de la solution de reference en lecture seule C:\\Users\\m3otis\\solution_robot_dimension. Inventaire complet de turtlesim mesure le meme jour : services Kill, SetPen, Spawn, TeleportAbsolute, TeleportRelative, plus /clear et /reset ; parametres background_r/g/b, qos_overrides.* et use_sim_time ; topics cmd_vel, color_sensor et pose par tortue, et AUCUN /tf. Aucune API de dessin, fond de couleur unie seulement : le crayon d'une tortue est le seul mecanisme qui allume un pixel dans turtlesim, donc afficher le quadrillage sans faire dessiner une tortue exige une seconde fenetre. Le trace n'est PAS recopie : Devoir2/code/grille_view.py importe planif.vue, le meme module que planif.app du Lab 1, pour qu'un seul quadrillage existe dans le depot. Le changement de repere est DERIVE a l'execution (turtlesim.canvas_width / grille.largeur_cellules = 11.088 / 64 = 0.17325 unite turtlesim par cellule) et jamais lu dans devoir2.obstacle.echelle_grille_vers_turtlesim, qui vaut encore 0.924 : cette valeur a ete calculee le 2026-09-19 pour la grille de 12 cellules de large remplacee par 64 le 2026-09-20, elle est donc PERIMEE et signalee comme telle a l'enseignant. Controle de la conversion : la pose de depart turtlesim (5.544, 5.544) tombe exactement au centre de la grille, (32.0, 32.0). intervalle_rafraichissement_s=0.1 reprend topics.voice_input_timer_period_s, deja la cadence de pompage d'une fenetre dans ce depot, plutot que d'introduire une seconde cadence a regler. trace_max_points=2000 borne l'accumulation de la trace (R10) : a 0.1 s par point cela couvre 200 s de mouvement continu, bien au-dela d'une commande du Devoir 2, et la trace defile ensuite. Couleurs et tailles choisies par l'agent executant pour rester lisibles sur le lightgray du quadrillage et distinctes des couleurs deja prises par planif_config.json (depart vert, but rouge, triangle orange, chemins bleu/violet/brun) : la tortue commandee est 'tab:cyan', la tortue-obstacle 'black' comme l'obstacle du planificateur, la trace 'tab:gray'. Aires de marqueur en points au carre, unite imposee par matplotlib.scatter. COMPLETE le 2026-09-21 : echantillons_par_cellule=4 ajoute, et les cles couleur_obstacle_tortue / aire_marqueur_obstacle retirees, apres une remarque de fond de l'enseignant. La premiere version tracait la tortue-obstacle comme un DISQUE pose par-dessus le quadrillage. Un quadrillage n'est pas un fond de plan : c'est une GRILLE D'OCCUPATION, ou chaque case porte la probabilite que l'obstacle y soit present, noir pour 1 et blanc pour 0. Un disque montre une forme que le planificateur ne voit pas, lui ne raisonnant que sur des cases. L'obstacle est donc desormais RASTERISE : occupation_disque estime la fraction de chaque cellule couverte par le disque, par echantillonnage regulier de echantillons_par_cellule au carre points, soit 16 points par case a 4. Ce nombre est un choix d'affichage, pas une mesure : l'erreur sur la fraction est bornee par la taille d'un sous-echantillon, un quart de cellule ici, ce qui suffit largement a un rendu ou une case fait quelques pixels. L'aire exacte d'une intersection disque-carre demanderait une integration par cas (le disque coupe un coin, un cote, deux cotes) pour une precision dont l'affichage n'a pas besoin. La methode est DETERMINISTE, aucun tirage aleatoire, donc le meme rendu a chaque appel (R19). Mesure du 2026-09-21 : le rayon de l'obstacle, 0.5 unite turtlesim, vaut 2.886 cellules sur la grille 64x64, soit environ 26 cellules entierement noires et une couronne de cellules grises.",
+      "devoir2_synthese_vocale": "devoir2.synthese_vocale ajoutee le 2026-09-20, apres que l'enseignant a signale une voix saccadee et mauvaise en francais. Cause MESUREE le meme jour : pyttsx3 passe par SAPI5, et SAPI5 n'expose sur cette machine qu'UNE voix, TTS_MS_EN-US_ZIRA_11.0 (en-US), a rate 200. Le texte francais etait donc prononce par une voix americaine. Or TROIS voix francaises existent deja sur la machine, dans Speech_OneCore que SAPI5 n'expose pas : Microsoft Caroline, Microsoft Claude et Microsoft Nathalie, toutes French (Canada), c'est-a-dire l'accent du cours. Trois voies ont ete proposees a l'enseignant : copier les cles de registre OneCore vers SAPI5 (zero code mais droits administrateur sur HKLM), passer par WinRT (pas d'administrateur), ou piper-tts (local, pas d'administrateur, mais accent de France et modele de ~60 Mo a telecharger). L'enseignant a demande le plus simple SANS droits administrateur : WinRT. Mesure de faisabilite avant d'ecrire quoi que ce soit : Windows.Media.SpeechSynthesis rend par defaut 'Microsoft Caroline' en fr-CA sur ce poste, synthetise 241486 octets de audio/wav pour une phrase de confirmation du Devoir 2, entete RIFF/WAVE valide, et la lecture par winsound.PlaySound (bibliotheque standard, aucune dependance de plus) est audible. moteur='auto' essaie WinRT puis se rabat sur pyttsx3 puis sur le texte seul, en DISANT a chaque fois pourquoi (R8, jamais de repli silencieux) ; 'winrt' et 'pyttsx3' forcent un moteur, 'texte' coupe la synthese. langue_preferee='fr' selectionne la premiere voix dont la langue commence par ce prefixe : 'fr' et non 'fr-CA' pour qu'un poste configure en fr-FR trouve quand meme une voix francaise plutot que de se rabattre sur l'anglais. voix_preferee='' laisse WinRT choisir la voix par defaut du systeme, deja francaise ici ; y mettre 'Microsoft Nathalie' ou 'Microsoft Claude' impose l'une des deux autres. Le 'saccade' signale par l'enseignant tient aussi au debit : pyttsx3 annonce rate=200 mots/minute, au-dessus d'un debit de parole naturel ; WinRT n'expose pas de reglage de debit par cette API, mais la voix francaise supprime la cause principale, qui etait la prononciation du francais par un moteur anglais.",
+      "devoir2_transcription": "devoir2.transcription ajoutee le 2026-09-20, apres que l'enseignant a vu apparaitre dans la fenetre de saisie vocale « Sous-titres realises par l'Amara.org » puis « Merci d'avoir regarde cette video » alors qu'il n'avait rien dit. Ce ne sont pas des erreurs de reconnaissance mais des HALLUCINATIONS connues de Whisper : le modele a ete entraine sur des sous-titres de videos, et sur du silence ou du bruit de fond il produit les formules de fin de generique qu'il a le plus vues. La transcription du Devoir 2 etant PROGRESSIVE (le tampon est retranscrit toutes les speech_rafraichissement_secondes, meme avant que l'etudiant ait commence a parler), le cas du tampon quasi silencieux est ici la norme et non l'exception, d'ou la visibilite du defaut. Mesure independante le meme jour : deux sinusoides pures, sans aucune parole, se transcrivaient deja en « Sous-titres realises par la communaute d'Amara.org ». Deux garde-fous, complementaires et non redondants. (1) vad_filtre=true active le detecteur d'activite vocale de faster-whisper (Silero), qui ECARTE les plages sans parole avant de les soumettre au modele : c'est la correction de fond, elle supprime la cause. vad_duree_silence_min_ms=500 est la duree de silence a partir de laquelle une plage est coupee ; 500 ms est court devant une pause de reflexion mais long devant une respiration. (2) phrases_hallucinees est un filet de securite en DONNEES et non en code (R6) : une transcription qui, une fois normalisee, se reduit a l'une de ces formules est rendue vide plutot qu'affichee. La liste couvre les deux formules vues par l'enseignant et leurs variantes mesurees, en francais et en anglais. Elle est volontairement courte et n'agit que sur la phrase ENTIERE : filtrer des sous-chaines couperait une vraie commande qui les contiendrait par hasard. conditionner_sur_texte_precedent=false empeche le modele de se servir de sa propre sortie precedente comme contexte, mecanisme par lequel une hallucination unique se repete ensuite a chaque rafraichissement."
+    }
+  },
+  "turtlesim": {
+    "canvas_width": 11.088,
+    "canvas_height": 11.088,
+    "start_x": 5.544,
+    "start_y": 5.544,
+    "start_theta": 0.0,
+    "cmd_vel_topic": "/turtle1/cmd_vel",
+    "pose_topic": "/turtle1/pose",
+    "queue_depth": 10
+  },
+  "sim": {
+    "tick_seconds": 0.05,
+    "window_pixels": 500,
+    "trail_max_points": 4000,
+    "cmd_timeout_seconds": 1.0,
+    "premieres_passes_fenetre": 3
+  },
+  "camera": {
+    "index": 0,
+    "frame_width": 640,
+    "frame_height": 480,
+    "fps": 30,
+    "flip_horizontal": true
+  },
+  "devoir1": {
+    "max_num_hands": 6,
+    "min_detection_confidence": 0.5,
+    "min_tracking_confidence": 0.5,
+    "model_complexity": 0,
+    "finger_bend_angle_deg": 25.0,
+    "thumb_vertical_angle_deg": 30.0,
+    "required_folded_fingers": 4,
+    "min_vector_norm": 1e-06,
+    "hud_font_scale": 0.9,
+    "hud_thickness": 2,
+    "quit_key_codes": [
+      27,
+      113
+    ],
+    "debounce_frames": 3,
+    "min_hand_scale_px": 40.0,
+    "thumb_margin_ratio": 0.15,
+    "emotion": {
+      "max_num_faces": 1,
+      "min_face_detection_confidence": 0.5,
+      "min_face_presence_confidence": 0.5,
+      "min_tracking_confidence": 0.5,
+      "min_score": 0.35,
+      "debounce_frames": 3
+    }
+  },
+  "devoir2": {
+    "llm_model": "hf.co/unsloth/Qwen3-4B-Instruct-2507-GGUF:Q4_K_M",
+    "llm_host": "http://127.0.0.1:11434",
+    "llm_timeout_seconds": 30.0,
+    "llm_max_attempts": 3,
+    "llm_num_ctx": 16384,
+    "llm_keep_alive": -1,
+    "speech_language": "fr-FR",
+    "ambient_noise_seconds": 1.0,
+    "microphone_device_index": null,
+    "diagnostic_micro": {
+      "duree_mesure_secondes": 3.0,
+      "phrase_test_defaut": "avance",
+      "seuil_silence_numerique_rms": 50.0
+    },
+    "linear_speed": 2.0,
+    "angular_speed": 1.6,
+    "affirmative_words": [
+      "oui",
+      "ouais",
+      "correct",
+      "exact",
+      "valide",
+      "ok",
+      "d'accord",
+      "accepte",
+      "yes"
+    ],
+    "negative_words": [
+      "non",
+      "nope",
+      "faux",
+      "incorrect",
+      "annule",
+      "no"
+    ],
+    "quit_words": [
+      "quitter",
+      "quit",
+      "sortir",
+      "stop programme",
+      "arreter le programme"
+    ],
+    "actions": {
+      "avancer": {
+        "linear_speed": 2.0,
+        "angular_speed": 0.0,
+        "distance_m": 2.0,
+        "angle_deg": 0.0,
+        "duree_s": 1.0,
+        "exemples": [
+          "avance",
+          "avancer",
+          "tout droit",
+          "forward",
+          "va devant"
+        ]
+      },
+      "reculer": {
+        "linear_speed": 2.0,
+        "angular_speed": 0.0,
+        "distance_m": 2.0,
+        "angle_deg": 0.0,
+        "duree_s": 1.0,
+        "is_forward_defaut": false,
+        "exemples": [
+          "recule",
+          "reculer",
+          "en arriere",
+          "back"
+        ]
+      },
+      "tourner": {
+        "linear_speed": 0.0,
+        "angular_speed": 1.6,
+        "distance_m": 0.0,
+        "angle_deg": 90.0,
+        "duree_s": 1.0,
+        "exemples": [
+          "tourne",
+          "tourner",
+          "gauche",
+          "droite",
+          "tourne a gauche",
+          "tourne a droite",
+          "left",
+          "right"
+        ]
+      },
+      "arreter": {
+        "linear_speed": 0.0,
+        "angular_speed": 0.0,
+        "distance_m": 0.0,
+        "angle_deg": 0.0,
+        "duree_s": 0.5,
+        "exemples": [
+          "stop",
+          "arrete",
+          "arreter",
+          "halte"
+        ]
+      }
+    },
+    "bornes": {
+      "distance_m_max": 5.0,
+      "angle_deg_max": 180.0,
+      "linear_speed_max": 2.0,
+      "angular_speed_max": 2.0,
+      "sequence_max_etapes": 8
+    },
+    "historique_tours": 3,
+    "sous_ensembles": {
+      "minimal": [
+        "avancer",
+        "arreter"
+      ],
+      "primitives": [
+        "avancer",
+        "reculer",
+        "tourner",
+        "arreter"
+      ],
+      "complet": [
+        "avancer",
+        "reculer",
+        "tourner",
+        "arreter",
+        "sequence"
+      ]
+    },
+    "command_period_s": 0.2,
+    "input_mode": "auto",
+    "obstacle": {
+      "cellule_colonne": 6,
+      "cellule_ligne": 7,
+      "echelle_grille_vers_turtlesim": 0.924,
+      "rayon": 0.5,
+      "nom_tortue": "obstacle",
+      "spawn_timeout_par_tentative_s": 2.0,
+      "spawn_tentatives_max": 5
+    },
+    "microphone_pause_apres_echec_s": 2.0,
+    "speech_model_size": "small",
+    "speech_compute_type": "float16",
+    "speech_device": "cuda",
+    "speech_rafraichissement_secondes": 3.0,
+    "microphone_arret_fil_timeout_s": 2.0,
+    "microphone_duree_max_ecoute_s": 600.0,
+    "fenetre_voix": {
+      "titre": "6MIG841 - Devoir 2 - saisie vocale",
+      "largeur_pixels": 640,
+      "hauteur_pixels": 220,
+      "police_nom": "Consolas",
+      "police_taille": 14,
+      "intervalle_pompe_s": 0.05
+    },
+    "openmp_duplicate_lib_ok": "TRUE",
+    "grille": {
+      "titre_fenetre": "6MIG841 - Devoir 2 - quadrillage du Lab 1",
+      "intervalle_rafraichissement_s": 0.1,
+      "trace_max_points": 2000,
+      "couleur_tortue": "tab:cyan",
+      "couleur_trace": "tab:gray",
+      "epaisseur_trace": 1.5,
+      "aire_marqueur_tortue": 120.0,
+      "echantillons_par_cellule": 4
+    },
+    "synthese_vocale": {
+      "moteur": "auto",
+      "langue_preferee": "fr",
+      "voix_preferee": ""
+    },
+    "transcription": {
+      "vad_filtre": true,
+      "vad_duree_silence_min_ms": 500,
+      "conditionner_sur_texte_precedent": false,
+      "phrases_hallucinees": [
+        "Sous-titres realises par l'Amara.org",
+        "Sous-titres realises par la communaute d'Amara.org",
+        "Sous-titrage ST' 501",
+        "Sous-titres realises para la communaute d'Amara.org",
+        "Merci d'avoir regarde cette video",
+        "Merci d'avoir regarde ce video",
+        "Merci d'avoir regarde la video",
+        "Merci",
+        "Thanks for watching!",
+        "Thank you for watching",
+        "Subtitles by the Amara.org community",
+        "you"
+      ]
+    }
+  },
+  "projet": {
+    "target_class": "cell phone",
+    "fallback_classes": [
+      "fork",
+      "banana",
+      "bottle",
+      "cup"
+    ],
+    "yolo_model": "yolo11n.pt",
+    "yolo_confidence": 0.45,
+    "yolo_imgsz": 640,
+    "angular_gain": 0.5,
+    "linear_speed": 1.0,
+    "goal_tolerance": 0.5,
+    "heading_tolerance_rad": 0.1745,
+    "control_period_seconds": 0.1,
+    "gesture_stop_thumbs": 1,
+    "gesture_go_hands": 2,
+    "modalites": {
+      "geste": {
+        "priorite": 30,
+        "peremption_s": 0.6
+      },
+      "voix": {
+        "priorite": 20,
+        "peremption_s": 5.0
+      },
+      "objet": {
+        "priorite": 10,
+        "peremption_s": 1.5
+      }
+    },
+    "arret_urgence_geste": "paume_ouverte",
+    "gesture_open_hand_fingers": 0,
+    "vitesse_angulaire_max": 2.0,
+    "vitesse_lineaire_max": 2.0,
+    "suivi_lisse_alpha": 0.4,
+    "planificateur_defaut": "theta_star",
+    "aller_a_pose_max_iterations": 200,
+    "regleur": {
+      "parametres": {
+        "angular_gain": {
+          "min": 0.1,
+          "max": 1.5,
+          "description": "gain proportionnel de correction de cap vers la cible suivie"
+        },
+        "linear_speed": {
+          "min": 0.2,
+          "max": 2.0,
+          "description": "vitesse lineaire de croisiere vers la cible, unites turtlesim par seconde"
+        },
+        "goal_tolerance": {
+          "min": 0.1,
+          "max": 1.0,
+          "description": "rayon d'arrivee autour de la cible, unites turtlesim"
+        },
+        "suivi_lisse_alpha": {
+          "min": 0.05,
+          "max": 1.0,
+          "description": "lissage exponentiel de la position de la cible suivie par YOLO, 1.0 ne filtre rien"
+        }
+      }
+    }
+  },
+  "bridge": {
+    "host": "127.0.0.1",
+    "port": 5810,
+    "recv_timeout_seconds": 0.02,
+    "max_datagram_bytes": 4096
+  },
+  "check_env": {
+    "nvidia_smi_timeout_seconds": 3.0
+  },
+  "ros2": {
+    "ros_domain_id_default": 7,
+    "ros_localhost_only": 1,
+    "rmw_implementation": "rmw_fastrtps_cpp",
+    "ros_distro": "humble",
+    "ros_version": 2,
+    "conda_env_name": "ihr"
+  },
+  "topics": {
+    "transcription_topic": "/ihr/transcription",
+    "speak_topic": "/ihr/speak",
+    "interpret_service": "/ihr/interpret",
+    "execute_action": "/ihr/execute",
+    "queue_depth": 10,
+    "voice_input_timer_period_s": 0.1,
+    "gesture_topic": "/ihr/gesture",
+    "target_topic": "/ihr/target",
+    "voice_intent_topic": "/ihr/voix_intention",
+    "ecoute_active_topic": "/ihr/ecoute_active"
+  },
+  "cinematique": {
+    "acceleration_max": 16.0,
+    "vitesse_lineaire_max": 3.0,
+    "vitesse_angulaire_max": 2.4,
+    "resolution_echantillonnage_s": 0.02,
+    "tolerance_collision": 0.1,
+    "periode_publication_s": 0.05
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "grille": {
+    "largeur_cellules": 64,
+    "hauteur_cellules": 64
+  },
+  "depart": [
+    1,
+    1
+  ],
+  "but": [
+    62,
+    62
+  ],
+  "planificateurs": {
+    "astar": {
+      "longueur": 88.02438661763942,
+      "points_de_passage": 65,
+      "cellules_reexaminees": 190
+    },
+    "thetastar": {
+      "longueur": 86.3730564741623,
+      "points_de_passage": 4,
+      "cellules_reexaminees": 174
+    },
+    "dstarlite": {
+      "longueur": 88.02438661763952,
+      "points_de_passage": 65,
+      "cellules_reexaminees": 107
+    }
+  }
+}

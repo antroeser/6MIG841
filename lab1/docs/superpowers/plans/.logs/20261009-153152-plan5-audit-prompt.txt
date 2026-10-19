@@ -1,0 +1,638 @@
+You are reviewing code. Write a report. You are NOT editing code, and no source file is open for editing in this chat - the code is quoted below, as text. Asking for a file would end your turn with nothing written, which is a failed review.
+
+There is no one to answer you: this is an unattended run. Never end your turn with a question, a request for permission, or an offer to make the fixes. Write the report and stop.
+
+The only file you may edit is audit.md. Append to it, under a heading '## plan5.md', your findings worst first, each naming the file, the line, what is wrong and why it matters. Look at least for: a value hard-coded where configuration belongs, a silent fallback, a missing error path, a return code trusted where the effect should have been verified, and a test that asserts only the happy path.
+
+If you find nothing wrong, still write one line under that heading saying the plan was reviewed and no problem was found. Writing nothing is never the right answer.
+
+If a '## plan5.md' heading is already in audit.md from an earlier round, APPEND under it anyway. A heading being present does not mean this round has been reported; only your writing does.
+
+Write the report in English.
+
+THEN, and only for a finding you have just written into audit.md, add to progress.md under the heading '## plan5.md' ONE unticked line '- [ ] audit: <what to fix>'. No line at all if there is nothing. Add nothing else there, tick nothing, and leave every other section alone. A ledger line whose finding is not in audit.md is a FAILED review: the run is blocked and your report is the only thing that could have explained it.
+
+=== HOW TO REVIEW: code-reviewer.md ===
+# Code Reviewer Prompt Template
+
+Use this template when dispatching a code reviewer subagent.
+
+**Purpose:** Review completed work against requirements and code quality standards before it cascades into more work.
+
+```
+Subagent (general-purpose):
+  description: "Review code changes"
+  prompt: |
+    You are a Senior Code Reviewer with expertise in software architecture,
+    design patterns, and best practices. Your job is to review completed work
+    against its plan or requirements and identify issues before they cascade.
+
+    ## What Was Implemented
+
+    [DESCRIPTION]
+
+    ## Requirements / Plan
+
+    [PLAN_OR_REQUIREMENTS]
+
+    ## Git Range to Review
+
+    **Base:** [BASE_SHA]
+    **Head:** [HEAD_SHA]
+
+    ```bash
+    git diff --stat [BASE_SHA]..[HEAD_SHA]
+    git diff [BASE_SHA]..[HEAD_SHA]
+    ```
+
+    ## Read-Only Review
+
+    Your review is read-only on this checkout. Do not mutate the working tree, the index, HEAD, or branch state in any way. Use tools like `git show`, `git diff`, and `git log` to inspect history. If you need a working copy of a different revision, check it out into a separate temporary directory (e.g. `git worktree add /tmp/review-[SHA] [SHA]`) — never move HEAD on this checkout.
+
+    ## You Do Not Dispatch Subagents
+
+    Do all of this review yourself. Never spawn a subagent to review part
+    of the diff, and never spawn another reviewer for a second opinion.
+    This process already provides every review seat the work gets; a
+    reviewer you spawn duplicates one of them at full cost, and its
+    verdict counts for nothing. If the diff feels too large for one
+    pass, review it in passes yourself and say so in your report.
+
+    ## What to Check
+
+    **Plan alignment:**
+    - Does the implementation match the plan / requirements?
+    - Are deviations justified improvements, or problematic departures?
+    - Is all planned functionality present?
+
+    **Code quality:**
+    - Clean separation of concerns?
+    - Proper error handling?
+    - Type safety where applicable?
+    - DRY without premature abstraction?
+    - Edge cases handled?
+
+    **Architecture:**
+    - Sound design decisions?
+    - Reasonable scalability and performance?
+    - Security concerns?
+    - Integrates cleanly with surrounding code?
+
+    **Testing:**
+    - Tests verify real behavior, not mocks?
+    - Edge cases covered?
+    - Integration tests where they matter?
+    - All tests passing?
+
+    **Production readiness:**
+    - Migration strategy if schema changed?
+    - Backward compatibility considered?
+    - Documentation complete?
+    - No obvious bugs?
+
+    ## Calibration
+
+    Categorize issues by actual severity. Not everything is Critical.
+    Acknowledge what was done well before listing issues — accurate praise
+    helps the implementer trust the rest of the feedback.
+
+    If you find significant deviations from the plan, flag them specifically
+    so the implementer can confirm whether the deviation was intentional.
+    If you find issues with the plan itself rather than the implementation,
+    say so.
+
+    ## Output Format
+
+    ### Strengths
+    [What's well done? Be specific.]
+
+    ### Issues
+
+    #### Critical (Must Fix)
+    [Bugs, security issues, data loss risks, broken functionality]
+
+    #### Important (Should Fix)
+    [Architecture problems, missing features, poor error handling, test gaps]
+
+    #### Minor (Nice to Have)
+    [Code style, optimization opportunities, documentation polish]
+
+    For each issue:
+    - File:line reference
+    - What's wrong
+    - Why it matters
+    - How to fix (if not obvious)
+
+    ### Recommendations
+    [Improvements for code quality, architecture, or process]
+
+    ### Assessment
+
+    **Ready to merge?** [Yes | No | With fixes]
+
+    **Reasoning:** [1-2 sentence technical assessment]
+
+    ## Critical Rules
+
+    **DO:**
+    - Categorize by actual severity
+    - Be specific (file:line, not vague)
+    - Explain WHY each issue matters
+    - Acknowledge strengths
+    - Give a clear verdict
+
+    **DON'T:**
+    - Say "looks good" without checking
+    - Mark nitpicks as Critical
+    - Give feedback on code you didn't actually read
+    - Be vague ("improve error handling")
+    - Avoid giving a clear verdict
+```
+
+**Placeholders:**
+- `[DESCRIPTION]` — brief summary of what was built
+- `[PLAN_OR_REQUIREMENTS]` — what it should do (plan file path, task text, or requirements)
+- `[BASE_SHA]` — starting commit
+- `[HEAD_SHA]` — ending commit
+
+**Reviewer returns:** Strengths, Issues (Critical / Important / Minor), Recommendations, Assessment
+
+## Example Output
+
+```
+### Strengths
+- Clean database schema with proper migrations (db.ts:15-42)
+- Comprehensive test coverage (18 tests, all edge cases)
+- Good error handling with fallbacks (summarizer.ts:85-92)
+
+### Issues
+
+#### Important
+1. **Missing help text in CLI wrapper**
+   - File: index-conversations:1-31
+   - Issue: No --help flag, users won't discover --concurrency
+   - Fix: Add --help case with usage examples
+
+2. **Date validation missing**
+   - File: search.ts:25-27
+   - Issue: Invalid dates silently return no results
+   - Fix: Validate ISO format, throw error with example
+
+#### Minor
+1. **Progress indicators**
+   - File: indexer.ts:130
+   - Issue: No "X of Y" counter for long operations
+   - Impact: Users don't know how long to wait
+
+### Recommendations
+- Add progress reporting for user experience
+- Consider config file for excluded projects (portability)
+
+### Assessment
+
+**Ready to merge: With fixes**
+
+**Reasoning:** Core implementation is solid with good architecture and tests. Important issues (help text, date validation) are easily fixed and don't affect core functionality.
+```
+
+
+=== THE SPECIFICATION THIS CODE IS MEASURED AGAINST ===
+# Spec — mobile robot path planner and simulator
+
+**Goal.** A 2-D simulator in which a mobile robot plans a collision-free path
+across a grid with Theta*, then travels it under trapezoidal profiles applied to
+its cylindrical coordinates, animated live in matplotlib.
+
+**Contents.** The world, the coordinate convention, the settled design
+decisions, the library constraints and the definition of done. Re-read on every
+call, so it stays complete and does not grow. Not a task list — that is
+`progress.md`.
+
+## The world
+
+| Item | Value |
+|---|---|
+| Grid | 64 x 64 cells |
+| Cell | exactly the size of the robot |
+| Obstacle | the centre 3 x 3 cells, static, drawn solid black |
+| Robot | a triangle inscribed in one cell, pointing along its direction of travel |
+| Start | cell (1,1), bottom-left, inside the map |
+| Goal | the top-right cell |
+
+## Coordinates — settled, do not re-derive
+
+The robot's position is expressed in cylindrical coordinates `r(t)` and
+`angle(t)`.
+
+**The polar origin is the outer corner of cell (0,0)**, the bottom-left corner
+of the grid. Consequences that hold everywhere in this project:
+
+- `r` and `angle` are non-negative at every point of the map.
+- `angle` sweeps roughly 0 to 90 degrees over the journey.
+- There is **no quadrant crossing and no angle wrap**. Code must not contain
+  unwrapping logic; if it seems necessary, the origin has been misplaced.
+
+## Motion — settled, and the subtle part
+
+Between two consecutive waypoints, `r(t)` and `angle(t)` **each** follow their
+own trapezoidal velocity profile. The robot genuinely moves in polar
+coordinates.
+
+**Therefore the travelled path between two waypoints is an ARC, not the straight
+line Theta* proved clear.** This is a real consequence and the most likely place
+this project goes wrong: an arc can bulge into the obstacle even when the
+straight segment between the same two waypoints was collision-free.
+
+The design must **sample each arc and test every sample against the obstacle**.
+A colliding arc is reported loudly — in the user interface and on stdout — and
+is never silently accepted, smoothed, or clipped away.
+
+**The final-time value is the TOTAL** for the whole path, start to goal. Each
+segment receives a share proportional to its length, and its trapezoid is scaled
+to fit that share. Velocity and acceleration are outputs, not inputs.
+
+Robot **dynamics and kinematics are out of scope**: no mass, no inertia, no
+wheel model, no steering limit.
+
+## Display
+
+Two axes in one matplotlib window.
+
+**Map axes**: the grid; the obstacle as a solid black 3 x 3 block; the planned
+path in green; the travelled trajectory in red, drawn progressively as the robot
+moves; the robot triangle oriented along its motion; and below the robot a live
+readout of the current `r(t)` and `angle(t)`.
+
+**Velocity axes**: velocity against time, drawn progressively as the simulation
+advances rather than shown complete from the start. Three curves:
+
+- `dr/dt` and `d(angle)/dt`, the commanded velocities. Because each follows a
+  trapezoidal profile, **each appears on screen as a trapezoid**, one per path
+  segment. Showing that shape is the purpose of this plot.
+- the resulting Cartesian speed, `sqrt(rdot^2 + (r * angledot)^2)`, which is
+  **not** a trapezoid. The contrast between commanded profile and produced speed
+  is the point.
+
+Axes carry units and a legend.
+
+**Resizing** the window rescales all content so it always fits: nothing is
+clipped, the grid stays square, both axes stay readable.
+
+## Controls
+
+One row along the bottom of the window:
+
+1. Button — compute the path with obstacle avoidance.
+2. Button — start the simulation.
+3. Button — stop.
+4. Immediately right of Stop, a rectangle showing elapsed simulation time at
+   0.1 second resolution.
+5. A text input for the final time, defaulting to 5 seconds.
+
+## Environment and constraints
+
+- Python 3. Third-party libraries: **matplotlib and numpy only**. Buttons and
+  the text box come from `matplotlib.widgets`. No tkinter, no PyQt, no other GUI
+  toolkit, and no path-planning or robotics library — Theta* and the trapezoidal
+  profiles are written for this project.
+- **No hardcoded values.** Grid size, cell size, obstacle position and extent,
+  start and goal cells, default final time, colours, sampling resolution, figure
+  size and every tolerance live in `config.json`, read at run time. A pure
+  mathematical constant of the domain is not configuration.
+- Every source file has a matching test under `tests/`, written in the same step
+  as the code. Code without its test is not done.
+- Every test asserts at least one **failure path**, not only the happy path.
+- Every function carries a header giving Purpose, Inputs, Outputs, and Raises
+  where it raises.
+- A new source file stays under 4000 tokens, roughly 300 to 400 lines, and so
+  does its test. A module that would exceed that is two modules.
+
+## Module map
+
+Each file has one responsibility. Later plans import earlier modules by name.
+
+| File | Responsibility |
+|---|---|
+| `config.json` | every configured value |
+| `world.py` | grid, cell geometry, obstacle, grid / Cartesian / polar conversion |
+| `planner.py` | Theta* with line-of-sight, returning waypoints |
+| `trajectory.py` | trapezoidal profile, and time allocation across segments |
+| `arcs.py` | arc sampling and collision verification |
+| `render_map.py` | the map axes |
+| `render_velocity.py` | the velocity axes |
+| `app.py` | controls, clock, animation loop, wiring |
+
+## Definition of done
+
+The application launches; **Compute** produces a green path avoiding the
+obstacle; **Start** animates the robot along it with the red trail growing and
+the velocity curves growing beside it; the `r`/`angle` readout and the elapsed
+clock update live; **Stop** halts it; changing the final time and recomputing
+changes the duration; resizing keeps everything visible; and every module has a
+passing test that includes a failure case.
+
+
+=== THE CODE THIS PLAN PRODUCED OR CHANGED ===
+
+----- render_map.py -----
+import matplotlib.pyplot as plt
+import matplotlib.patches as patches
+import numpy as np
+from world import World
+
+class MapView:
+    """
+    Purpose: Draws the map axes including grid, obstacle, path, trail, robot, and readout.
+    Details: Handles resizing to keep content fitted and grid square.
+    Inputs: ax (matplotlib.axes.Axes), world (World), config (dict).
+    Outputs: None.
+    Raises: ValueError if config keys are missing.
+    """
+    def __init__(self, ax, world, config):
+        self.ax = ax
+        self.world = world
+        self.config = config
+        
+        # Extract configuration
+        grid_cfg = config.get("grid", {})
+        obstacle_cfg = config.get("obstacle", {})
+        
+        self.cols = grid_cfg.get("cols")
+        self.rows = grid_cfg.get("rows")
+        self.cell_size = grid_cfg.get("cell_size")
+        
+        if self.cols is None or self.rows is None or self.cell_size is None:
+            raise ValueError("Missing grid configuration keys: cols, rows, cell_size")
+            
+        self.obstacle_width = obstacle_cfg.get("center_cols", 3) * self.cell_size
+        self.obstacle_height = obstacle_cfg.get("center_rows", 3) * self.cell_size
+        
+        # Draw static scene
+        self._draw_grid()
+        self._draw_obstacle()
+        
+        # Setup artists for dynamic content
+        self.path_line, = self.ax.plot([], [], color='green', linewidth=2, label='Planned Path')
+        self.trail_line, = self.ax.plot([], [], color='red', linewidth=1, label='Travelled Trail')
+        
+        # Robot triangle
+        self.robot_patch = patches.RegularPolygon((0,0), numVertices=3, radius=self.cell_size/2, 
+                                                  orientation=0, facecolor='blue', edgecolor='black')
+        self.ax.add_patch(self.robot_patch)
+        
+        # Readout text
+        self.readout_text = self.ax.text(0, 0, "", fontsize=8, ha='center', va='top', color='blue')
+        
+        # Set initial limits and aspect
+        self._update_limits()
+        self.ax.set_aspect('equal')
+        self.ax.legend(loc='upper right')
+        
+        # Connect to resize event
+        fig = ax.get_figure()
+        fig.canvas.mpl_connect('resize_event', self._on_resize)
+
+    def _draw_grid(self):
+        """Draws grid lines at every cell boundary."""
+        for i in range(self.cols + 1):
+            x = i * self.cell_size
+            self.ax.plot([x, x], [0, self.rows * self.cell_size], color='lightgray', linewidth=0.5)
+        for j in range(self.rows + 1):
+            y = j * self.cell_size
+            self.ax.plot([0, self.cols * self.cell_size], [y, y], color='lightgray', linewidth=0.5)
+
+    def _draw_obstacle(self):
+        """Draws the obstacle as a filled black rectangle covering the centre cells."""
+        # Calculate center of the grid
+        grid_width = self.cols * self.cell_size
+        grid_height = self.rows * self.cell_size
+        
+        # Center of obstacle
+        center_x = grid_width / 2
+        center_y = grid_height / 2
+        
+        # Obstacle dimensions
+        obs_w = self.obstacle_width
+        obs_h = self.obstacle_height
+        
+        # Bottom-left corner of obstacle
+        bottom_left_x = center_x - obs_w / 2
+        bottom_left_y = center_y - obs_h / 2
+        
+        rect = patches.Rectangle((bottom_left_x, bottom_left_y), obs_w, obs_h, 
+                                 facecolor='black', edgecolor='black')
+        self.ax.add_patch(rect)
+
+    def _update_limits(self):
+        """Updates axis limits to fit the grid."""
+        self.ax.set_xlim(-0.5 * self.cell_size, self.cols * self.cell_size + 0.5 * self.cell_size)
+        self.ax.set_ylim(-0.5 * self.cell_size, self.rows * self.cell_size + 0.5 * self.cell_size)
+
+    def _on_resize(self, event):
+        """Handles figure resize to keep grid square and content fitted."""
+        self._update_limits()
+        self.ax.set_aspect('equal')
+        self.ax.figure.canvas.draw_idle()
+
+    def draw_path(self, cells):
+        """
+        Purpose: Draws the planned path as a green polyline through cell centres.
+        Details: Replaces previous path.
+        Inputs: cells (list of tuples (col, row)).
+        Outputs: None.
+        Raises: ValueError if fewer than two cells.
+        """
+        if len(cells) < 2:
+            raise ValueError("Path must have at least two waypoints")
+            
+        xs = []
+        ys = []
+        for col, row in cells:
+            x, y = self.world.cell_to_xy(col, row)
+            xs.append(x)
+            ys.append(y)
+            
+        self.path_line.set_data(xs, ys)
+        self.ax.figure.canvas.draw_idle()
+
+    def set_robot(self, x, y, heading_rad):
+        """
+        Purpose: Places the robot triangle at (x, y) pointing along heading.
+        Inputs: x (float), y (float), heading_rad (float).
+        Outputs: None.
+        Raises: None.
+        """
+        # RegularPolygon orientation is the angle of the first vertex relative to x-axis.
+        # A triangle pointing along heading needs its first vertex at heading.
+        self.robot_patch.center = (x, y)
+        self.robot_patch.orientation = heading_rad
+        self.ax.figure.canvas.draw_idle()
+
+    def append_trail(self, x, y):
+        """
+        Purpose: Extends the red travelled trajectory by one point.
+        Inputs: x (float), y (float).
+        Outputs: None.
+        Raises: None.
+        """
+        xs, ys = self.trail_line.get_data()
+        self.trail_line.set_data(np.append(xs, x), np.append(ys, y))
+        self.ax.figure.canvas.draw_idle()
+
+    def reset_trail(self):
+        """
+        Purpose: Clears the travelled trail.
+        Inputs: None.
+        Outputs: None.
+        Raises: None.
+        """
+        self.trail_line.set_data([], [])
+        self.ax.figure.canvas.draw_idle()
+
+    def set_readout(self, r, angle_rad):
+        """
+        Purpose: Writes current r and angle as text below the robot.
+        Inputs: r (float), angle_rad (float).
+        Outputs: None.
+        Raises: None.
+        """
+        angle_deg = np.degrees(angle_rad)
+        text = f"r: {r:.2f}, angle: {angle_deg:.1f}°"
+        
+        # Position below the robot
+        robot_x, robot_y = self.robot_patch.center
+        self.readout_text.set_position((robot_x, robot_y - self.cell_size * 0.6))
+        self.readout_text.set_text(text)
+        self.ax.figure.canvas.draw_idle()
+
+
+----- tests\test_render_map.py -----
+import unittest
+import tempfile
+import os
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+from world import World
+from render_map import MapView
+import numpy as np
+
+class TestMapView(unittest.TestCase):
+    def setUp(self):
+        self.config_data = {
+            "grid": {"cols": 64, "rows": 64, "cell_size": 1.0},
+            "obstacle": {"center_cols": 3, "center_rows": 3},
+            "start": {"cell": [1, 1]},
+            "goal": {"cell": [62, 62]},
+            "arc": {"samples_per_segment": 64},
+            "time": {"accel_fraction": 0.3}
+        }
+        self.config_file = tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False)
+        import json
+        json.dump(self.config_data, self.config_file)
+        self.config_file.close()
+        
+        self.world = World(self.config_file.name)
+        self.fig, self.ax = plt.subplots()
+        self.view = MapView(self.ax, self.world, self.config_data)
+
+    def tearDown(self):
+        plt.close(self.fig)
+        os.unlink(self.config_file.name)
+
+    def test_obstacle_patch_coverage(self):
+        # Find the black rectangle patch
+        black_patch = None
+        for patch in self.ax.patches:
+            if patch.get_facecolor() == (0.0, 0.0, 0.0, 1.0):
+                black_patch = patch
+                break
+        self.assertIsNotNone(black_patch, "No black patch found")
+        
+        # Check dimensions
+        width = black_patch.get_width()
+        height = black_patch.get_height()
+        self.assertAlmostEqual(width, 3.0, places=5)
+        self.assertAlmostEqual(height, 3.0, places=5)
+        
+        # Check position (center of 64x64 grid is 32,32)
+        x, y = black_patch.get_xy()
+        self.assertAlmostEqual(x, 32.0 - 1.5, places=5)
+        self.assertAlmostEqual(y, 32.0 - 1.5, places=5)
+
+    def test_draw_path_vertex_count(self):
+        cells = [(1, 1), (2, 2), (3, 3)]
+        self.view.draw_path(cells)
+        
+        line = self.view.path_line
+        xs, ys = line.get_data()
+        self.assertEqual(len(xs), 3)
+        self.assertEqual(len(ys), 3)
+        
+        # Check color
+        self.assertEqual(line.get_color(), 'green')
+
+    def test_draw_path_replaces(self):
+        cells1 = [(1, 1), (2, 2)]
+        cells2 = [(1, 1), (2, 2), (3, 3), (4, 4)]
+        
+        self.view.draw_path(cells1)
+        self.assertEqual(len(self.view.path_line.get_data()[0]), 2)
+        
+        self.view.draw_path(cells2)
+        self.assertEqual(len(self.view.path_line.get_data()[0]), 4)
+
+    def test_draw_path_too_few_cells_raises(self):
+        with self.assertRaises(ValueError):
+            self.view.draw_path([(1, 1)])
+
+    def test_trail_grows(self):
+        self.view.append_trail(1.0, 1.0)
+        self.view.append_trail(2.0, 2.0)
+        
+        xs, ys = self.view.trail_line.get_data()
+        self.assertEqual(len(xs), 2)
+        self.assertEqual(xs[0], 1.0)
+        self.assertEqual(xs[1], 2.0)
+        
+        self.assertEqual(self.view.trail_line.get_color(), 'red')
+
+    def test_trail_reset(self):
+        self.view.append_trail(1.0, 1.0)
+        self.view.reset_trail()
+        
+        xs, ys = self.view.trail_line.get_data()
+        self.assertEqual(len(xs), 0)
+        self.assertEqual(len(ys), 0)
+
+    def test_robot_triangle_rotation(self):
+        x, y = 10.0, 10.0
+        self.view.set_robot(x, y, 0.0)
+        center = self.view.robot_patch.center
+        self.assertEqual(center, (x, y))
+        orientation1 = self.view.robot_patch.orientation
+        
+        self.view.set_robot(x, y, np.pi / 2)
+        orientation2 = self.view.robot_patch.orientation
+        
+        self.assertNotEqual(orientation1, orientation2)
+        
+        # Check vertices count (RegularPolygon repeats the first vertex to close the shape)
+        verts = self.view.robot_patch.get_verts()
+        self.assertEqual(len(verts), 4)
+
+    def test_readout_text(self):
+        x, y = 10.0, 10.0
+        self.view.set_robot(x, y, 0.0)
+        self.view.set_readout(5.0, np.pi / 4)
+        
+        text = self.view.readout_text.get_text()
+        self.assertIn("r: 5.00", text)
+        self.assertIn("angle: 45.0", text)
+        
+        # Check position is below robot
+        pos = self.view.readout_text.get_position()
+        self.assertLess(pos[1], y)
+
+if __name__ == '__main__':
+    unittest.main()

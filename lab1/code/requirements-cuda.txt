@@ -1,0 +1,26 @@
+# 6MIG841 - Interaction humain-robot
+# Paquets CUDA optionnels pour Devoir2/code/voice.py en mode
+# devoir2.speech_device="cuda" (Lab1/code/ihr_config.json).
+#
+# NE FAIT PARTIE D'AUCUNE INSTALLATION PAR DEFAUT. install_lab1.ps1 ne pose ce fichier que
+# si on lui passe -Cuda : poids mesure sur disque le 2026-09-19 sur cette machine, 2,0 Go
+# (nvidia-cublas-cu12 737 Mo, nvidia-cudnn-cu12 1,1 Go, nvidia-cuda-nvrtc-cu12 179 Mo), soit
+# plus que la totalite des autres librairies du Lab 1 reunies.
+#
+# Sans ces paquets, et avec speech_device="cuda", ctranslate2 (moteur de faster-whisper)
+# leve `RuntimeError: Library cublas64_12.dll is not found or cannot be loaded` au PREMIER
+# CALCUL REEL, pas au chargement du modele (mesure le 2026-09-19,
+# .sdd/6mig841-ameliorations/vram-residence-report.md). check_env.py rapporte leur absence
+# a l'avance, avant qu'un devoir en salle ne tombe dessus (workflow.md R9 : verifier l'effet).
+#
+# Alternative sans telechargement : mettre speech_device="cpu" dans ihr_config.json (mode
+# d'origine du solutionnaire, .sdd/6mig841-ameliorations/stt-local-report.md). Une machine
+# sans GPU NVIDIA doit utiliser cette alternative, ce fichier ne lui servant a rien.
+#
+# Versions mesurees par resolution pip reelle le 2026-09-19, identiques dans .venv
+# (Python 3.13.3) et dans l'environnement conda 'ihr' (Python 3.12.14), jamais devinees :
+# aucune des trois n'a de version deja installee par une autre dependance de ce depot,
+# contrairement a matplotlib et huggingface-hub.
+nvidia-cublas-cu12==12.9.2.10
+nvidia-cuda-nvrtc-cu12==12.9.86
+nvidia-cudnn-cu12==9.26.0.51

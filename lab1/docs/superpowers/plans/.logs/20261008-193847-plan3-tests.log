@@ -1,0 +1,23 @@
+...............F..F......
+======================================================================
+FAIL: test_profile_integral (test_trajectory.TestTrajectory.test_profile_integral)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\aroeser\projects\robot-planner\tests\test_trajectory.py", line 56, in test_profile_integral
+    self.assertAlmostEqual(integral, end - start, places=5)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: np.float64(9.99998997996996) != 10.0 within 5 places (np.float64(1.0020030039470385e-05) difference)
+
+======================================================================
+FAIL: test_profile_triangular (test_trajectory.TestTrajectory.test_profile_triangular)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\aroeser\projects\robot-planner\tests\test_trajectory.py", line 74, in test_profile_triangular
+    self.assertAlmostEqual(integral, end - start, places=5)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: np.float64(9.99998997996996) != 10.0 within 5 places (np.float64(1.0020030039470385e-05) difference)
+
+----------------------------------------------------------------------
+Ran 25 tests in 0.066s
+
+FAILED (failures=2)

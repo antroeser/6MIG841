@@ -1,0 +1,79 @@
+# 6MIG841 - Interaction humain-robot
+# Librairies extraites des rapports etudiants (voir Lab1/code/libraries.json).
+# Versions MESUREES le 2026-09-18 par resolution pip sur
+# Python 3.13.3 / Windows 11, puis figees. Elles ne sont pas devinees : deux pins
+# inventes (pyttsx3==2.100, ollama==0.6.3) n'existaient pas et ont fait echouer
+# l'installation, avec un code de retour pip egal a 0 malgre l'echec.
+# Installation : Lab1/code/install_lab1.ps1
+
+# --- Vision (Devoir 1, Projet) ---
+opencv-python==5.0.0.93
+mediapipe==1.0.1
+numpy==2.5.3
+
+# --- Detection d'objets (Projet) ---
+ultralytics==8.4.155
+
+# --- Planification (Lab 1) ---
+# matplotlib==3.11.2 ajoute le 2026-09-19 (.sdd/6mig841-ameliorations/lab1-dependances-report.md) :
+# reellement importee par Lab1/code/planif/app.py et compare.py (figures de comparaison
+# A*/Theta*/D*-Lite) mais jamais declaree pour elle-meme avant ce jour. Deja presente en
+# tant que dependance transitive, avec la MEME version mesuree dans les deux environnements
+# (.venv Python 3.13.3 et conda 'ihr' Python 3.12.14) : cette epingle ne telecharge rien de
+# nouveau, elle rend explicite ce qui etait deja installe implicitement.
+matplotlib==3.11.2
+
+# --- Voix et LLM (Devoir 2) ---
+# faster-whisper==1.2.1 ajoute le 2026-09-19 (.sdd/6mig841-ameliorations/stt-local-report.md) :
+# reconnaissance vocale LOCALE (modele 'small', calcul int8), remplace recognize_google
+# (SpeechRecognition envoyait l'audio a Google). Version resolue par pip reelle sur ce
+# poste (Python 3.13.3 et, separement, l'environnement conda 'ihr' en Python 3.12.14),
+# jamais devinee. SpeechRecognition et PyAudio restent : sr.Microphone capture toujours
+# le flux audio brut, seule la reconnaissance change de moteur.
+faster-whisper==1.2.1
+# ctranslate2==4.8.2 : moteur d'inference de faster-whisper. Jamais importe directement par
+# ce depot (dependance transitive de faster-whisper), mais epingle EXPLICITEMENT le
+# 2026-09-19 : sans cette ligne, une future version de faster-whisper pourrait resoudre une
+# version differente de ctranslate2, jamais mesuree sur ce depot. Version mesuree par
+# resolution pip reelle le 2026-09-19, identique dans .venv et dans l'environnement conda
+# 'ihr'.
+ctranslate2==4.8.2
+# huggingface-hub==1.32.0 : importee directement par Devoir2/code/voice.py (nommer le
+# repertoire de cache des modeles Whisper dans un message d'erreur). Deja presente comme
+# dependance transitive de faster-whisper ; epinglee pour elle-meme le 2026-09-19 puisqu'elle
+# est reellement importee par ce depot et pas seulement par faster-whisper en interne.
+huggingface-hub==1.32.0
+SpeechRecognition==3.17.0
+PyAudio==0.2.14
+pyttsx3==2.99
+# Voix FRANCAISES de Windows, ajoutees le 2026-09-20. Mesure ce jour-la sur la machine de
+# l'enseignant : SAPI5, par lequel passe pyttsx3, n'expose qu'une seule voix ici,
+# TTS_MS_EN-US_ZIRA_11.0 (en-US), donc le francais du Devoir 2 etait prononce par un moteur
+# anglais. Les trois voix French (Canada) presentes sur le poste (Microsoft Caroline, Claude,
+# Nathalie) vivent dans Speech_OneCore, que SAPI5 ne montre pas. Ces liaisons WinRT les
+# atteignent SANS droits administrateur, contrairement a la copie de cles de registre vers
+# SAPI5. Devoir2/code/voice.py::MoteurWinRT s'en sert et se rabat sur pyttsx3 en les
+# annoncant si elles manquent (R8), donc leur absence degrade la voix sans casser le devoir.
+# La lecture du WAV synthetise passe par winsound, bibliotheque standard : aucune dependance
+# de plus pour le son.
+winrt-runtime==3.2.1
+winrt-Windows.Foundation==3.2.1
+winrt-Windows.Foundation.Collections==3.2.1
+winrt-Windows.Media.SpeechSynthesis==3.2.1
+winrt-Windows.Storage.Streams==3.2.1
+ollama==0.6.2
+
+# --- Tests ---
+pytest==9.1.1
+pytest-timeout==2.4.0
+
+# --- CUDA (OPTIONNEL) ---
+# Necessaire UNIQUEMENT si Lab1/code/ihr_config.json, section "devoir2", porte
+# speech_device="cuda" (le cas par defaut de ce solutionnaire depuis le 2026-09-19,
+# .sdd/6mig841-ameliorations/vram-residence-report.md) ET que la machine a un GPU NVIDIA.
+# Voir Lab1/code/requirements-cuda.txt : ce fichier separe n'est PAS installe par defaut par
+# install_lab1.ps1 (poids mesure sur disque le 2026-09-19 : 2,0 Go), seulement avec le
+# commutateur -Cuda. Sans lui, et avec speech_device="cuda", Devoir2/code/voice.py leve
+# `RuntimeError: Library cublas64_12.dll is not found` au premier calcul reel (pas au
+# chargement du modele) : passer speech_device a "cpu" dans ihr_config.json est l'alternative
+# sans telechargement supplementaire.

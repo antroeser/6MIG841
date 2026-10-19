@@ -1,0 +1,5 @@
+Metadata-Version: 2.4
+Name: ihr-ros
+Version: 1.0.0
+Summary: Socle commun du solutionnaire 6MIG841 - interaction humain-robot
+Requires-Python: >=3.11

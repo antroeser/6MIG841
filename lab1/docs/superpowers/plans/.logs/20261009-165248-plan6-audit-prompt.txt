@@ -1,0 +1,627 @@
+You are reviewing code. Write a report. You are NOT editing code, and no source file is open for editing in this chat - the code is quoted below, as text. Asking for a file would end your turn with nothing written, which is a failed review.
+
+There is no one to answer you: this is an unattended run. Never end your turn with a question, a request for permission, or an offer to make the fixes. Write the report and stop.
+
+The only file you may edit is audit.md. Append to it, under a heading '## plan6.md', your findings worst first, each naming the file, the line, what is wrong and why it matters. Look at least for: a value hard-coded where configuration belongs, a silent fallback, a missing error path, a return code trusted where the effect should have been verified, and a test that asserts only the happy path.
+
+If you find nothing wrong, still write one line under that heading saying the plan was reviewed and no problem was found. Writing nothing is never the right answer.
+
+If a '## plan6.md' heading is already in audit.md from an earlier round, APPEND under it anyway. A heading being present does not mean this round has been reported; only your writing does.
+
+Write the report in English.
+
+THEN, and only for a finding you have just written into audit.md, add to progress.md under the heading '## plan6.md' ONE unticked line '- [ ] audit: <what to fix>'. No line at all if there is nothing. Add nothing else there, tick nothing, and leave every other section alone. A ledger line whose finding is not in audit.md is a FAILED review: the run is blocked and your report is the only thing that could have explained it.
+
+=== HOW TO REVIEW: code-reviewer.md ===
+# Code Reviewer Prompt Template
+
+Use this template when dispatching a code reviewer subagent.
+
+**Purpose:** Review completed work against requirements and code quality standards before it cascades into more work.
+
+```
+Subagent (general-purpose):
+  description: "Review code changes"
+  prompt: |
+    You are a Senior Code Reviewer with expertise in software architecture,
+    design patterns, and best practices. Your job is to review completed work
+    against its plan or requirements and identify issues before they cascade.
+
+    ## What Was Implemented
+
+    [DESCRIPTION]
+
+    ## Requirements / Plan
+
+    [PLAN_OR_REQUIREMENTS]
+
+    ## Git Range to Review
+
+    **Base:** [BASE_SHA]
+    **Head:** [HEAD_SHA]
+
+    ```bash
+    git diff --stat [BASE_SHA]..[HEAD_SHA]
+    git diff [BASE_SHA]..[HEAD_SHA]
+    ```
+
+    ## Read-Only Review
+
+    Your review is read-only on this checkout. Do not mutate the working tree, the index, HEAD, or branch state in any way. Use tools like `git show`, `git diff`, and `git log` to inspect history. If you need a working copy of a different revision, check it out into a separate temporary directory (e.g. `git worktree add /tmp/review-[SHA] [SHA]`) — never move HEAD on this checkout.
+
+    ## You Do Not Dispatch Subagents
+
+    Do all of this review yourself. Never spawn a subagent to review part
+    of the diff, and never spawn another reviewer for a second opinion.
+    This process already provides every review seat the work gets; a
+    reviewer you spawn duplicates one of them at full cost, and its
+    verdict counts for nothing. If the diff feels too large for one
+    pass, review it in passes yourself and say so in your report.
+
+    ## What to Check
+
+    **Plan alignment:**
+    - Does the implementation match the plan / requirements?
+    - Are deviations justified improvements, or problematic departures?
+    - Is all planned functionality present?
+
+    **Code quality:**
+    - Clean separation of concerns?
+    - Proper error handling?
+    - Type safety where applicable?
+    - DRY without premature abstraction?
+    - Edge cases handled?
+
+    **Architecture:**
+    - Sound design decisions?
+    - Reasonable scalability and performance?
+    - Security concerns?
+    - Integrates cleanly with surrounding code?
+
+    **Testing:**
+    - Tests verify real behavior, not mocks?
+    - Edge cases covered?
+    - Integration tests where they matter?
+    - All tests passing?
+
+    **Production readiness:**
+    - Migration strategy if schema changed?
+    - Backward compatibility considered?
+    - Documentation complete?
+    - No obvious bugs?
+
+    ## Calibration
+
+    Categorize issues by actual severity. Not everything is Critical.
+    Acknowledge what was done well before listing issues — accurate praise
+    helps the implementer trust the rest of the feedback.
+
+    If you find significant deviations from the plan, flag them specifically
+    so the implementer can confirm whether the deviation was intentional.
+    If you find issues with the plan itself rather than the implementation,
+    say so.
+
+    ## Output Format
+
+    ### Strengths
+    [What's well done? Be specific.]
+
+    ### Issues
+
+    #### Critical (Must Fix)
+    [Bugs, security issues, data loss risks, broken functionality]
+
+    #### Important (Should Fix)
+    [Architecture problems, missing features, poor error handling, test gaps]
+
+    #### Minor (Nice to Have)
+    [Code style, optimization opportunities, documentation polish]
+
+    For each issue:
+    - File:line reference
+    - What's wrong
+    - Why it matters
+    - How to fix (if not obvious)
+
+    ### Recommendations
+    [Improvements for code quality, architecture, or process]
+
+    ### Assessment
+
+    **Ready to merge?** [Yes | No | With fixes]
+
+    **Reasoning:** [1-2 sentence technical assessment]
+
+    ## Critical Rules
+
+    **DO:**
+    - Categorize by actual severity
+    - Be specific (file:line, not vague)
+    - Explain WHY each issue matters
+    - Acknowledge strengths
+    - Give a clear verdict
+
+    **DON'T:**
+    - Say "looks good" without checking
+    - Mark nitpicks as Critical
+    - Give feedback on code you didn't actually read
+    - Be vague ("improve error handling")
+    - Avoid giving a clear verdict
+```
+
+**Placeholders:**
+- `[DESCRIPTION]` — brief summary of what was built
+- `[PLAN_OR_REQUIREMENTS]` — what it should do (plan file path, task text, or requirements)
+- `[BASE_SHA]` — starting commit
+- `[HEAD_SHA]` — ending commit
+
+**Reviewer returns:** Strengths, Issues (Critical / Important / Minor), Recommendations, Assessment
+
+## Example Output
+
+```
+### Strengths
+- Clean database schema with proper migrations (db.ts:15-42)
+- Comprehensive test coverage (18 tests, all edge cases)
+- Good error handling with fallbacks (summarizer.ts:85-92)
+
+### Issues
+
+#### Important
+1. **Missing help text in CLI wrapper**
+   - File: index-conversations:1-31
+   - Issue: No --help flag, users won't discover --concurrency
+   - Fix: Add --help case with usage examples
+
+2. **Date validation missing**
+   - File: search.ts:25-27
+   - Issue: Invalid dates silently return no results
+   - Fix: Validate ISO format, throw error with example
+
+#### Minor
+1. **Progress indicators**
+   - File: indexer.ts:130
+   - Issue: No "X of Y" counter for long operations
+   - Impact: Users don't know how long to wait
+
+### Recommendations
+- Add progress reporting for user experience
+- Consider config file for excluded projects (portability)
+
+### Assessment
+
+**Ready to merge: With fixes**
+
+**Reasoning:** Core implementation is solid with good architecture and tests. Important issues (help text, date validation) are easily fixed and don't affect core functionality.
+```
+
+
+=== THE SPECIFICATION THIS CODE IS MEASURED AGAINST ===
+# Spec — mobile robot path planner and simulator
+
+**Goal.** A 2-D simulator in which a mobile robot plans a collision-free path
+across a grid with Theta*, then travels it under trapezoidal profiles applied to
+its cylindrical coordinates, animated live in matplotlib.
+
+**Contents.** The world, the coordinate convention, the settled design
+decisions, the library constraints and the definition of done. Re-read on every
+call, so it stays complete and does not grow. Not a task list — that is
+`progress.md`.
+
+## The world
+
+| Item | Value |
+|---|---|
+| Grid | 64 x 64 cells |
+| Cell | exactly the size of the robot |
+| Obstacle | the centre 3 x 3 cells, static, drawn solid black |
+| Robot | a triangle inscribed in one cell, pointing along its direction of travel |
+| Start | cell (1,1), bottom-left, inside the map |
+| Goal | the top-right cell |
+
+## Coordinates — settled, do not re-derive
+
+The robot's position is expressed in cylindrical coordinates `r(t)` and
+`angle(t)`.
+
+**The polar origin is the outer corner of cell (0,0)**, the bottom-left corner
+of the grid. Consequences that hold everywhere in this project:
+
+- `r` and `angle` are non-negative at every point of the map.
+- `angle` sweeps roughly 0 to 90 degrees over the journey.
+- There is **no quadrant crossing and no angle wrap**. Code must not contain
+  unwrapping logic; if it seems necessary, the origin has been misplaced.
+
+## Motion — settled, and the subtle part
+
+Between two consecutive waypoints, `r(t)` and `angle(t)` **each** follow their
+own trapezoidal velocity profile. The robot genuinely moves in polar
+coordinates.
+
+**Therefore the travelled path between two waypoints is an ARC, not the straight
+line Theta* proved clear.** This is a real consequence and the most likely place
+this project goes wrong: an arc can bulge into the obstacle even when the
+straight segment between the same two waypoints was collision-free.
+
+The design must **sample each arc and test every sample against the obstacle**.
+A colliding arc is reported loudly — in the user interface and on stdout — and
+is never silently accepted, smoothed, or clipped away.
+
+**The final-time value is the TOTAL** for the whole path, start to goal. Each
+segment receives a share proportional to its length, and its trapezoid is scaled
+to fit that share. Velocity and acceleration are outputs, not inputs.
+
+Robot **dynamics and kinematics are out of scope**: no mass, no inertia, no
+wheel model, no steering limit.
+
+## Display
+
+Two axes in one matplotlib window.
+
+**Map axes**: the grid; the obstacle as a solid black 3 x 3 block; the planned
+path in green; the travelled trajectory in red, drawn progressively as the robot
+moves; the robot triangle oriented along its motion; and below the robot a live
+readout of the current `r(t)` and `angle(t)`.
+
+**Velocity axes**: velocity against time, drawn progressively as the simulation
+advances rather than shown complete from the start. Three curves:
+
+- `dr/dt` and `d(angle)/dt`, the commanded velocities. Because each follows a
+  trapezoidal profile, **each appears on screen as a trapezoid**, one per path
+  segment. Showing that shape is the purpose of this plot.
+- the resulting Cartesian speed, `sqrt(rdot^2 + (r * angledot)^2)`, which is
+  **not** a trapezoid. The contrast between commanded profile and produced speed
+  is the point.
+
+Axes carry units and a legend.
+
+**Resizing** the window rescales all content so it always fits: nothing is
+clipped, the grid stays square, both axes stay readable.
+
+## Controls
+
+One row along the bottom of the window:
+
+1. Button — compute the path with obstacle avoidance.
+2. Button — start the simulation.
+3. Button — stop.
+4. Immediately right of Stop, a rectangle showing elapsed simulation time at
+   0.1 second resolution.
+5. A text input for the final time, defaulting to 5 seconds.
+
+## Environment and constraints
+
+- Python 3. Third-party libraries: **matplotlib and numpy only**. Buttons and
+  the text box come from `matplotlib.widgets`. No tkinter, no PyQt, no other GUI
+  toolkit, and no path-planning or robotics library — Theta* and the trapezoidal
+  profiles are written for this project.
+- **No hardcoded values.** Grid size, cell size, obstacle position and extent,
+  start and goal cells, default final time, colours, sampling resolution, figure
+  size and every tolerance live in `config.json`, read at run time. A pure
+  mathematical constant of the domain is not configuration.
+- Every source file has a matching test under `tests/`, written in the same step
+  as the code. Code without its test is not done.
+- Every test asserts at least one **failure path**, not only the happy path.
+- Every function carries a header giving Purpose, Inputs, Outputs, and Raises
+  where it raises.
+- A new source file stays under 4000 tokens, roughly 300 to 400 lines, and so
+  does its test. A module that would exceed that is two modules.
+
+## Module map
+
+Each file has one responsibility. Later plans import earlier modules by name.
+
+| File | Responsibility |
+|---|---|
+| `config.json` | every configured value |
+| `world.py` | grid, cell geometry, obstacle, grid / Cartesian / polar conversion |
+| `planner.py` | Theta* with line-of-sight, returning waypoints |
+| `trajectory.py` | trapezoidal profile, and time allocation across segments |
+| `arcs.py` | arc sampling and collision verification |
+| `render_map.py` | the map axes |
+| `render_velocity.py` | the velocity axes |
+| `app.py` | controls, clock, animation loop, wiring |
+
+## Definition of done
+
+The application launches; **Compute** produces a green path avoiding the
+obstacle; **Start** animates the robot along it with the red trail growing and
+the velocity curves growing beside it; the `r`/`angle` readout and the elapsed
+clock update live; **Stop** halts it; changing the final time and recomputing
+changes the duration; resizing keeps everything visible; and every module has a
+passing test that includes a failure case.
+
+
+=== THE CODE THIS PLAN PRODUCED OR CHANGED ===
+
+----- render_velocity.py -----
+import numpy as np
+from arcs import cartesian_speed
+
+class VelocityView:
+    """
+    Purpose: Draws the velocity axes showing r_dot, angle_dot, and Cartesian speed against time.
+    Details: The curves grow progressively as the simulation advances.
+             r_dot is in cells/s, angle_dot in rad/s, speed in cells/s.
+    Inputs: ax (matplotlib.axes.Axes), config (dict).
+    Outputs: None.
+    Raises: ValueError if config keys are missing.
+    """
+    def __init__(self, ax, config):
+        self.ax = ax
+        self.config = config
+        
+        velocity_cfg = config.get('velocity')
+        if not velocity_cfg:
+            raise ValueError("Missing 'velocity' configuration section")
+            
+        colors = velocity_cfg.get('colors', {})
+        labels = velocity_cfg.get('labels', {})
+        margin = velocity_cfg.get('margin', 0.1)
+        line_width = velocity_cfg.get('line_width')
+        
+        if line_width is None:
+            raise ValueError("Missing 'line_width' in 'velocity' configuration")
+        
+        color_r_dot = colors.get('r_dot')
+        color_angle_dot = colors.get('angle_dot')
+        color_speed = colors.get('speed')
+        
+        if not all([color_r_dot, color_angle_dot, color_speed]):
+            raise ValueError("Missing velocity color configuration keys in 'velocity.colors'")
+            
+        label_r_dot = labels.get('r_dot', 'dr/dt (cells/s)')
+        label_angle_dot = labels.get('angle_dot', 'd(angle)/dt (rad/s)')
+        label_speed = labels.get('speed', 'Speed (cells/s)')
+        
+        self.line_r_dot, = self.ax.plot([], [], color=color_r_dot, linewidth=line_width, label=label_r_dot)
+        self.line_angle_dot, = self.ax.plot([], [], color=color_angle_dot, linewidth=line_width, label=label_angle_dot)
+        self.line_speed, = self.ax.plot([], [], color=color_speed, linewidth=line_width, label=label_speed)
+        
+        self.ax.set_xlabel('Time (s)')
+        self.ax.set_ylabel('Velocity (cells/s, rad/s)')
+        self.ax.legend(loc='best')
+        
+        self.data_r_dot = []
+        self.data_angle_dot = []
+        self.data_speed = []
+        self.data_t = []
+        self.margin = margin
+
+    def append(self, sample):
+        """
+        Purpose: Extends all three lines by one point from one trajectory record.
+        Inputs: sample (dict) containing 't', 'r_dot', 'angle_dot', 'r'.
+        Outputs: None.
+        Raises: KeyError if required keys are missing in sample.
+        """
+        try:
+            t = sample['t']
+            r_dot = sample['r_dot']
+            angle_dot = sample['angle_dot']
+            r = sample['r']
+        except KeyError as e:
+            raise KeyError(f"Sample missing required key: {e}")
+
+        speed = cartesian_speed({'r': r, 'r_dot': r_dot, 'angle_dot': angle_dot})
+
+        self.data_t.append(t)
+        self.data_r_dot.append(r_dot)
+        self.data_angle_dot.append(angle_dot)
+        self.data_speed.append(speed)
+        
+        self.line_r_dot.set_data(self.data_t, self.data_r_dot)
+        self.line_angle_dot.set_data(self.data_t, self.data_angle_dot)
+        self.line_speed.set_data(self.data_t, self.data_speed)
+        
+        self.autoscale()
+        self.ax.figure.canvas.draw_idle()
+
+    def reset(self):
+        """
+        Purpose: Clears all three lines.
+        Inputs: None.
+        Outputs: None.
+        Raises: None.
+        """
+        self.data_t = []
+        self.data_r_dot = []
+        self.data_angle_dot = []
+        self.data_speed = []
+        
+        self.line_r_dot.set_data([], [])
+        self.line_angle_dot.set_data([], [])
+        self.line_speed.set_data([], [])
+        
+        self.ax.figure.canvas.draw_idle()
+
+    def autoscale(self):
+        """
+        Purpose: Widens the limits to the data seen so far.
+        Inputs: None.
+        Outputs: None.
+        Raises: None.
+        """
+        if not self.data_t:
+            return
+            
+        t_min = min(self.data_t)
+        t_max = max(self.data_t)
+        
+        t_range = t_max - t_min
+        t_margin = t_range * self.margin if t_range > 0 else 1.0
+        self.ax.set_xlim(t_min - t_margin, t_max + t_margin)
+        
+        all_values = self.data_r_dot + self.data_angle_dot + self.data_speed
+        v_min = min(all_values)
+        v_max = max(all_values)
+        
+        v_range = v_max - v_min
+        v_margin = v_range * self.margin if v_range > 0 else 1.0
+        self.ax.set_ylim(v_min - v_margin, v_max + v_margin)
+
+
+----- tests\test_render_velocity.py -----
+import unittest
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+import numpy as np
+
+from render_velocity import VelocityView
+
+class TestVelocityView(unittest.TestCase):
+    def setUp(self):
+        self.config_data = {
+            "velocity": {
+                "colors": {
+                    "r_dot": "blue",
+                    "angle_dot": "orange",
+                    "speed": "green"
+                },
+                "labels": {
+                    "r_dot": "dr/dt (cells/s)",
+                    "angle_dot": "d(angle)/dt (rad/s)",
+                    "speed": "Speed (cells/s)"
+                },
+                "margin": 0.1,
+                "line_width": 1.5
+            }
+        }
+        self.fig, self.ax = plt.subplots()
+        self.view = VelocityView(self.ax, self.config_data)
+
+    def tearDown(self):
+        plt.close(self.fig)
+
+    def test_three_lines_created_with_legend(self):
+        lines = self.ax.get_lines()
+        self.assertEqual(len(lines), 3)
+        
+        legend = self.ax.get_legend()
+        self.assertIsNotNone(legend)
+        
+        labels = [line.get_label() for line in lines]
+        self.assertIn('dr/dt (cells/s)', labels)
+        self.assertIn('d(angle)/dt (rad/s)', labels)
+        self.assertIn('Speed (cells/s)', labels)
+
+    def test_append_extends_each_by_exactly_one_point(self):
+        initial_len = len(self.view.data_t)
+        self.assertEqual(initial_len, 0)
+        
+        sample = {
+            't': 1.0,
+            'r_dot': 0.5,
+            'angle_dot': 0.1,
+            'r': 10.0
+        }
+        self.view.append(sample)
+        
+        self.assertEqual(len(self.view.data_t), 1)
+        self.assertEqual(len(self.view.data_r_dot), 1)
+        self.assertEqual(len(self.view.data_angle_dot), 1)
+        self.assertEqual(len(self.view.data_speed), 1)
+        
+        self.assertEqual(self.view.data_t[0], 1.0)
+        self.assertEqual(self.view.data_r_dot[0], 0.5)
+        self.assertEqual(self.view.data_angle_dot[0], 0.1)
+        expected_speed = np.sqrt(0.25 + 1.0)
+        self.assertAlmostEqual(self.view.data_speed[0], expected_speed)
+
+    def test_reset_empties_all_three(self):
+        sample = {'t': 1.0, 'r_dot': 0.5, 'angle_dot': 0.1, 'r': 10.0}
+        self.view.append(sample)
+        self.view.append({'t': 2.0, 'r_dot': 0.6, 'angle_dot': 0.2, 'r': 11.0})
+        
+        self.view.reset()
+        
+        self.assertEqual(len(self.view.data_t), 0)
+        self.assertEqual(len(self.view.data_r_dot), 0)
+        self.assertEqual(len(self.view.data_angle_dot), 0)
+        self.assertEqual(len(self.view.data_speed), 0)
+        
+        for line in self.ax.get_lines():
+            x, y = line.get_data()
+            self.assertEqual(len(x), 0)
+            self.assertEqual(len(y), 0)
+
+    def test_trapezoid_property(self):
+        samples = []
+        
+        # Accel phase
+        for i in range(3):
+            t = i * 1.0
+            r_dot = t * 5.0
+            samples.append({'t': t, 'r_dot': r_dot, 'angle_dot': 0, 'r': 0})
+            
+        # Cruise phase
+        for i in range(3):
+            t = 2.0 + i * 1.0
+            r_dot = 10.0
+            samples.append({'t': t, 'r_dot': r_dot, 'angle_dot': 0, 'r': 0})
+            
+        # Decel phase
+        for i in range(3):
+            t = 5.0 + i * 1.0
+            r_dot = 10.0 - (t - 5.0) * 5.0
+            samples.append({'t': t, 'r_dot': r_dot, 'angle_dot': 0, 'r': 0})
+            
+        for s in samples:
+            self.view.append(s)
+            
+        r_dots = self.view.data_r_dot
+        
+        # Accel: 0 -> 5 -> 10
+        self.assertTrue(r_dots[0] < r_dots[1])
+        self.assertTrue(r_dots[1] < r_dots[2])
+        
+        # Cruise: 10 -> 10 -> 10
+        self.assertEqual(r_dots[2], r_dots[3])
+        self.assertEqual(r_dots[3], r_dots[4])
+        
+        # Decel: 10 -> 5 -> 0
+        # r_dots[5] is 10 (last cruise point? No, cruise is indices 3,4,5? Let's re-verify generation)
+        # Accel: i=0,1,2 -> t=0,1,2 -> r=0,5,10 (Indices 0,1,2)
+        # Cruise: i=0,1,2 -> t=2,3,4 -> r=10,10,10 (Indices 3,4,5)
+        # Decel: i=0,1,2 -> t=5,6,7 -> r=10,5,0 (Indices 6,7,8)
+        
+        # So:
+        # 0: 0
+        # 1: 5
+        # 2: 10
+        # 3: 10
+        # 4: 10
+        # 5: 10
+        # 6: 10
+        # 7: 5
+        # 8: 0
+        
+        # Check drop
+        self.assertTrue(r_dots[6] > r_dots[7])
+        self.assertTrue(r_dots[7] > r_dots[8])
+
+    def test_autoscale_covers_data_range(self):
+        sample1 = {'t': 0.0, 'r_dot': 0.0, 'angle_dot': 0.0, 'r': 0.0}
+        sample2 = {'t': 10.0, 'r_dot': 100.0, 'angle_dot': 50.0, 'r': 10.0}
+        
+        self.view.append(sample1)
+        self.view.append(sample2)
+        
+        xlim = self.ax.get_xlim()
+        ylim = self.ax.get_ylim()
+        
+        self.assertLessEqual(xlim[0], 0.0)
+        self.assertGreaterEqual(xlim[1], 10.0)
+        
+        self.assertLessEqual(ylim[0], 0.0)
+        self.assertGreaterEqual(ylim[1], 500.0)
+
+    def test_append_missing_key_raises_keyerror(self):
+        with self.assertRaises(KeyError) as context:
+            self.view.append({'t': 1.0})
+            
+        self.assertIn('r_dot', str(context.exception))
+
+if __name__ == '__main__':
+    unittest.main()
