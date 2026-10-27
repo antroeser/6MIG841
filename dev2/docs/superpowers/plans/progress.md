@@ -23,7 +23,7 @@ restatement of a plan. Marks: `- [ ]` not done, `- [x]` done and audited clean,
 
 - [x] in folder test/test_arcs.py tests : test_arc_dont_le_segment_etait_libre_est_refuse, test_arc_entre_dans_l_obstacle_est_detecte, test_arc_frole_l_obstacle_sans_le_toucher
 
-- [ ] tests pass
+- [x] tests pass
 
 
 ## plan3.md
