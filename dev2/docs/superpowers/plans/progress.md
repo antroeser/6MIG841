@@ -14,6 +14,7 @@ restatement of a plan. Marks: `- [ ]` not done, `- [x]` done and audited clean,
 - [x] in folder test/test_state_machine.py tests : test_signer_is_forward_vrai_rend_une_vitesse_lineaire_positive, test_signer_is_clockwise_vrai_rend_une_vitesse_angulaire_negative
 
 - [x] tests pass
+- [!] tests - suite still failing (exit 1) after the fix loop
 
 
 
