@@ -6,5 +6,4 @@ La suite `test/` doit passer en entier. Ne fais que ce que le plan en cours
 demande.
 
 Interdit : modifier les fichiers de `test/`, changer la signature d'une fonction
-existante, ajouter une dépendance, toucher à `code/detect_thumbs.py` ou
-`code/emotion_detector.py` (plomberie fournie).
+existante, ajouter une dépendance.
