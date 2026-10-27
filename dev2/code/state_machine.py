@@ -452,11 +452,36 @@ class MachineDialogue:
         --------------------------------------------------------------------------
         """
         self._exiger(Etat.CONFIRMATION_COMMANDE, Etat.CONFIRMATION_ACTION)
-        # Indice : l'etat courant decide ou mene un refus ; SORTIE et INDECIS d'abord
-        # Tests : test_refus_en_confirmation_commande_renvoie_a_ecoute_jamais_a_interpretation, test_refus_en_confirmation_action_renvoie_a_interpretation_jamais_a_ecoute
-        raise NotImplementedError(
-            "fonction 'Transitions.repondu' a implementer (voir l'enonce et les tests cites)"
+        
+        reponse = interpreter_reponse(
+            texte, 
+            self.mots_accord, 
+            self.mots_refus, 
+            self.mots_sortie
         )
+
+        if reponse is Reponse.SORTIE:
+            return self._aller(Etat.ARRET, "Mot de sortie entendu. Au revoir.")
+
+        if reponse is Reponse.INDECIS:
+            if self.etat is Etat.CONFIRMATION_COMMANDE:
+                return self._aller(Etat.CONFIRMATION_COMMANDE, "Je n'ai pas compris. Oui ou non ?")
+            else:
+                return self._aller(Etat.CONFIRMATION_ACTION, "Je n'ai pas compris. Oui ou non ?")
+
+        if reponse is Reponse.REFUS:
+            if self.etat is Etat.CONFIRMATION_COMMANDE:
+                self.commande = ""
+                return self._aller(Etat.ECOUTE, "Très bien, redites votre commande.")
+            else:
+                self.plan = None
+                return self._aller(Etat.INTERPRETATION, "Très bien, je retente l'interprétation.")
+
+        # Reponse.ACCORD
+        if self.etat is Etat.CONFIRMATION_COMMANDE:
+            return self._aller(Etat.INTERPRETATION, "Très bien, je vais traduire votre commande.")
+        else:
+            return self._aller(Etat.EXECUTION, "Très bien, j'exécute le mouvement.")
 
     def interprete(self, plan: Plan) -> Transition:
         """
@@ -604,11 +629,9 @@ def signer(linear_speed: float, angular_speed: float,
         (linear, angular) (tuple[float, float]): vitesses SIGNEES
     --------------------------------------------------------------------------
     """
-    # Indice : convention REP-103 : antihoraire positif, horaire negatif
-    # Tests : test_signer_is_forward_vrai_rend_une_vitesse_lineaire_positive, test_signer_is_clockwise_vrai_rend_une_vitesse_angulaire_negative
-    raise NotImplementedError(
-        "fonction 'signer' a implementer (voir l'enonce et les tests cites)"
-    )
+    linear = linear_speed if is_forward else -linear_speed
+    angular = -angular_speed if is_clockwise else angular_speed
+    return linear, angular
 
 
 def _borner(valeur: float, maximum: float | None) -> float:

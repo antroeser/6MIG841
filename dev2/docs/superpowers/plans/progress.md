@@ -7,13 +7,13 @@ restatement of a plan. Marks: `- [ ]` not done, `- [x]` done and audited clean,
 `- [!]` audit raised an issue, with one line naming it.
 
 ## plan1.md
-- [ ] code/state_machine.py : 
+- [x] code/state_machine.py : Implémentation de repondu et signer
 
-- [ ] in folder test/test_state_machine.py tests : test_refus_en_confirmation_commande_renvoie_a_ecoute_jamais_a_interpretation, test_refus_en_confirmation_action_renvoie_a_interpretation_jamais_a_ecoute
+- [x] in folder test/test_state_machine.py tests : test_refus_en_confirmation_commande_renvoie_a_ecoute_jamais_a_interpretation, test_refus_en_confirmation_action_renvoie_a_interpretation_jamais_a_ecoute
 
-- [ ] in folder test/test_state_machine.py tests : test_signer_is_forward_vrai_rend_une_vitesse_lineaire_positive, test_signer_is_clockwise_vrai_rend_une_vitesse_angulaire_negative
+- [x] in folder test/test_state_machine.py tests : test_signer_is_forward_vrai_rend_une_vitesse_lineaire_positive, test_signer_is_clockwise_vrai_rend_une_vitesse_angulaire_negative
 
-- [ ] tests pass
+- [x] tests pass
 
 
 
