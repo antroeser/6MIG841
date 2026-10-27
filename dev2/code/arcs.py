@@ -142,8 +142,54 @@ def echantillonner_arc(pose_depart: tuple[float, float, float],
     if duree_etape < 0.0:
         raise ValueError(f"duree_etape negative ({duree_etape}).")
 
-    # Indice : integrer x, y, theta par Euler explicite (modele unicycle) et tester la collision avant chaque pas
-    # Tests : test_arc_dont_le_segment_etait_libre_est_refuse, test_arc_entre_dans_l_obstacle_est_detecte, test_arc_frole_l_obstacle_sans_le_toucher
-    raise NotImplementedError(
-        "fonction 'echantillonner_arc' a implementer (voir l'enonce et les tests cites)"
-    )
+    x, y, theta = pose_depart
+    echantillons: list[EchantillonArc] = []
+    collision: Collision | None = None
+
+    # Test de la pose de depart (avant le premier pas)
+    if _en_collision(x, y, obstacle, tolerance_collision):
+        collision = Collision(instant=0.0, x=x, y=y)
+        echantillons.append(EchantillonArc(instant=0.0, x=x, y=y, theta=theta))
+        return ResultatArc(echantillons=tuple(echantillons), collision=collision)
+
+    if duree_etape == 0.0:
+        return ResultatArc(echantillons=tuple(echantillons), collision=None)
+
+    pas = resolution_s
+    t = 0.0
+
+    # Boucle d'integration par Euler explicite
+    # On avance par pas de `pas` jusqu'a `duree_etape`
+    # On s'assure de ne pas depasser `duree_etape` en ajustant le dernier pas si necessaire
+    while t < duree_etape:
+        # Ajuster le pas pour ne pas depasser la duree totale
+        dt = min(pas, duree_etape - t)
+
+        # Evaluer les vitesses a l'instant t (modeles de profils trapezoidaux)
+        # evaluer retourne un tuple (vitesse, acceleration) selon trajectory.py
+        # On prend la vitesse (1er element)
+        v_lineaire = sens_lineaire * evaluer(profil_lineaire, t).vitesse
+        v_angulaire = sens_angulaire * evaluer(profil_angulaire, t).vitesse
+
+        # Calculer les nouvelles positions (Euler explicite)
+        # dx = v * cos(theta) * dt
+        # dy = v * sin(theta) * dt
+        # dtheta = w * dt
+        nx = x + v_lineaire * math.cos(theta) * dt
+        ny = y + v_lineaire * math.sin(theta) * dt
+        ntheta = theta + v_angulaire * dt
+
+        t_next = t + dt
+
+        # Tester la collision a la nouvelle position AVANT de l'accepter
+        if _en_collision(nx, ny, obstacle, tolerance_collision):
+            collision = Collision(instant=t_next, x=nx, y=ny)
+            echantillons.append(EchantillonArc(instant=t_next, x=nx, y=ny, theta=ntheta))
+            return ResultatArc(echantillons=tuple(echantillons), collision=collision)
+
+        # Pas de collision, on met a jour l'etat et on enregistre l'echantillon
+        x, y, theta = nx, ny, ntheta
+        t = t_next
+        echantillons.append(EchantillonArc(instant=t, x=x, y=y, theta=theta))
+
+    return ResultatArc(echantillons=tuple(echantillons), collision=None)
