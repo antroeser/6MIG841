@@ -15,17 +15,18 @@ restatement of a plan. Marks: `- [ ]` not done, `- [x]` done and audited clean,
 
 
 ## plan2.md
-- [x] code/arcs.py : Implémentation de echantillonner_arc (Euler explicite, detection collision)
-
-- [x] in folder test/test_arcs.py tests : test_arc_dont_le_segment_etait_libre_est_refuse, test_arc_entre_dans_l_obstacle_est_detecte, test_arc_frole_l_obstacle_sans_le_toucher
-
-- [x] tests pass
-
-
-## plan3.md
 
 - [ ] code/trajectory.py : 
 
 - [ ] in folder test/test_trajectory.py tests : test_evaluer_ecrete_avant_le_depart_et_apres_la_fin, test_vitesse_nulle_aux_deux_bouts, test_vitesse_maximale_respectee
+
+- [ ] tests pass
+
+
+## plan3.md
+
+- [ ] code/arcs.py : Implémentation de echantillonner_arc (Euler explicite, detection collision)
+
+- [ ] in folder test/test_arcs.py tests : test_arc_dont_le_segment_etait_libre_est_refuse, test_arc_entre_dans_l_obstacle_est_detecte, test_arc_frole_l_obstacle_sans_le_toucher
 
 - [ ] tests pass
