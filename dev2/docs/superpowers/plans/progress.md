@@ -7,10 +7,10 @@ restatement of a plan. Marks: `- [ ]` not done, `- [x]` done and audited clean,
 `- [!]` audit raised an issue, with one line naming it.
 
 ## plan1.md
-- [x] code/state_machine.py : Implémentation de repondu et signer
-- [x] in folder test/test_state_machine.py tests : test_refus_en_confirmation_commande_renvoie_a_ecoute_jamais_a_interpretation, test_refus_en_confirmation_action_renvoie_a_interpretation_jamais_a_ecoute
-- [x] in folder test/test_state_machine.py tests : test_signer_is_forward_vrai_rend_une_vitesse_lineaire_positive, test_signer_is_clockwise_vrai_rend_une_vitesse_angulaire_negative
-- [x] tests pass
+- [x] Prendre connaissance de l'objectif de la fonction Transitions.repondu dans code/state_machine.py
+- [x] Implémenter UNIQUEMENT la fonction Transitions.repondu en tenant compte du contexte et en respectant les rêgles de programmation et de présentation du code. L'etat courant decide ou mene un refus ; SORTIE et INDECIS d'abord
+- [x] Prendre connaissance de l'objectif de la fonction signer dans code/state_machine.py
+- [x] Implémenter UNIQUEMENT la fonction signer en tenant compte du contexte et en respectant les rêgles de programmation et de présentation du code. La convemtion à utiliser est la suivante : REP-103, antihoraire positif, horaire negatif
 
 
 
