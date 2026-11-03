@@ -13,7 +13,6 @@ restatement of a plan. Marks: `- [ ]` not done, `- [x]` done and audited clean,
 - [x] Implémenter UNIQUEMENT la fonction signer en tenant compte du contexte et en respectant les rêgles de programmation et de présentation du code. La convemtion à utiliser est la suivante : REP-103, antihoraire positif, horaire negatif
 
 
-
 ## plan2.md
 - [x] code/arcs.py : Implémentation de echantillonner_arc (Euler explicite, detection collision)
 
