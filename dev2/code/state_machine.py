@@ -444,6 +444,11 @@ class MachineDialogue:
             Le meme evenement sert aux deux confirmations, et c'est l'ETAT COURANT
             qui decide ou mene un refus.
 
+            Ordre de priorite : SORTIE d'abord, puis INDECIS, puis REFUS, puis ACCORD.
+            Un refus en CONFIRMATION_COMMANDE renvoie a ECOUTE (on redemande la phrase).
+            Un refus en CONFIRMATION_ACTION renvoie a INTERPRETATION (on retente la
+            traduction de la MEME phrase).
+
         Inputs:
             texte (str): transcription de la reponse
 
@@ -452,11 +457,37 @@ class MachineDialogue:
         --------------------------------------------------------------------------
         """
         self._exiger(Etat.CONFIRMATION_COMMANDE, Etat.CONFIRMATION_ACTION)
-        # Indice : l'etat courant decide ou mene un refus ; SORTIE et INDECIS d'abord
-        # Tests : test_refus_en_confirmation_commande_renvoie_a_ecoute_jamais_a_interpretation, test_refus_en_confirmation_action_renvoie_a_interpretation_jamais_a_ecoute
-        raise NotImplementedError(
-            "fonction 'Transitions.repondu' a implementer (voir l'enonce et les tests cites)"
+        
+        reponse = interpreter_reponse(
+            texte, 
+            self.mots_accord, 
+            self.mots_refus, 
+            self.mots_sortie
         )
+
+        # SORTIE : n'importe quel etat, on arrete
+        if reponse is Reponse.SORTIE:
+            return self._aller(Etat.ARRET, "Mot de sortie entendu. Au revoir.")
+
+        # INDECIS : on reste dans le meme etat et on repose la question
+        if reponse is Reponse.INDECIS:
+            message = "Je n'ai pas compris. Oui ou non ?"
+            return self._aller(self.etat, message)
+
+        # REFUS : l'etat courant decide la destination
+        if reponse is Reponse.REFUS:
+            if self.etat is Etat.CONFIRMATION_COMMANDE:
+                self.commande = ""
+                return self._aller(Etat.ECOUTE, "Très bien, redites votre commande.")
+            else:
+                self.plan = None
+                return self._aller(Etat.INTERPRETATION, "Très bien, je retente l'interprétation.")
+
+        # ACCORD : l'etat courant decide la destination
+        if self.etat is Etat.CONFIRMATION_COMMANDE:
+            return self._aller(Etat.INTERPRETATION, "Très bien, je vais traduire votre commande.")
+        else:
+            return self._aller(Etat.EXECUTION, "Très bien, j'exécute le mouvement.")
 
     def interprete(self, plan: Plan) -> Transition:
         """
@@ -593,9 +624,14 @@ def signer(linear_speed: float, angular_speed: float,
         (vers la gauche) est positif et le sens horaire (vers la droite) est
         negatif.
 
+        - is_forward=True  -> linear positif (avancer)
+        - is_forward=False -> linear negatif (reculer)
+        - is_clockwise=True  -> angular negatif (horaire, a droite)
+        - is_clockwise=False -> angular positif (antihoraire, a gauche)
+
     Inputs:
-        linear_speed (float): grandeur NON SIGNEE (m/s)
-        angular_speed (float): grandeur NON SIGNEE (rad/s)
+        linear_speed (float): grandeur NON SIGNEE (m/s), doit etre >= 0
+        angular_speed (float): grandeur NON SIGNEE (rad/s), doit etre >= 0
         is_forward (bool): vrai pour avancer, faux pour reculer
         is_clockwise (bool): vrai pour tourner a droite (horaire), faux pour
             tourner a gauche (antihoraire)
@@ -604,11 +640,9 @@ def signer(linear_speed: float, angular_speed: float,
         (linear, angular) (tuple[float, float]): vitesses SIGNEES
     --------------------------------------------------------------------------
     """
-    # Indice : convention REP-103 : antihoraire positif, horaire negatif
-    # Tests : test_signer_is_forward_vrai_rend_une_vitesse_lineaire_positive, test_signer_is_clockwise_vrai_rend_une_vitesse_angulaire_negative
-    raise NotImplementedError(
-        "fonction 'signer' a implementer (voir l'enonce et les tests cites)"
-    )
+    linear = linear_speed if is_forward else -linear_speed
+    angular = -angular_speed if is_clockwise else angular_speed
+    return linear, angular
 
 
 def _borner(valeur: float, maximum: float | None) -> float:

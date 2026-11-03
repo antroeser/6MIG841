@@ -8,4 +8,4 @@
 
 4. **Implémenter** UNIQUEMENT la fonction `signer` en tenant compte du contexte et en respectant les rêgles de programmation et de présentation du code. La convemtion à utiliser est la suivante : REP-103, antihoraire positif, horaire negatif
 
-**Terminé quand** `test/test_state_machine.py` passent tous
+**Terminé quand** test/test_state_machine.py passent tous

@@ -181,14 +181,45 @@ def evaluer(profil: ProfilTrapeze, instant: float) -> Echantillon:
     --------------------------------------------------------------------------
     """
     t = float(instant)
-    if t < 0.0:
-        t = 0.0
 
-    # Indice : trois phases : montee (a*t), plateau (vitesse de crete constante), descente (temps restant)
-    # Tests : test_evaluer_ecrete_avant_le_depart_et_apres_la_fin, test_vitesse_nulle_aux_deux_bouts, test_vitesse_maximale_respectee
-    raise NotImplementedError(
-        "fonction 'evaluer' a implementer (voir l'enonce et les tests cites)"
-    )
+    # Cas degenere : distance nulle, on est toujours a l'arret au point de depart
+    if profil.distance == 0.0:
+        return Echantillon(position=0.0, vitesse=0.0)
+
+    # Ecretage avant le depart
+    if t < 0.0:
+        return Echantillon(position=0.0, vitesse=0.0)
+
+    # Ecretage apres la fin : on est arrive a la destination
+    if t >= profil.duree_totale:
+        return Echantillon(position=profil.distance, vitesse=0.0)
+
+    a = profil.acceleration
+    v_max = profil.vitesse_crete
+    t_montee = profil.duree_montee
+    t_plateau = profil.duree_plateau
+
+    # Phase 1 : Montee (acceleration constante a)
+    if t <= t_montee:
+        vitesse = a * t
+        position = 0.5 * a * t * t
+        return Echantillon(position=position, vitesse=vitesse)
+
+    # Phase 2 : Plateau (vitesse constante v_max)
+    fin_montee = t_montee
+    fin_plateau = t_montee + t_plateau
+    if t <= fin_plateau:
+        vitesse = v_max
+        position_montee = 0.5 * a * t_montee * t_montee
+        position = position_montee + v_max * (t - t_montee)
+        return Echantillon(position=position, vitesse=vitesse)
+
+    # Phase 3 : Descente (deceleration constante -a)
+    # Calcul depuis la fin pour la stabilite numerique
+    temps_restant = profil.duree_totale - t
+    vitesse = a * temps_restant
+    position = profil.distance - 0.5 * a * temps_restant * temps_restant
+    return Echantillon(position=position, vitesse=vitesse)
 
 
 def repartir_temps(longueurs: list[float] | tuple[float, ...],
