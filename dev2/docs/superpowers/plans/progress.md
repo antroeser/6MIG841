@@ -18,7 +18,7 @@ restatement of a plan. Marks: `- [ ]` not done, `- [x]` done and audited clean,
 
 - [x] code/trajectory.py : Implémentation de evaluer (montée, plateau, descente, écrêtage)
 - [x] in folder test/test_trajectory.py tests : test_evaluer_ecrete_avant_le_depart_et_apres_la_fin, test_vitesse_nulle_aux_deux_bouts, test_vitesse_maximale_respectee
-- [x] tests pass
+- [x] tests pass : suite test_trajectory.py complète
 
 
 ## plan3.md
