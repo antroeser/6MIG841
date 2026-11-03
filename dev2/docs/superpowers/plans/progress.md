@@ -11,6 +11,7 @@ restatement of a plan. Marks: `- [ ]` not done, `- [x]` done and audited clean,
 - [x] Implémenter UNIQUEMENT la fonction Transitions.repondu en tenant compte du contexte et en respectant les rêgles de programmation et de présentation du code. L'etat courant decide ou mene un refus ; SORTIE et INDECIS d'abord
 - [x] Prendre connaissance de l'objectif de la fonction signer dans code/state_machine.py
 - [x] Implémenter UNIQUEMENT la fonction signer en tenant compte du contexte et en respectant les rêgles de programmation et de présentation du code. La convemtion à utiliser est la suivante : REP-103, antihoraire positif, horaire negatif
+- [!] tests - suite still failing (exit 1) after the fix loop
 
 
 ## plan2.md
