@@ -444,6 +444,11 @@ class MachineDialogue:
             Le meme evenement sert aux deux confirmations, et c'est l'ETAT COURANT
             qui decide ou mene un refus.
 
+            Ordre de priorite : SORTIE d'abord, puis INDECIS, puis REFUS, puis ACCORD.
+            Un refus en CONFIRMATION_COMMANDE renvoie a ECOUTE (on redemande la phrase).
+            Un refus en CONFIRMATION_ACTION renvoie a INTERPRETATION (on retente la
+            traduction de la MEME phrase).
+
         Inputs:
             texte (str): transcription de la reponse
 
@@ -460,15 +465,16 @@ class MachineDialogue:
             self.mots_sortie
         )
 
+        # SORTIE : n'importe quel etat, on arrete
         if reponse is Reponse.SORTIE:
             return self._aller(Etat.ARRET, "Mot de sortie entendu. Au revoir.")
 
+        # INDECIS : on reste dans le meme etat et on repose la question
         if reponse is Reponse.INDECIS:
-            if self.etat is Etat.CONFIRMATION_COMMANDE:
-                return self._aller(Etat.CONFIRMATION_COMMANDE, "Je n'ai pas compris. Oui ou non ?")
-            else:
-                return self._aller(Etat.CONFIRMATION_ACTION, "Je n'ai pas compris. Oui ou non ?")
+            message = "Je n'ai pas compris. Oui ou non ?"
+            return self._aller(self.etat, message)
 
+        # REFUS : l'etat courant decide la destination
         if reponse is Reponse.REFUS:
             if self.etat is Etat.CONFIRMATION_COMMANDE:
                 self.commande = ""
@@ -477,7 +483,7 @@ class MachineDialogue:
                 self.plan = None
                 return self._aller(Etat.INTERPRETATION, "Très bien, je retente l'interprétation.")
 
-        # Reponse.ACCORD
+        # ACCORD : l'etat courant decide la destination
         if self.etat is Etat.CONFIRMATION_COMMANDE:
             return self._aller(Etat.INTERPRETATION, "Très bien, je vais traduire votre commande.")
         else:
@@ -618,9 +624,14 @@ def signer(linear_speed: float, angular_speed: float,
         (vers la gauche) est positif et le sens horaire (vers la droite) est
         negatif.
 
+        - is_forward=True  -> linear positif (avancer)
+        - is_forward=False -> linear negatif (reculer)
+        - is_clockwise=True  -> angular negatif (horaire, a droite)
+        - is_clockwise=False -> angular positif (antihoraire, a gauche)
+
     Inputs:
-        linear_speed (float): grandeur NON SIGNEE (m/s)
-        angular_speed (float): grandeur NON SIGNEE (rad/s)
+        linear_speed (float): grandeur NON SIGNEE (m/s), doit etre >= 0
+        angular_speed (float): grandeur NON SIGNEE (rad/s), doit etre >= 0
         is_forward (bool): vrai pour avancer, faux pour reculer
         is_clockwise (bool): vrai pour tourner a droite (horaire), faux pour
             tourner a gauche (antihoraire)
