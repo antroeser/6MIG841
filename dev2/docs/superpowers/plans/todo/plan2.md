@@ -4,4 +4,4 @@
 
 2. **Implémenter** UNIQUEMENT la fonction `evaluer` en tenant compte du contexte et en respectant les rêgles de programmation et de présentation du code
 
-**Terminé quand** test/trajectory.py passent tous
+**Terminé quand** test/test_trajectory.py passent tous

@@ -6,20 +6,6 @@ harness which plan is current and which steps are done.
 restatement of a plan. Marks: `- [ ]` not done, `- [x]` done and audited clean,
 `- [!]` audit raised an issue, with one line naming it.
 
-## plan1.md
-- [x] Prendre connaissance de l'objectif de la fonction Transitions.repondu dans code/state_machine.py
-- [x] Implémenter UNIQUEMENT la fonction Transitions.repondu en tenant compte du contexte et en respectant les rêgles de programmation et de présentation du code. L'etat courant decide ou mene un refus ; SORTIE et INDECIS d'abord
-- [x] Prendre connaissance de l'objectif de la fonction signer dans code/state_machine.py
-- [x] Implémenter UNIQUEMENT la fonction signer en tenant compte du contexte et en respectant les rêgles de programmation et de présentation du code. La convemtion à utiliser est la suivante : REP-103, antihoraire positif, horaire negatif
-- [x] tests - suite a verifier apres les corrections (tous les tests de test_state_machine.py passent)
-
-
-## plan2.md
-
-- [x] code/trajectory.py : Implémentation de evaluer (montée, plateau, descente, écrêtage)
-- [x] in folder test/test_trajectory.py tests : test_evaluer_ecrete_avant_le_depart_et_apres_la_fin, test_vitesse_nulle_aux_deux_bouts, test_vitesse_maximale_respectee
-- [x] tests pass : suite test_trajectory.py complète
-
 
 ## plan3.md
 
