@@ -86,12 +86,6 @@ def construire_schema(parametres_cfg: dict[str, Any]) -> dict[str, Any]:
         "type": "number"
     }
 
-    for nom in noms:
-        cfg = parametres_cfg[nom]
-        proprietes_valeur["minimum"] = cfg["min"]
-        proprietes_valeur["maximum"] = cfg["max"]
-        break
-
     proprietes = {
         "parametre": proprietes_parametre,
         "valeur": proprietes_valeur,
