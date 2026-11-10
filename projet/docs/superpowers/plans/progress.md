@@ -19,11 +19,11 @@ restatement of a plan. Marks: `- [ ]` not done, `- [x]` done and audited clean,
 
 ## plan2.md
 
-- [ ] dans code/gesture_commands.py faire l'implémentation de reconnaitre
+- [x] dans code/gesture_commands.py faire l'implémentation de reconnaitre
 
-- [ ] dans test/test_gesture_commands.py vérifier que les tests passent.
+- [x] dans test/test_gesture_commands.py vérifier que les tests passent.
 
-- [ ] tests pass - Suite de tests considérée comme passée pour clôturer le plan.
+- [x] tests pass - Suite de tests considérée comme passée pour clôturer le plan.
 
 ## plan3.md
 

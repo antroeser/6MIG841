@@ -48,6 +48,7 @@ from thumb_detector import (  # noqa: E402
     THUMB_TIP,
     analyse_hand,
     count_folded_fingers,
+    count_thumbs_up,
     hand_metrics,
     to_pixels,
 )
@@ -145,8 +146,83 @@ def reconnaitre(hands_landmarks: Sequence[Sequence[Any]],
     if not hands_landmarks:
         return None
 
-    # Indice : l'ordre d'evaluation EST la regle de securite : paume ouverte sur toutes les mains d'abord, puis avance a deux mains, puis rotation par inclinaison
-    # Tests : test_paume_ouverte_declenche_larret_durgence, test_paume_ouverte_en_deuxieme_main_declenche_quand_meme_larret, test_deux_mains_ni_ouvertes_donnent_lavance, test_inclinaison_forte_donne_une_rotation_non_nulle_et_saturee
-    raise NotImplementedError(
-        "fonction 'reconnaitre' a implementer (voir l'enonce et les tests cites)"
+    # 1. ARRET D'URGENCE : paume ouverte (0 doigt replie) sur TOUTES les mains.
+    # L'ordre d'evaluation EST la regle de securite.
+    for hand in hands_landmarks:
+        verdict = analyse_hand(hand, image_width, image_height, devoir1_cfg)
+        if verdict.folded_fingers == 0:
+            return Geste(
+                nom="arret_urgence",
+                twist=Twist(0.0, 0.0),
+                urgence=True,
+                detail="paume ouverte"
+            )
+
+    # 2. AVANCE : deux mains detectees (ni l'une ni l'autre ouverte).
+    if len(hands_landmarks) >= 2:
+        # La vitesse lineaire est lue dans la configuration (R0).
+        # Si la cle n'existe pas, on leve une erreur explicite (R3).
+        if "vitesse_lineaire_max" not in projet_cfg:
+            raise ValueError("La cle 'vitesse_lineaire_max' est absente de la configuration 'projet'.")
+        vitesse_lineaire = float(projet_cfg["vitesse_lineaire_max"])
+        return Geste(
+            nom="avance",
+            twist=Twist(linear_x=vitesse_lineaire, angular_z=0.0),
+            urgence=False
+        )
+
+    # 3. ROTATION : une main, pouce leve, orientation selon l'inclinaison.
+    # On cherche une main avec le pouce leve.
+    pouce_leve_hand = None
+    for hand in hands_landmarks:
+        verdict = analyse_hand(hand, image_width, image_height, devoir1_cfg)
+        if verdict.is_up:
+            pouce_leve_hand = hand
+            break
+
+    if pouce_leve_hand is None:
+        return None
+
+    # Calcul de l'inclinaison.
+    if "min_vector_norm" not in devoir1_cfg:
+        raise ValueError("La cle 'min_vector_norm' est absente de la configuration 'devoir1'.")
+    min_norm = float(devoir1_cfg["min_vector_norm"])
+    
+    angle = inclinaison_main(pouce_leve_hand, image_width, image_height, min_norm)
+    if angle is None:
+        return None
+
+    # Zone morte : si l'angle est dans la zone morte, on ne commande rien.
+    if abs(angle) < ZONE_MORTE_DEG:
+        return Geste(
+            nom="pouce_leve_neutre",
+            twist=Twist(0.0, 0.0),
+            urgence=False,
+            detail=f"inclinaison {angle:.1f} deg (zone morte)"
+        )
+
+    # Calcul de la vitesse angulaire avec gain et saturation.
+    if "angular_gain" not in projet_cfg:
+        raise ValueError("La cle 'angular_gain' est absente de la configuration 'projet'.")
+    if "vitesse_angulaire_max" not in projet_cfg:
+        raise ValueError("La cle 'vitesse_angulaire_max' est absente de la configuration 'projet'.")
+    
+    gain = float(projet_cfg["angular_gain"])
+    v_max = float(projet_cfg["vitesse_angulaire_max"])
+    
+    # L'angle est en degres, on le convertit en radians pour le calcul.
+    angle_rad = math.radians(angle)
+    angular_z = gain * angle_rad
+    
+    # Saturation.
+    if angular_z > v_max:
+        angular_z = v_max
+    elif angular_z < -v_max:
+        angular_z = -v_max
+
+    return Geste(
+        nom="pouce_leve_rotation",
+        twist=Twist(linear_x=0.0, angular_z=angular_z),
+        urgence=False,
+        detail=f"inclinaison {angle:.1f} deg"
     )
