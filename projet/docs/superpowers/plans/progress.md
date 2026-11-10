@@ -33,6 +33,7 @@ restatement of a plan. Marks: `- [ ]` not done, `- [x]` done and audited clean,
 - [!] dans test/test_navigator.py vérifier que les tests passent. - La commande `unittest discover -s tests` ne trouve pas les tests (dossier `projet/test` et framework `pytest`).
 
 - [ ] tests pass - Suite de tests considérée comme passée pour clôturer le plan.
+- [!] tests - suite still failing (exit 1) after the fix loop
 
 ## plan4.md
 
