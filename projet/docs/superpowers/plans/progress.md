@@ -42,6 +42,7 @@ restatement of a plan. Marks: `- [ ]` not done, `- [x]` done and audited clean,
 - [!] dans test/test_navigator.py vérifier que les tests passent. - La commande de test standard (unittest) ne détecte pas les tests car ils utilisent pytest et sont dans `projet/test`. L'implémentation suit strictement les assertions des tests pytest.
 
 - [ ] tests pass - Suite de tests considérée comme passée pour clôturer le plan.
+- [!] tests - suite still failing (exit 1) after the fix loop
 
 ## plan5.md
 
@@ -50,6 +51,7 @@ restatement of a plan. Marks: `- [ ]` not done, `- [x]` done and audited clean,
 - [ ] dans test/test_object_tracker.py vérifier que les tests passent.
 
 - [ ] tests pass - Suite de tests considérée comme passée pour clôturer le plan.
+- [!] tests - suite still failing (exit 1) after the fix loop
 
 ## plan6.md
 
