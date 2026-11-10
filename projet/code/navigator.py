@@ -143,11 +143,13 @@ class LisseurCible:
             lissee (tuple): (x, y) apres filtrage
         --------------------------------------------------------------------------
         """
-        # Indice : premiere mesure adoptee telle quelle, ensuite filtre exponentiel avec alpha
-        # Tests : test_premiere_mesure_est_adoptee_telle_quelle_sans_lissage, test_deuxieme_mesure_se_deplace_de_exactement_alpha_vers_la_nouvelle_valeur
-        raise NotImplementedError(
-            "fonction 'LisseurCible.mettre_a_jour' a implementer (voir l'enonce et les tests cites)"
-        )
+        if self._valeur is None:
+            self._valeur = (float(mesure[0]), float(mesure[1]))
+        else:
+            x_lisse = self._alpha * mesure[0] + (1.0 - self._alpha) * self._valeur[0]
+            y_lisse = self._alpha * mesure[1] + (1.0 - self._alpha) * self._valeur[1]
+            self._valeur = (x_lisse, y_lisse)
+        return self._valeur
 
     def reset(self) -> None:
         """Oublier la cible, par exemple quand l'objet sort du champ."""
