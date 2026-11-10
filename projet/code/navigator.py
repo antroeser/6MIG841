@@ -85,10 +85,43 @@ def calculer_consigne(pose: Pose,
         consigne (Consigne): vitesses saturees et justification
     --------------------------------------------------------------------------
     """
-    # Indice : arrivee d'abord, puis tourner sans avancer hors tolerance de cap, sinon avancer et corriger le cap
-    # Tests : test_cible_droit_devant_et_loin_donne_la_phase_approche, test_cible_derriere_la_tortue_impose_une_rotation_avant_toute_avance, test_erreur_de_cap_extreme_ne_depasse_jamais_vitesse_angulaire_max
-    raise NotImplementedError(
-        "fonction 'calculer_consigne' a implementer (voir l'enonce et les tests cites)"
+    goal_tolerance = float(settings.get("goal_tolerance", 0.5))
+    heading_tolerance_rad = float(settings.get("heading_tolerance_rad", 0.1745))
+    angular_gain = float(settings.get("angular_gain", 0.5))
+    vitesse_angulaire_max = float(settings.get("vitesse_angulaire_max", 2.0))
+    linear_speed = float(settings.get("linear_speed", 1.0))
+    vitesse_lineaire_max = float(settings.get("vitesse_lineaire_max", 2.0))
+
+    dist = distance((pose.x, pose.y), cible)
+    erreur_cap = heading_error(pose.theta, cible)
+
+    if dist < goal_tolerance:
+        return Consigne(
+            twist=Twist(0.0, 0.0),
+            erreur_cap_rad=erreur_cap,
+            distance_restante=dist,
+            arrivee=True,
+            phase="arrivee"
+        )
+
+    if abs(erreur_cap) > heading_tolerance_rad:
+        angular = _saturer(angular_gain * erreur_cap, vitesse_angulaire_max)
+        return Consigne(
+            twist=Twist(0.0, angular),
+            erreur_cap_rad=erreur_cap,
+            distance_restante=dist,
+            arrivee=False,
+            phase="orientation"
+        )
+
+    linear = _saturer(linear_speed, vitesse_lineaire_max)
+    angular = _saturer(angular_gain * erreur_cap, vitesse_angulaire_max)
+    return Consigne(
+        twist=Twist(linear, angular),
+        erreur_cap_rad=erreur_cap,
+        distance_restante=dist,
+        arrivee=False,
+        phase="approche"
     )
 
 

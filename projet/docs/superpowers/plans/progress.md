@@ -37,7 +37,7 @@ restatement of a plan. Marks: `- [ ]` not done, `- [x]` done and audited clean,
 
 ## plan4.md
 
-- [ ] dans code/navigator.py faire l'implémentation de calculer_consigne
+- [x] dans code/navigator.py faire l'implémentation de calculer_consigne
 
 - [ ] dans test/test_navigator.py vérifier que les tests passent.
 
