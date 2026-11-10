@@ -174,10 +174,46 @@ class Arbitre:
             arbitrage (Arbitrage): consigne retenue et modalites ecartees
         --------------------------------------------------------------------------
         """
-        # Indice : ecarter les commandes perimees, puis retenir la plus prioritaire, la plus recente en cas d'egalite
-        # Tests : test_priorite_plus_haute_gagne_entre_deux_commandes_fraiches, test_urgence_bat_une_commande_normale_plus_fraiche_et_plus_prioritaire, test_commande_perimee_est_ecartee_et_la_tortue_sarrete, test_commande_du_futur_proche_reste_valide_et_nest_pas_supprimee
-        raise NotImplementedError(
-            "fonction 'Arbiter.arbitrer' a implementer (voir l'enonce et les tests cites)"
+        candidates: list[Commande] = []
+        perimees: list[str] = []
+
+        for commande in self._commandes.values():
+            # R0/R19 : l'age est borne a 0 pour les commandes "du futur" (instant > commande.instant),
+            # ce qui les garde valides (age = 0 <= peremption).
+            age = max(0.0, instant - commande.instant)
+            peremption = self._peremption_de(commande)
+
+            if age > peremption:
+                perimees.append(commande.modalite)
+            else:
+                candidates.append(commande)
+
+        if not candidates:
+            return Arbitrage(
+                twist=Twist(0.0, 0.0),
+                modalite="aucune",
+                motif="arret de securite",
+                candidates=(),
+                perimees=tuple(sorted(perimees)),
+            )
+
+        # Trier par priorite decroissante, puis par instant decroissant (le plus recent gagne).
+        candidates.sort(
+            key=lambda c: (self._priorite_de(c), c.instant),
+            reverse=True,
+        )
+        gagnante = candidates[0]
+
+        # Les candidates sont les modalites des commandes valides (y compris la gagnante).
+        # On les trie pour une presentation stable.
+        noms_candidates = tuple(sorted(c.modalite for c in candidates))
+
+        return Arbitrage(
+            twist=gagnante.twist,
+            modalite=gagnante.modalite,
+            motif=gagnante.motif,
+            candidates=noms_candidates,
+            perimees=tuple(sorted(perimees)),
         )
 
 
