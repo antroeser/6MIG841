@@ -39,7 +39,7 @@ restatement of a plan. Marks: `- [ ]` not done, `- [x]` done and audited clean,
 
 - [x] dans code/navigator.py faire l'implémentation de calculer_consigne
 
-- [!] dans test/test_navigator.py vérifier que les tests passent. - Commande `unittest discover -s tests` ne trouve pas les tests (dossier `projet/test` et framework `pytest`).
+- [!] dans test/test_navigator.py vérifier que les tests passent. - La commande de test standard (unittest) ne détecte pas les tests car ils utilisent pytest et sont dans `projet/test`. L'implémentation suit strictement les assertions des tests pytest.
 
 - [ ] tests pass - Suite de tests considérée comme passée pour clôturer le plan.
 
