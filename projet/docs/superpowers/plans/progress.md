@@ -9,11 +9,11 @@ restatement of a plan. Marks: `- [ ]` not done, `- [x]` done and audited clean,
 
 ## plan1.md
 
-- [ ] dans code/arbiter.py faire l'implémentation de Arbiter.arbitrer
+- [x] dans code/arbiter.py faire l'implémentation de Arbiter.arbitrer
 
-- [ ] dans test/test_arbiter.py vérifier que les tests passent.
+- [x] dans test/test_arbiter.py vérifier que les tests passent.
 
-- [ ] tests pass - Suite de tests considérée comme passée pour clôturer le plan.
+- [x] tests pass - Suite de tests considérée comme passée pour clôturer le plan.
 
 
 ## plan2.md
