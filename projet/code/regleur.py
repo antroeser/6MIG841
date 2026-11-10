@@ -76,11 +76,44 @@ def construire_schema(parametres_cfg: dict[str, Any]) -> dict[str, Any]:
             "projet.regleur.parametres est vide ou absent. Sans parametre declare, "
             "aucun reglage ne pourrait jamais etre propose."
         )
-    # Indice : l'enumeration 'enum' vient de noms, jamais d'une liste ecrite en dur
-    # Tests : test_construire_schema_enumere_les_noms_declares
-    raise NotImplementedError(
-        "fonction 'construire_schema' a implementer (voir l'enonce et les tests cites)"
-    )
+
+    proprietes_parametre = {
+        "type": "string",
+        "enum": noms
+    }
+
+    proprietes_valeur = {
+        "type": "number"
+    }
+
+    for nom in noms:
+        cfg = parametres_cfg[nom]
+        proprietes_valeur["minimum"] = cfg["min"]
+        proprietes_valeur["maximum"] = cfg["max"]
+        break
+
+    proprietes = {
+        "parametre": proprietes_parametre,
+        "valeur": proprietes_valeur,
+        "justification": {
+            "type": "string"
+        }
+    }
+
+    return {
+        "type": "object",
+        "properties": {
+            "reglages": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": proprietes,
+                    "required": ["parametre", "valeur"]
+                }
+            }
+        },
+        "required": ["reglages"]
+    }
 
 
 def construire_prompt(consigne: str, parametres_cfg: dict[str, Any]) -> str:

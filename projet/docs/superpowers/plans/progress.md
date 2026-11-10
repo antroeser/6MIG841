@@ -55,8 +55,8 @@ restatement of a plan. Marks: `- [ ]` not done, `- [x]` done and audited clean,
 
 ## plan6.md
 
-- [ ] dans code/regleur.py faire l'implémentation de construire_schema
+- [x] dans code/regleur.py faire l'implémentation de construire_schema
 
-- [ ] dans test/test_regleur.py vérifier que les tests passent.
+- [x] dans test/test_regleur.py vérifier que les tests passent.
 
-- [ ] tests pass - Suite de tests considérée comme passée pour clôturer le plan.
+- [x] tests pass - Suite de tests considérée comme passée pour clôturer le plan.
