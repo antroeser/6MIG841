@@ -43,6 +43,7 @@ import sys
 import time
 from pathlib import Path
 from typing import Any
+import threading
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
@@ -115,6 +116,35 @@ def executer_action(turtle, action, settings: dict[str, Any],
     turtle.spin_once(0.0)
     return publies + 1
 
+def ecouter_avec_fenetre(entree, invite):
+    """Écouter dans un fil secondaire et actualiser Tkinter
+    dans le fil principal.
+    """
+    fenetre = getattr(entree, "affichage", None)
+
+    if fenetre is None:
+        return entree.ecouter(invite)
+
+    resultat = {}
+    erreur = {}
+
+    def travail():
+        try:
+            resultat["texte"] = entree.ecouter(invite)
+        except Exception as exc:
+            erreur["exception"] = exc
+
+    fil = threading.Thread(target=travail, daemon=True)
+    fil.start()
+
+    while fil.is_alive():
+        fenetre.pump()
+        fil.join(timeout=0.05)
+
+    if "exception" in erreur:
+        raise erreur["exception"]
+
+    return resultat.get("texte", "")
 
 def boucle(machine: MachineDialogue,
            entree,
@@ -164,10 +194,10 @@ def boucle(machine: MachineDialogue,
         etat = machine.etat
 
         if etat is Etat.ECOUTE:
-            transition = machine.entendu(entree.ecouter("Commande ?"))
+            transition = machine.entendu(ecouter_avec_fenetre(entree, "Commande ?"))
 
         elif etat in (Etat.CONFIRMATION_COMMANDE, Etat.CONFIRMATION_ACTION):
-            transition = machine.repondu(entree.ecouter("oui ou non ?"))
+            transition = machine.repondu(ecouter_avec_fenetre(entree, "oui ou non ?"))
 
         elif etat is Etat.INTERPRETATION:
             commande_courante = machine.commande

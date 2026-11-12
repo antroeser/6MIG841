@@ -471,7 +471,7 @@ class MachineDialogue:
 
         # INDECIS : on reste dans le meme etat et on repose la question
         if reponse is Reponse.INDECIS:
-            message = "Je n'ai pas compris. Oui ou non ?"
+            message = "Je n'ai pas compris. Répondez par oui ou non ?"
             return self._aller(self.etat, message)
 
         # REFUS : l'etat courant decide la destination

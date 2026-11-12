@@ -94,7 +94,7 @@
     }
   },
   "devoir2": {
-    "llm_model": "hf.co/unsloth/Qwen3-4B-Instruct-2507-GGUF:Q4_K_M",
+    "llm_model": "llama3.2:latest",
     "llm_host": "http://127.0.0.1:11434",
     "llm_timeout_seconds": 30.0,
     "llm_max_attempts": 3,
