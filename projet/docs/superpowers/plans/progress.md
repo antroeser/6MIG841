@@ -46,12 +46,9 @@ restatement of a plan. Marks: `- [ ]` not done, `- [x]` done and audited clean,
 
 ## plan5.md
 
-- [ ] dans code/object_tracker.py faire l'implémentation de Arbiter.arbitrer
-
+- [x] dans code/object_tracker.py faire l'implémentation de choisir_meilleure
 - [ ] dans test/test_object_tracker.py vérifier que les tests passent.
-
 - [ ] tests pass - Suite de tests considérée comme passée pour clôturer le plan.
-- [!] tests - suite still failing (exit 1) after the fix loop
 
 ## plan6.md
 
