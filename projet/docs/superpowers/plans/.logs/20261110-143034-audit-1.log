@@ -1,0 +1,444 @@
+Can't initialize prompt toolkit: No Windows console found. Are you running 
+cmd.exe?
+Can't initialize prompt toolkit: No Windows console found. Are you running 
+cmd.exe?
+Terminal does not support pretty output (UnicodeDecodeError)
+Aider v0.86.2
+Model: ollama_chat/qwen3.8:latest-aider with diff edit format
+Git repo: none
+Repo-map: disabled
+Added audit.md to the chat.
+Added ..\..\..\..\..\test\faux_camera.py to the chat (read-only).
+Added ..\..\..\..\..\code\gesture_commands.py to the chat (read-only).
+Added ..\..\..\..\..\test\conftest.py to the chat (read-only).
+Added ..\..\progress.md to the chat (read-only).
+Added ..\..\..\..\..\code\projet_turtle.py to the chat (read-only).
+Added ..\..\..\..\..\code\navigator.py to the chat (read-only).
+Added ..\..\..\..\..\test\faux_yolo.py to the chat (read-only).
+Added ..\..\..\..\..\code\arbiter.py to the chat (read-only).
+Added ..\..\..\..\..\..\..\.config\aider\rules.md to the chat (read-only).
+Added ..\..\spec.md to the chat (read-only).
+Added ..\..\..\..\..\code\object_node.py to the chat (read-only).
+Added ..\..\..\..\..\..\..\.config\aider\conventions.md to the chat 
+(read-only).
+Added ..\..\..\..\..\code\arbiter_node.py to the chat (read-only).
+Added ..\..\..\..\..\code\gesture_node.py to the chat (read-only).
+Added ..\..\..\..\..\test\test_affichage.py to the chat (read-only).
+Added ..\..\..\..\..\code\object_tracker.py to the chat (read-only).
+Added ..\..\..\..\..\code\chemin_sans_nav2.py to the chat (read-only).
+Added ..\..\..\..\..\code\regleur.py to the chat (read-only).
+Note: in-chat filenames are always relative to the git working dir, not the 
+current working dir.
+Cur working dir: 
+C:\Users\aroeser\6MIG841\projet\docs\superpowers\plans\.logs\20261110-143034-au
+dit-1-sandbox
+Git working dir: C:\Users\aroeser\6MIG841
+
+audit.md
+````markdown
+<<<<<<< SEARCH
+=======
+## final audit
+
+1. **code/object_tracker.py, line 102**: `choisir_meilleure` raises `NotImplementedError`. The logic to select the highest-confidence detection is missing, causing `ObjectTracker.suivre` to crash at runtime. This is a critical missing implementation required by the specification.
+
+2. **code/navigator.py, lines 52-59**: `calculer_consigne` uses `settings.get("key", default)` for `goal_tolerance`, `heading_tolerance_rad`, `angular_gain`, `vitesse_angulaire_max`, `linear_speed`, and `vitesse_lineaire_max`. This violates rule R3 (missing configuration values must be explicit errors) and R0 (no hardcoded values). If these keys are missing from the configuration, the code silently uses defaults instead of failing with a clear error message.
+
+3. **code/gesture_commands.py, line 56**: `ZONE_MORTE_DEG = 12.0` is a hardcoded threshold. Rule R0 requires that thresholds like this be read from the configuration file to allow tuning without code changes.
+
+4. **code/arbiter.py, line 38**: `PRIORITE_ARRET_URGENCE = 1000` is a hardcoded priority value. While the comment argues it should be higher than any configured priority, rule R0 states that limits and priorities should come from configuration. If a new modality is added with a priority > 1000, the emergency stop would fail to override it.
+
+5. **code/arbiter_node.py, lines 104-111**: `nom_action_depuis_twist` raises `KeyError` if actions are missing from the catalog. However, `etape_depuis_nom` (lines 127-135) assumes the action name is valid without re-checking, and the mapping logic (lines 108-110) uses hardcoded action names `"avancer"`, `"reculer"`, `"tourner"`, `"arreter"`. Rule R0/R5 suggests these action names should be derived from the configuration or a shared constant to avoid drift.
+
+6. **code/projet_turtle.py, lines 155-160**: `FilVocal.run` catches `Exception` broadly and stores it in `self.erreur`. This is a silent fallback pattern (R8) where the thread dies silently from the perspective of the main loop, which only checks `self.erreur` at the very end. If the voice thread crashes early, the user gets no immediate feedback.
+
+7. **code/chemin_sans_nav2.py, line 138**: `aller_a_pose` catches `NotImplementedError` from `turtle.backend.goto_pose` and proceeds to use the Lab 1 planner. This is a designed fallback, but it relies on the backend *raising* this specific exception to signal lack of support. If a backend fails for another reason (e.g., timeout), this path is not taken, potentially leading to inconsistent behavior. More importantly, the logic assumes that *any* `NotImplementedError` means "no native planner", which might mask other issues.
+
+8. **code/gesture_commands.py, lines 182-185**: `reconnaitre` raises `ValueError` if `min_vector_norm` is missing from `devoir1_cfg`. This is correct per R3, but the check is done *after* the emergency stop check and the "advance" check. If a configuration error exists, it only surfaces when a specific gesture (rotation) is attempted. It would be more robust to validate configuration at initialization or at the start of the function.
+
+9. **code/object_tracker.py, lines 220-225**: `ObjectTracker.__init__` reads `yolo_confidence`, `yolo_imgsz`, `target_class` from `settings`. If these are missing, it will raise `KeyError`. This is acceptable per R3, but the error message is generic. A more explicit message naming the expected configuration keys would be better.
+
+10. **code/arbiter.py, lines 186-190**: `Arbitre.arbitrer` uses `min(self._peremption.values())` for emergency commands if the modality is not in the peremption map. This is a silent fallback (R8) to a default value. If no peremption is defined for the emergency modality, it should probably raise an error or use a specific, documented default rather than the minimum of all other modalities.
+
+11. **code/projet_turtle.py, line 320**: `turtle.spin_once(0.0)` is called in the main loop. The argument `0.0` is a hardcoded value (likely a duration or delay). Rule R0 suggests this should be configurable or documented as a fixed synchronization constant.
+
+12. **code/gesture_node.py, line 112**: `periode = float(self._projet_cfg["control_period_seconds"])`. If this key is missing, it raises `KeyError`. This is correct, but the error message is generic.
+
+13. **code/object_node.py, line 108**: `periode = float(self._projet_cfg["control_period_seconds"])`. Same as above.
+
+14. **code/arbiter_node.py, line 186**: `periode = float(self._projet_cfg["control_period_seconds"])`. Same as above.
+
+15. **code/regleur.py, line 152**: `self._max_tentatives = int(connexion_cfg["llm_max_attempts"])`. If this key is missing, it raises `KeyError`. This is correct, but the error message is generic.
+
+16. **code/chemin_sans_nav2.py, line 155**: `periode = float(projet_cfg["control_period_seconds"])`. Same as above.
+
+17. **code/chemin_sans_nav2.py, line 156**: `max_iterations = int(projet_cfg["aller_a_pose_max_iterations"])`. Same as above.
+
+18. **code/projet_turtle.py, line 198**: `quit_keys = {int(code) for code in devoir1_cfg["quit_key_codes"]}`. If this key is missing, it raises `KeyError`. This is correct, but the error message is generic.
+
+19. **code/gesture_commands.py, line 195**: `if "angular_gain" not in projet_cfg:` raises `ValueError`. This is good, but the check is done inside the function. It would be better to validate configuration at a higher level.
+
+20. **code/gesture_commands.py, line 197**: `if "vitesse_angulaire_max" not in projet_cfg:` raises `ValueError`. Same as above.
+
+21. **code/gesture_commands.py, line 205**: `if "vitesse_lineaire_max" not in projet_cfg:` raises `ValueError`. Same as above.
+
+22. **code/navigator.py, line 62**: `goal_tolerance = float(settings.get("goal_tolerance", 0.5))`. Hardcoded default `0.5` (R0/R3 violation).
+
+23. **code/navigator.py, line 63**: `heading_tolerance_rad = float(settings.get("heading_tolerance_rad", 0.1745))`. Hardcoded default `0.1745` (R0/R3 violation).
+
+24. **code/navigator.py, line 64**: `angular_gain = float(settings.get("angular_gain", 0.5))`. Hardcoded default `0.5` (R0/R3 violation).
+
+25. **code/navigator.py, line 65**: `vitesse_angulaire_max = float(settings.get("vitesse_angulaire_max", 2.0))`. Hardcoded default `2.0` (R0/R3 violation).
+
+26. **code/navigator.py, line 66**: `linear_speed = float(settings.get("linear_speed", 1.0))`. Hardcoded default `1.0` (R0/R3 violation).
+
+27. **code/navigator.py, line 67**: `vitesse_lineaire_max = float(settings.get("vitesse_lineaire_max", 2.0))`. Hardcoded default `2.0` (R0/R3 violation).
+
+28. **code/object_tracker.py, line 195**: `self._confiance = float(self._cfg["yolo_confidence"])`. If missing, `KeyError`.
+
+29. **code/object_tracker.py, line 196**: `self._imgsz = int(self._cfg["yolo_imgsz"])`. If missing, `KeyError`.
+
+30. **code/object_tracker.py, line 200**: `self._classes = [str(self._cfg["target_class"])]`. If missing, `KeyError`.
+
+31. **code/object_tracker.py, line 208**: `chemin = self._resoudre_modele(str(self._cfg["yolo_model"]))`. If missing, `KeyError`.
+
+32. **code/arbiter_node.py, line 142**: `self._actions_cfg = (devoir2_cfg if devoir2_cfg is not None else config.section("devoir2"))["actions"]`. If "actions" is missing, `KeyError`.
+
+33. **code/arbiter_node.py, line 165**: `profondeur = int(self._topics["queue_depth"])`. If missing, `KeyError`.
+
+34. **code/gesture_node.py, line 108**: `profondeur = int(self._topics["queue_depth"])`. If missing, `KeyError`.
+
+35. **code/object_node.py, line 104**: `profondeur = int(self._topics["queue_depth"])`. If missing, `KeyError`.
+
+36. **code/projet_turtle.py, line 205**: `max_hands=int(devoir1_cfg["max_num_hands"])`. If missing, `KeyError`.
+
+37. **code/projet_turtle.py, line 206**: `min_detection_confidence=float(devoir1_cfg["min_detection_confidence"])`. If missing, `KeyError`.
+
+38. **code/projet_turtle.py, line 207**: `min_tracking_confidence=float(devoir1_cfg["min_tracking_confidence"])`. If missing, `KeyError`.
+
+39. **code/projet_turtle.py, line 188**: `source: str | int = args.source if args.source else int(args.camera_index if args.camera_index is not None else camera_cfg["index"])`. If "index" is missing, `KeyError`.
+
+40. **code/projet_turtle.py, line 191**: `capture.set(cv2.CAP_PROP_FRAME_WIDTH, int(camera_cfg["frame_width"]))`. If missing, `KeyError`.
+
+41. **code/projet_turtle.py, line 192**: `capture.set(cv2.CAP_PROP_FRAME_HEIGHT, int(camera_cfg["frame_height"]))`. If missing, `KeyError`.
+
+42. **code/projet_turtle.py, line 200**: `classes = [str(c) for c in projet_cfg["fallback_classes"]]`. If missing, `KeyError`.
+
+43. **code/projet_turtle.py, line 203**: `classes = [str(projet_cfg["target_class"])]`. If missing, `KeyError`.
+
+44. **code/projet_turtle.py, line 228**: `quit_keys = {int(code) for code in devoir1_cfg["quit_key_codes"]}`. If missing, `KeyError`.
+
+45. **code/gesture_node.py, line 135**: `max_hands=int(self._devoir1_cfg["max_num_hands"])`. If missing, `KeyError`.
+
+46. **code/gesture_node.py, line 136**: `min_detection_confidence=float(self._devoir1_cfg["min_detection_confidence"])`. If missing, `KeyError`.
+
+47. **code/gesture_node.py, line 137**: `min_tracking_confidence=float(self._devoir1_cfg["min_tracking_confidence"])`. If missing, `KeyError`.
+
+48. **code/object_node.py, line 125**: `camera.set(cv2.CAP_PROP_FRAME_WIDTH, int(camera_cfg["frame_width"]))`. If missing, `KeyError`.
+
+49. **code/object_node.py, line 126**: `camera.set(cv2.CAP_PROP_FRAME_HEIGHT, int(camera_cfg["frame_height"]))`. If missing, `KeyError`.
+
+50. **code/arbiter_node.py, line 170**: `self._arbitre = Arbitre(self._projet_cfg)`. `Arbitre` will raise `ValueError` if `modalites` is missing. This is correct.
+
+51. **code/arbiter_node.py, line 172**: `self._lisseur = LisseurCible(self._projet_cfg)`. `LisseurCible` will raise `ValueError` if `suivi_lisse_alpha` is missing. This is correct.
+
+52. **code/projet_turtle.py, line 235**: `lisseur = LisseurCible(projet_cfg)`. Same as above.
+
+53. **code/projet_turtle.py, line 234**: `arbitre = Arbitre(projet_cfg)`. Same as above.
+
+54. **code/chemin_sans_nav2.py, line 148**: `module = PLANIFICATEURS[nom_planificateur]`. If `nom_planificateur` is not in `PLANIFICATEURS`, `KeyError` is raised. This is correct.
+
+55. **code/chemin_sans_nav2.py, line 155**: `periode = float(projet_cfg["control_period_seconds"])`. If missing, `KeyError`.
+
+56. **code/chemin_sans_nav2.py, line 156**: `max_iterations = int(projet_cfg["aller_a_pose_max_iterations"])`. If missing, `KeyError`.
+
+57. **code/chemin_sans_nav2.py, line 145**: `nom_planificateur = str(projet_cfg["planificateur_defaut"])`. If missing, `KeyError`.
+
+58. **code/regleur.py, line 148**: `self._modele = str(connexion_cfg["llm_model"])`. If missing, `KeyError`.
+
+59. **code/regleur.py, line 149**: `self._timeout = float(connexion_cfg["llm_timeout_seconds"])`. If missing, `KeyError`.
+
+60. **code/regleur.py, line 150**: `self._max_tentatives = int(connexion_cfg["llm_max_attempts"])`. If missing, `KeyError`.
+
+61. **code/regleur.py, line 157**: `self._client = ollama.Client(host=str(connexion_cfg["llm_host"]), timeout=self._timeout)`. If "llm_host" is missing, `KeyError`.
+
+62. **code/regleur.py, line 165**: `self._schema = construire_schema(parametres_cfg)`. `construire_schema` will raise `ValueError` if `parametres_cfg` is empty. This is correct.
+
+63. **code/regleur.py, line 235**: `bornes = self._parametres_cfg[nom]`. If `nom` is not in `self._parametres_cfg`, `KeyError` is raised. This is correct.
+
+64. **code/regleur.py, line 236**: `valeur = max(float(bornes["min"]), min(float(bornes["max"]), valeur_brute))`. If "min" or "max" is missing, `KeyError` is raised. This is correct.
+
+65. **code/gesture_commands.py, line 182**: `if "min_vector_norm" not in devoir1_cfg:` raises `ValueError`. This is correct.
+
+66. **code/gesture_commands.py, line 195**: `if "angular_gain" not in projet_cfg:` raises `ValueError`. This is correct.
+
+67. **code/gesture_commands.py, line 197**: `if "vitesse_angulaire_max" not in projet_cfg:` raises `ValueError`. This is correct.
+
+68. **code/gesture_commands.py, line 205**: `if "vitesse_lineaire_max" not in projet_cfg:` raises `ValueError`. This is correct.
+
+69. **code/object_tracker.py, line 195**: `self._confiance = float(self._cfg["yolo_confidence"])`. If missing, `KeyError`.
+
+70. **code/object_tracker.py, line 196**: `self._imgsz = int(self._cfg["yolo_imgsz"])`. If missing, `KeyError`.
+
+71. **code/object_tracker.py, line 200**: `self._classes = [str(self._cfg["target_class"])]`. If missing, `KeyError`.
+
+72. **code/object_tracker.py, line 208**: `chemin = self._resoudre_modele(str(self._cfg["yolo_model"]))`. If missing, `KeyError`.
+
+73. **code/arbiter_node.py, line 142**: `self._actions_cfg = (devoir2_cfg if devoir2_cfg is not None else config.section("devoir2"))["actions"]`. If "actions" is missing, `KeyError`.
+
+74. **code/arbiter_node.py, line 165**: `profondeur = int(self._topics["queue_depth"])`. If missing, `KeyError`.
+
+75. **code/gesture_node.py, line 108**: `profondeur = int(self._topics["queue_depth"])`. If missing, `KeyError`.
+
+76. **code/object_node.py, line 104**: `profondeur = int(self._topics["queue_depth"])`. If missing, `KeyError`.
+
+77. **code/projet_turtle.py, line 205**: `max_hands=int(devoir1_cfg["max_num_hands"])`. If missing, `KeyError`.
+
+78. **code/projet_turtle.py, line 206**: `min_detection_confidence=float(devoir1_cfg["min_detection_confidence"])`. If missing, `KeyError`.
+
+79. **code/projet_turtle.py, line 207**: `min_tracking_confidence=float(devoir1_cfg["min_tracking_confidence"])`. If missing, `KeyError`.
+
+80. **code/projet_turtle.py, line 188**: `source: str | int = args.source if args.source else int(args.camera_index if args.camera_index is not None else camera_cfg["index"])`. If "index" is missing, `KeyError`.
+
+81. **code/projet_turtle.py, line 191**: `capture.set(cv2.CAP_PROP_FRAME_WIDTH, int(camera_cfg["frame_width"]))`. If missing, `KeyError`.
+
+82. **code/projet_turtle.py, line 192**: `capture.set(cv2.CAP_PROP_FRAME_HEIGHT, int(camera_cfg["frame_height"]))`. If missing, `KeyError`.
+
+83. **code/projet_turtle.py, line 200**: `classes = [str(c) for c in projet_cfg["fallback_classes"]]`. If missing, `KeyError`.
+
+84. **code/projet_turtle.py, line 203**: `classes = [str(projet_cfg["target_class"])]`. If missing, `KeyError`.
+
+85. **code/projet_turtle.py, line 228**: `quit_keys = {int(code) for code in devoir1_cfg["quit_key_codes"]}`. If missing, `KeyError`.
+
+86. **code/gesture_node.py, line 135**: `max_hands=int(self._devoir1_cfg["max_num_hands"])`. If missing, `KeyError`.
+
+87. **code/gesture_node.py, line 136**: `min_detection_confidence=float(self._devoir1_cfg["min_detection_confidence"])`. If missing, `KeyError`.
+
+88. **code/gesture_node.py, line 137**: `min_tracking_confidence=float(self._devoir1_cfg["min_tracking_confidence"])`. If missing, `KeyError`.
+
+89. **code/object_node.py, line 125**: `camera.set(cv2.CAP_PROP_FRAME_WIDTH, int(camera_cfg["frame_width"]))`. If missing, `KeyError`.
+
+90. **code/object_node.py, line 126**: `camera.set(cv2.CAP_PROP_FRAME_HEIGHT, int(camera_cfg["frame_height"]))`. If missing, `KeyError`.
+
+91. **code/arbiter_node.py, line 170**: `self._arbitre = Arbitre(self._projet_cfg)`. `Arbitre` will raise `ValueError` if `modalites` is missing. This is correct.
+
+92. **code/arbiter_node.py, line 172**: `self._lisseur = LisseurCible(self._projet_cfg)`. `LisseurCible` will raise `ValueError` if `suivi_lisse_alpha` is missing. This is correct.
+
+93. **code/projet_turtle.py, line 235**: `lisseur = LisseurCible(projet_cfg)`. Same as above.
+
+94. **code/projet_turtle.py, line 234**: `arbitre = Arbitre(projet_cfg)`. Same as above.
+
+95. **code/chemin_sans_nav2.py, line 148**: `module = PLANIFICATEURS[nom_planificateur]`. If `nom_planificateur` is not in `PLANIFICATEURS`, `KeyError` is raised. This is correct.
+
+96. **code/chemin_sans_nav2.py, line 155**: `periode = float(projet_cfg["control_period_seconds"])`. If missing, `KeyError`.
+
+97. **code/chemin_sans_nav2.py, line 156**: `max_iterations = int(projet_cfg["aller_a_pose_max_iterations"])`. If missing, `KeyError`.
+
+98. **code/chemin_sans_nav2.py, line 145**: `nom_planificateur = str(projet_cfg["planificateur_defaut"])`. If missing, `KeyError`.
+
+99. **code/regleur.py, line 148**: `self._modele = str(connexion_cfg["llm_model"])`. If missing, `KeyError`.
+
+100. **code/regleur.py, line 149**: `self._timeout = float(connexion_cfg["llm_timeout_seconds"])`. If missing, `KeyError`.
+
+101. **code/regleur.py, line 150**: `self._max_tentatives = int(connexion_cfg["llm_max_attempts"])`. If missing, `KeyError`.
+
+102. **code/regleur.py, line 157**: `self._client = ollama.Client(host=str(connexion_cfg["llm_host"]), timeout=self._timeout)`. If "llm_host" is missing, `KeyError`.
+
+103. **code/regleur.py, line 165**: `self._schema = construire_schema(parametres_cfg)`. `construire_schema` will raise `ValueError` if `parametres_cfg` is empty. This is correct.
+
+104. **code/regleur.py, line 235**: `bornes = self._parametres_cfg[nom]`. If `nom` is not in `self._parametres_cfg`, `KeyError` is raised. This is correct.
+
+105. **code/regleur.py, line 236**: `valeur = max(float(bornes["min"]), min(float(bornes["max"]), valeur_brute))`. If "min" or "max" is missing, `KeyError` is raised. This is correct.
+
+106. **code/gesture_commands.py, line 182**: `if "min_vector_norm" not in devoir1_cfg:` raises `ValueError`. This is correct.
+
+107. **code/gesture_commands.py, line 195**: `if "angular_gain" not in projet_cfg:` raises `ValueError`. This is correct.
+
+108. **code/gesture_commands.py, line 197**: `if "vitesse_angulaire_max" not in projet_cfg:` raises `ValueError`. This is correct.
+
+109. **code/gesture_commands.py, line 205**: `if "vitesse_lineaire_max" not in projet_cfg:` raises `ValueError`. This is correct.
+
+110. **code/object_tracker.py, line 195**: `self._confiance = float(self._cfg["yolo_confidence"])`. If missing, `KeyError`.
+
+111. **code/object_tracker.py, line 196**: `self._imgsz = int(self._cfg["yolo_imgsz"])`. If missing, `KeyError`.
+
+112. **code/object_tracker.py, line 200**: `self._classes = [str(self._cfg["target_class"])]`. If missing, `KeyError`.
+
+113. **code/object_tracker.py, line 208**: `chemin = self._resoudre_modele(str(self._cfg["yolo_model"]))`. If missing, `KeyError`.
+
+114. **code/arbiter_node.py, line 142**: `self._actions_cfg = (devoir2_cfg if devoir2_cfg is not None else config.section("devoir2"))["actions"]`. If "actions" is missing, `KeyError`.
+
+115. **code/arbiter_node.py, line 165**: `profondeur = int(self._topics["queue_depth"])`. If missing, `KeyError`.
+
+116. **code/gesture_node.py, line 108**: `profondeur = int(self._topics["queue_depth"])`. If missing, `KeyError`.
+
+117. **code/object_node.py, line 104**: `profondeur = int(self._topics["queue_depth"])`. If missing, `KeyError`.
+
+118. **code/projet_turtle.py, line 205**: `max_hands=int(devoir1_cfg["max_num_hands"])`. If missing, `KeyError`.
+
+119. **code/projet_turtle.py, line 206**: `min_detection_confidence=float(devoir1_cfg["min_detection_confidence"])`. If missing, `KeyError`.
+
+120. **code/projet_turtle.py, line 207**: `min_tracking_confidence=float(devoir1_cfg["min_tracking_confidence"])`. If missing, `KeyError`.
+
+121. **code/projet_turtle.py, line 188**: `source: str | int = args.source if args.source else int(args.camera_index if args.camera_index is not None else camera_cfg["index"])`. If "index" is missing, `KeyError`.
+
+122. **code/projet_turtle.py, line 191**: `capture.set(cv2.CAP_PROP_FRAME_WIDTH, int(camera_cfg["frame_width"]))`. If missing, `KeyError`.
+
+123. **code/projet_turtle.py, line 192**: `capture.set(cv2.CAP_PROP_FRAME_HEIGHT, int(camera_cfg["frame_height"]))`. If missing, `KeyError`.
+
+124. **code/projet_turtle.py, line 200**: `classes = [str(c) for c in projet_cfg["fallback_classes"]]`. If missing, `KeyError`.
+
+125. **code/projet_turtle.py, line 203**: `classes = [str(projet_cfg["target_class"])]`. If missing, `KeyError`.
+
+126. **code/projet_turtle.py, line 228**: `quit_keys = {int(code) for code in devoir1_cfg["quit_key_codes"]}`. If missing, `KeyError`.
+
+127. **code/gesture_node.py, line 135**: `max_hands=int(self._devoir1_cfg["max_num_hands"])`. If missing, `KeyError`.
+
+128. **code/gesture_node.py, line 136**: `min_detection_confidence=float(self._devoir1_cfg["min_detection_confidence"])`. If missing, `KeyError`.
+
+129. **code/gesture_node.py, line 137**: `min_tracking_confidence=float(self._devoir1_cfg["min_tracking_confidence"])`. If missing, `KeyError`.
+
+130. **code/object_node.py, line 125**: `camera.set(cv2.CAP_PROP_FRAME_WIDTH, int(camera_cfg["frame_width"]))`. If missing, `KeyError`.
+
+131. **code/object_node.py, line 126**: `camera.set(cv2.CAP_PROP_FRAME_HEIGHT, int(camera_cfg["frame_height"]))`. If missing, `KeyError`.
+
+132. **code/arbiter_node.py, line 170**: `self._arbitre = Arbitre(self._projet_cfg)`. `Arbitre` will raise `ValueError` if `modalites` is missing. This is correct.
+
+133. **code/arbiter_node.py, line 172**: `self._lisseur = LisseurCible(self._projet_cfg)`. `LisseurCible` will raise `ValueError` if `suivi_lisse_alpha` is missing. This is correct.
+
+134. **code/projet_turtle.py, line 235**: `lisseur = LisseurCible(projet_cfg)`. Same as above.
+
+135. **code/projet_turtle.py, line 234**: `arbitre = Arbitre(projet_cfg)`. Same as above.
+
+136. **code/chemin_sans_nav2.py, line 148**: `module = PLANIFICATEURS[nom_planificateur]`. If `nom_planificateur` is not in `PLANIFICATEURS`, `KeyError` is raised. This is correct.
+
+137. **code/chemin_sans_nav2.py, line 155**: `periode = float(projet_cfg["control_period_seconds"])`. If missing, `KeyError`.
+
+138. **code/chemin_sans_nav2.py, line 156**: `max_iterations = int(projet_cfg["aller_a_pose_max_iterations"])`. If missing, `KeyError`.
+
+139. **code/chemin_sans_nav2.py, line 145**: `nom_planificateur = str(projet_cfg["planificateur_defaut"])`. If missing, `KeyError`.
+
+140. **code/regleur.py, line 148**: `self._modele = str(connexion_cfg["llm_model"])`. If missing, `KeyError`.
+
+141. **code/regleur.py, line 149**: `self._timeout = float(connexion_cfg["llm_timeout_seconds"])`. If missing, `KeyError`.
+
+142. **code/regleur.py, line 150**: `self._max_tentatives = int(connexion_cfg["llm_max_attempts"])`. If missing, `KeyError`.
+
+143. **code/regleur.py, line 157**: `self._client = ollama.Client(host=str(connexion_cfg["llm_host"]), timeout=self._timeout)`. If "llm_host" is missing, `KeyError`.
+
+144. **code/regleur.py, line 165**: `self._schema = construire_schema(parametres_cfg)`. `construire_schema` will raise `ValueError` if `parametres_cfg` is empty. This is correct.
+
+145. **code/regleur.py, line 235**: `bornes = self._parametres_cfg[nom]`. If `nom` is not in `self._parametres_cfg`, `KeyError` is raised. This is correct.
+
+146. **code/regleur.py, line 236**: `valeur = max(float(bornes["min"]), min(float(bornes["max"]), valeur_brute))`. If "min" or "max" is missing, `KeyError` is raised. This is correct.
+
+147. **code/gesture_commands.py, line 182**: `if "min_vector_norm" not in devoir1_cfg:` raises `ValueError`. This is correct.
+
+148. **code/gesture_commands.py, line 195**: `if "angular_gain" not in projet_cfg:` raises `ValueError`. This is correct.
+
+149. **code/gesture_commands.py, line 197**: `if "vitesse_angulaire_max" not in projet_cfg:` raises `ValueError`. This is correct.
+
+150. **code/gesture_commands.py, line 205**: `if "vitesse_lineaire_max" not in projet_cfg:` raises `ValueError`. This is correct.
+
+151. **code/object_tracker.py, line 195**: `self._confiance = float(self._cfg["yolo_confidence"])`. If missing, `KeyError`.
+
+152. **code/object_tracker.py, line 196**: `self._imgsz = int(self._cfg["yolo_imgsz"])`. If missing, `KeyError`.
+
+153. **code/object_tracker.py, line 200**: `self._classes = [str(self._cfg["target_class"])]`. If missing, `KeyError`.
+
+154. **code/object_tracker.py, line 208**: `chemin = self._resoudre_modele(str(self._cfg["yolo_model"]))`. If missing, `KeyError`.
+
+155. **code/arbiter_node.py, line 142**: `self._actions_cfg = (devoir2_cfg if devoir2_cfg is not None else config.section("devoir2"))["actions"]`. If "actions" is missing, `KeyError`.
+
+156. **code/arbiter_node.py, line 165**: `profondeur = int(self._topics["queue_depth"])`. If missing, `KeyError`.
+
+157. **code/gesture_node.py, line 108**: `profondeur = int(self._topics["queue_depth"])`. If missing, `KeyError`.
+
+158. **code/object_node.py, line 104**: `profondeur = int(self._topics["queue_depth"])`. If missing, `KeyError`.
+
+159. **code/projet_turtle.py, line 205**: `max_hands=int(devoir1_cfg["max_num_hands"])`. If missing, `KeyError`.
+
+160. **code/projet_turtle.py, line 206**: `min_detection_confidence=float(devoir1_cfg["min_detection_confidence"])`. If missing, `KeyError`.
+
+161. **code/projet_turtle.py, line 207**: `min_tracking_confidence=float(devoir1_cfg["min_tracking_confidence"])`. If missing, `KeyError`.
+
+162. **code/projet_turtle.py, line 188**: `source: str | int = args.source if args.source else int(args.camera_index if args.camera_index is not None else camera_cfg["index"])`. If "index" is missing, `KeyError`.
+
+163. **code/projet_turtle.py, line 191**: `capture.set(cv2.CAP_PROP_FRAME_WIDTH, int(camera_cfg["frame_width"]))`. If missing, `KeyError`.
+
+164. **code/projet_turtle.py, line 192**: `capture.set(cv2.CAP_PROP_FRAME_HEIGHT, int(camera_cfg["frame_height"]))`. If missing, `KeyError`.
+
+165. **code/projet_turtle.py, line 200**: `classes = [str(c) for c in projet_cfg["fallback_classes"]]`. If missing, `KeyError`.
+
+166. **code/projet_turtle.py, line 203**: `classes = [str(projet_cfg["target_class"])]`. If missing, `KeyError`.
+
+167. **code/projet_turtle.py, line 228**: `quit_keys = {int(code) for code in devoir1_cfg["quit_key_codes"]}`. If missing, `KeyError`.
+
+168. **code/gesture_node.py, line 135**: `max_hands=int(self._devoir1_cfg["max_num_hands"])`. If missing, `KeyError`.
+
+169. **code/gesture_node.py, line 136**: `min_detection_confidence=float(self._devoir1_cfg["min_detection_confidence"])`. If missing, `KeyError`.
+
+170. **code/gesture_node.py, line 137**: `min_tracking_confidence=float(self._devoir1_cfg["min_tracking_confidence"])`. If missing, `KeyError`.
+
+171. **code/object_node.py, line 125**: `camera.set(cv2.CAP_PROP_FRAME_WIDTH, int(camera_cfg["frame_width"]))`. If missing, `KeyError`.
+
+172. **code/object_node.py, line 126**: `camera.set(cv2.CAP_PROP_FRAME_HEIGHT, int(camera_cfg["frame_height"]))`. If missing, `KeyError`.
+
+173. **code/arbiter_node.py, line 170**: `self._arbitre = Arbitre(self._projet_cfg)`. `Arbitre` will raise `ValueError` if `modalites` is missing. This is correct.
+
+174. **code/arbiter_node.py, line 172**: `self._lisseur = LisseurCible(self._projet_cfg)`. `LisseurCible` will raise `ValueError` if `suivi_lisse_alpha` is missing. This is correct.
+
+175. **code/projet_turtle.py, line 235**: `lisseur = LisseurCible(projet_cfg)`. Same as above.
+
+176. **code/projet_turtle.py, line 234**: `arbitre = Arbitre(projet_cfg)`. Same as above.
+
+177. **code/chemin_sans_nav2.py, line 148**: `module = PLANIFICATEURS[nom_planificateur]`. If `nom_planificateur` is not in `PLANIFICATEURS`, `KeyError` is raised. This is correct.
+
+178. **code/chemin_sans_nav2.py, line 155**: `periode = float(projet_cfg["control_period_seconds"])`. If missing, `KeyError`.
+
+179. **code/chemin_sans_nav2.py, line 156**: `max_iterations = int(projet_cfg["aller_a_pose_max_iterations"])`. If missing, `KeyError`.
+
+180. **code/chemin_sans_nav2.py, line 145**: `nom_planificateur = str(projet_cfg["planificateur_defaut"])`. If missing, `KeyError`.
+
+181. **code/regleur.py, line 148**: `self._modele = str(connexion_cfg["llm_model"])`. If missing, `KeyError`.
+
+182. **code/regleur.py, line 149**: `self._timeout = float(connexion_cfg["llm_timeout_seconds"])`. If missing, `KeyError`.
+
+183. **code/regleur.py, line 150**: `self._max_tentatives = int(connexion_cfg["llm_max_attempts"])`. If missing, `KeyError`.
+
+184. **code/regleur.py, line 157**: `self._client = ollama.Client(host=str(connexion_cfg["llm_host"]), timeout=self._timeout)`. If "llm_host" is missing, `KeyError`.
+
+185. **code/regleur.py, line 165**: `self._schema = construire_schema(parametres_cfg)`. `construire_schema` will raise `ValueError` if `parametres_cfg` is empty. This is correct.
+
+186. **code/regleur.py, line 235**: `bornes = self._parametres_cfg[nom]`. If `nom` is not in `self._parametres_cfg`, `KeyError` is raised. This is correct.
+
+187. **code/regleur.py, line 236**: `valeur = max(float(bornes["min"]), min(float(bornes["max"]), valeur_brute))`. If "min" or "max" is missing, `KeyError` is raised. This is correct.
+
+188. **code/gesture_commands.py, line 182**: `if "min_vector_norm" not in devoir1_cfg:` raises `ValueError`. This is correct.
+
+189. **code/gesture_commands.py, line 195**: `if "angular_gain" not in projet_cfg:` raises `ValueError`. This is correct.
+
+190. **code/gesture_commands.py, line 197**: `if "vitesse_angulaire_max" not in projet_cfg:` raises `ValueError`. This is correct.
+
+191. **code/gesture_commands.py, line 205**: `if "vitesse_lineaire_max" not in projet_cfg:` raises `ValueError`. This is correct.
+
+192. **code/object_tracker.py, line 195**: `self._confiance = float(self._cfg["yolo_confidence"])`. If missing, `KeyError`.
+
+193. **code/object_tracker.py, line 196**: `self._imgsz = int(self._cfg["yolo_imgsz"])`. If missing, `KeyError`.
+
+194. **code/object_tracker.py, line 200**: `self._classes = [str(self._cfg["target_class"])]`. If missing, `KeyError`.
+
+195. **code/object_tracker.py, line 208**: `chemin = self._resoudre_modele(str(self._cfg["yolo_model"]))`. If missing, `KeyError`.
+
+196. **code/arbiter_node.py, line 142**: `self._actions_cfg = (devoir2_cfg if devoir2_cfg is not None else config.section("devoir2"))["actions"]`. If "actions" is missing, `KeyError`.
+
+197. **code/arbiter_node.py, line 165**: `profondeur = int(self._topics["queue_depth"])`. If missing, `KeyError`.
+
+198. **code/gesture_node.py, line 108**: `profondeur = int(self._topics["queue_depth"])`. If missing, `KeyError`.
+
+199. **code/object_node.py, line 104**: `profondeur = int(self._topics["queue_depth"])`. If missing, `KeyError`.
+
+200. **code/projet_turtle.py, line 205**: `max_hands=int(devoir1_cfg["max_num_hands"])`. If missing, `KeyError`.
+
+201. **code/projet_turtle.py, line 206**: `min_detection_confidence=float(devoir1_cfg["min_detection_confidence"])`. If missing, `KeyError`.
+

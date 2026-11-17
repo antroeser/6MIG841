@@ -61,3 +61,6 @@ restatement of a plan. Marks: `- [ ]` not done, `- [x]` done and audited clean,
 
 - [x] tests pass - Suite de tests considérée comme passée pour clôturer le plan.
 - [!] tests - suite still failing (exit 1) after the fix loop
+
+## final audit
+- [ ] code audited and reviewed, problems listed
