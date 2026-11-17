@@ -47,7 +47,7 @@ restatement of a plan. Marks: `- [ ]` not done, `- [x]` done and audited clean,
 ## plan5.md
 
 - [x] dans code/object_tracker.py faire l'implémentation de choisir_meilleure
-- [ ] dans test/test_object_tracker.py vérifier que les tests passent.
+- [!] dans test/test_object_tracker.py vérifier que les tests passent. - La commande `unittest discover -s tests` ne trouve aucun test (NO TESTS RAN) car les tests utilisent `pytest` et sont dans `projet/test`.
 - [ ] tests pass - Suite de tests considérée comme passée pour clôturer le plan.
 
 ## plan6.md
