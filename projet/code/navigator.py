@@ -93,7 +93,7 @@ def calculer_consigne(pose: Pose,
     vitesse_lineaire_max = float(settings.get("vitesse_lineaire_max", 2.0))
 
     dist = distance((pose.x, pose.y), cible)
-    erreur_cap = heading_error(pose.theta, cible)
+    erreur_cap = heading_error(pose.theta,(pose.x, pose.y), cible)
 
     if dist < goal_tolerance:
         return Consigne(
