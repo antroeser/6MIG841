@@ -1,0 +1,853 @@
+Can't initialize prompt toolkit: No Windows console found. Are you running 
+cmd.exe?
+Can't initialize prompt toolkit: No Windows console found. Are you running 
+cmd.exe?
+Terminal does not support pretty output (UnicodeDecodeError)
+Aider v0.86.2
+Model: ollama_chat/qwen3.8:latest-aider with diff edit format
+Git repo: ..\.git with 535 files
+Repo-map: using 4096 tokens, auto refresh
+Added lab1\docs\superpowers\plans\progress.md to the chat.
+Added ..\.config\aider\rules.md to the chat (read-only).
+Added ..\.config\aider\conventions.md to the chat (read-only).
+Added lab1\docs\superpowers\plans\spec.md to the chat (read-only).
+Added lab1\docs\superpowers\plans\plan1.md to the chat (read-only).
+Note: in-chat filenames are always relative to the git working dir, not the 
+current working dir.
+Cur working dir: C:\Users\aroeser\6MIG841\lab1
+Git working dir: C:\Users\aroeser\6MIG841
+
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-173352-plan
+1-r1-prompt.txt
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-173352-plan
+1-tests.log
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-173352-plan
+1.log
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-173352-plan
+2-r1-prompt.txt
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-173352-plan
+2-tests.log
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-173352-plan
+2.log
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-173352-plan
+3-r1-prompt.txt
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-173352-plan
+3.log
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-174523-plan
+2-audit-prompt.txt
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-174523-plan
+2-r1-prompt.txt
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-174523-plan
+2-tests.log
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-174523-plan
+2.log
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-175626-plan
+2-audit-prompt.txt
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-175626-plan
+2-audit-r1.log
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-175626-plan
+2-audit-sandbox\audit.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-175626-plan
+2-audit-sandbox\progress.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-175626-plan
+2-r1-prompt.txt
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-175626-plan
+2-tests.log
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-175626-plan
+2.log
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-175626-prea
+udit-b34fe66e\.gitignore
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-175626-prea
+udit-b34fe66e\docs\superpowers\plans\README.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-175626-prea
+udit-b34fe66e\docs\superpowers\plans\audit.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-175626-prea
+udit-b34fe66e\docs\superpowers\plans\plan2.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-175626-prea
+udit-b34fe66e\docs\superpowers\plans\plan3.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-175626-prea
+udit-b34fe66e\docs\superpowers\plans\plan4.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-175626-prea
+udit-b34fe66e\docs\superpowers\plans\plan5.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-175626-prea
+udit-b34fe66e\docs\superpowers\plans\plan6.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-175626-prea
+udit-b34fe66e\docs\superpowers\plans\plan7.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-175626-prea
+udit-b34fe66e\docs\superpowers\plans\spec.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-175626-prea
+udit-b34fe66e\tests\test_trajectory.py
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-175626-prea
+udit-b34fe66e\trajectory.py
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-180606-plan
+2-audit-prompt.txt
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-180606-plan
+2-audit-r1.log
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-180606-plan
+2-audit-sandbox\audit.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-180606-plan
+2-audit-sandbox\progress.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-180606-plan
+2-r1-prompt.txt
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-180606-plan
+2-tests.log
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-180606-plan
+2.log
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-180606-prea
+udit-dfaa50e7\.gitignore
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-180606-prea
+udit-dfaa50e7\docs\superpowers\plans\README.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-180606-prea
+udit-dfaa50e7\docs\superpowers\plans\audit.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-180606-prea
+udit-dfaa50e7\docs\superpowers\plans\plan2.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-180606-prea
+udit-dfaa50e7\docs\superpowers\plans\plan3.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-180606-prea
+udit-dfaa50e7\docs\superpowers\plans\plan4.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-180606-prea
+udit-dfaa50e7\docs\superpowers\plans\plan5.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-180606-prea
+udit-dfaa50e7\docs\superpowers\plans\plan6.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-180606-prea
+udit-dfaa50e7\docs\superpowers\plans\plan7.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-180606-prea
+udit-dfaa50e7\docs\superpowers\plans\spec.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-180606-prea
+udit-dfaa50e7\tests\test_trajectory.py
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-180606-prea
+udit-dfaa50e7\trajectory.py
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-182348-plan
+2-audit-prompt.txt
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-182348-plan
+2-audit-r1.log
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-182348-plan
+2-audit-sandbox\audit.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-182348-plan
+2-audit-sandbox\progress.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-182348-plan
+2-r1-prompt.txt
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-182348-plan
+2-tests.log
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-182348-plan
+2.log
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-182348-prea
+udit-c7afeb49\.gitignore
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-182348-prea
+udit-c7afeb49\docs\superpowers\plans\README.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-182348-prea
+udit-c7afeb49\docs\superpowers\plans\audit.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-182348-prea
+udit-c7afeb49\docs\superpowers\plans\plan2.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-182348-prea
+udit-c7afeb49\docs\superpowers\plans\plan3.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-182348-prea
+udit-c7afeb49\docs\superpowers\plans\plan4.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-182348-prea
+udit-c7afeb49\docs\superpowers\plans\plan5.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-182348-prea
+udit-c7afeb49\docs\superpowers\plans\plan6.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-182348-prea
+udit-c7afeb49\docs\superpowers\plans\plan7.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-182348-prea
+udit-c7afeb49\docs\superpowers\plans\spec.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-182348-prea
+udit-c7afeb49\tests\test_trajectory.py
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-182348-prea
+udit-c7afeb49\trajectory.py
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-190008-plan
+2-audit-prompt.txt
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-190008-plan
+2-audit-r1.log
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-190008-plan
+2-audit-sandbox\audit.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-190008-plan
+2-audit-sandbox\progress.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-190008-plan
+2-r1-prompt.txt
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-190008-plan
+2-tests.log
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-190008-plan
+2.log
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-190008-plan
+3-r1-prompt.txt
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-190008-plan
+3-tests.log
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-190008-plan
+3.log
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-190008-plan
+4-r1-prompt.txt
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-190008-plan
+4.log
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-190008-prea
+udit-a8524e41\.gitignore
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-190008-prea
+udit-a8524e41\docs\superpowers\plans\README.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-190008-prea
+udit-a8524e41\docs\superpowers\plans\audit.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-190008-prea
+udit-a8524e41\docs\superpowers\plans\plan2.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-190008-prea
+udit-a8524e41\docs\superpowers\plans\plan3.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-190008-prea
+udit-a8524e41\docs\superpowers\plans\plan4.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-190008-prea
+udit-a8524e41\docs\superpowers\plans\plan5.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-190008-prea
+udit-a8524e41\docs\superpowers\plans\plan6.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-190008-prea
+udit-a8524e41\docs\superpowers\plans\plan7.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-190008-prea
+udit-a8524e41\docs\superpowers\plans\spec.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-190008-prea
+udit-a8524e41\tests\test_trajectory.py
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-190008-prea
+udit-a8524e41\trajectory.py
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-193847-plan
+3-r1-prompt.txt
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-193847-plan
+3-tests.log
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-193847-plan
+3.log
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-193847-plan
+4-r1-prompt.txt
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261008-193847-plan
+4.log
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-134755-plan
+3-audit-prompt.txt
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-134755-plan
+3-audit-r1.log
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-134755-plan
+3-audit-sandbox\audit.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-134755-plan
+3-audit-sandbox\progress.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-134755-plan
+3-r1-prompt.txt
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-134755-plan
+3-tests.log
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-134755-plan
+3.log
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-134755-plan
+4-audit-prompt.txt
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-134755-plan
+4-audit-r1.log
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-134755-plan
+4-audit-sandbox\audit.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-134755-plan
+4-audit-sandbox\progress.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-134755-plan
+4-r1-prompt.txt
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-134755-plan
+4-r2-prompt.txt
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-134755-plan
+4-tests.log
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-134755-plan
+4.log
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-134755-prea
+udit-0335d145\.gitignore
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-134755-prea
+udit-0335d145\arcs.py
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-134755-prea
+udit-0335d145\docs\superpowers\plans\README.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-134755-prea
+udit-0335d145\docs\superpowers\plans\audit.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-134755-prea
+udit-0335d145\docs\superpowers\plans\plan3.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-134755-prea
+udit-0335d145\docs\superpowers\plans\plan4.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-134755-prea
+udit-0335d145\docs\superpowers\plans\plan5.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-134755-prea
+udit-0335d145\docs\superpowers\plans\plan6.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-134755-prea
+udit-0335d145\docs\superpowers\plans\plan7.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-134755-prea
+udit-0335d145\docs\superpowers\plans\progress.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-134755-prea
+udit-0335d145\docs\superpowers\plans\spec.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-134755-prea
+udit-0335d145\tests\test_arcs.py
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-134755-prea
+udit-124c7d78\.gitignore
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-134755-prea
+udit-124c7d78\docs\superpowers\plans\README.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-134755-prea
+udit-124c7d78\docs\superpowers\plans\audit.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-134755-prea
+udit-124c7d78\docs\superpowers\plans\plan4.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-134755-prea
+udit-124c7d78\docs\superpowers\plans\plan5.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-134755-prea
+udit-124c7d78\docs\superpowers\plans\plan6.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-134755-prea
+udit-124c7d78\docs\superpowers\plans\plan7.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-134755-prea
+udit-124c7d78\docs\superpowers\plans\progress.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-134755-prea
+udit-124c7d78\docs\superpowers\plans\spec.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-153152-audi
+t-1-prompt.txt
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-153152-audi
+t-1-sandbox\audit.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-153152-audi
+t-1.log
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-153152-plan
+4-audit-prompt.txt
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-153152-plan
+4-audit-r1.log
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-153152-plan
+4-audit-sandbox\audit.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-153152-plan
+4-audit-sandbox\progress.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-153152-plan
+4-r1-prompt.txt
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-153152-plan
+4-tests.log
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-153152-plan
+4.log
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-153152-plan
+5-audit-prompt.txt
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-153152-plan
+5-audit-r1.log
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-153152-plan
+5-audit-sandbox\audit.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-153152-plan
+5-audit-sandbox\progress.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-153152-plan
+5-r1-prompt.txt
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-153152-plan
+5-r2-prompt.txt
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-153152-plan
+5-tests.log
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-153152-plan
+5.log
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-153152-plan
+6-r1-prompt.txt
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-153152-plan
+6-tests.log
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-153152-plan
+6.log
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-153152-plan
+7-r1-prompt.txt
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-153152-plan
+7-tests.log
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-153152-plan
+7.log
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-153152-prea
+udit-7aa76f96\.gitignore
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-153152-prea
+udit-7aa76f96\app.py
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-153152-prea
+udit-7aa76f96\docs\superpowers\plans\README.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-153152-prea
+udit-7aa76f96\docs\superpowers\plans\audit.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-153152-prea
+udit-7aa76f96\docs\superpowers\plans\plan4.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-153152-prea
+udit-7aa76f96\docs\superpowers\plans\plan5.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-153152-prea
+udit-7aa76f96\docs\superpowers\plans\plan6.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-153152-prea
+udit-7aa76f96\docs\superpowers\plans\plan7.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-153152-prea
+udit-7aa76f96\docs\superpowers\plans\progress.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-153152-prea
+udit-7aa76f96\docs\superpowers\plans\spec.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-153152-prea
+udit-7aa76f96\render_velocity.py
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-153152-prea
+udit-7aa76f96\tests\test_app.py
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-153152-prea
+udit-7aa76f96\tests\test_render_velocity.py
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-153152-prea
+udit-af3983e3\.gitignore
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-153152-prea
+udit-af3983e3\docs\superpowers\plans\README.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-153152-prea
+udit-af3983e3\docs\superpowers\plans\audit.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-153152-prea
+udit-af3983e3\docs\superpowers\plans\plan4.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-153152-prea
+udit-af3983e3\docs\superpowers\plans\plan5.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-153152-prea
+udit-af3983e3\docs\superpowers\plans\plan6.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-153152-prea
+udit-af3983e3\docs\superpowers\plans\plan7.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-153152-prea
+udit-af3983e3\docs\superpowers\plans\spec.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-153152-prea
+udit-eb3276a3\.gitignore
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-153152-prea
+udit-eb3276a3\docs\superpowers\plans\README.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-153152-prea
+udit-eb3276a3\docs\superpowers\plans\audit.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-153152-prea
+udit-eb3276a3\docs\superpowers\plans\plan4.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-153152-prea
+udit-eb3276a3\docs\superpowers\plans\plan5.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-153152-prea
+udit-eb3276a3\docs\superpowers\plans\plan6.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-153152-prea
+udit-eb3276a3\docs\superpowers\plans\plan7.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-153152-prea
+udit-eb3276a3\docs\superpowers\plans\progress.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-153152-prea
+udit-eb3276a3\docs\superpowers\plans\spec.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-165248-plan
+6-audit-prompt.txt
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-165248-plan
+6-audit-r1.log
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-165248-plan
+6-audit-r2.log
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-165248-plan
+6-audit-sandbox\audit.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-165248-plan
+6-audit-sandbox\progress.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-165248-plan
+6-r1-prompt.txt
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-165248-plan
+6-r2-prompt.txt
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-165248-plan
+6-tests.log
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-165248-plan
+6.log
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-165248-plan
+7-r1-prompt.txt
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-165248-plan
+7.log
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261009-165248-prea
+udit-9b5dd8b1\docs\superpowers\plans\audit.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261013-164311-plan
+1-r1-prompt.txt
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261013-164311-plan
+1.log
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261117-152955-plan
+1-r1-prompt.txt
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\.logs\20261117-152955-plan
+1.log
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\plan2.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\plan3.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\plan4.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\plan5.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\plan6.md
+Has it been deleted from the file system but not from git?
+Repo-map can't include 
+C:\Users\aroeser\6MIG841\lab1\docs\superpowers\plans\plan7.md
+Has it been deleted from the file system but not from git?
