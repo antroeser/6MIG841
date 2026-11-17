@@ -40,8 +40,8 @@ from typing import Any
 _ICI = Path(__file__).resolve().parent
 _RACINE = _ICI.parent.parent
 sys.path.insert(0, str(_ICI))
-sys.path.insert(0, str(_RACINE / "Devoir1" / "code"))
-sys.path.insert(0, str(_RACINE / "Devoir2" / "code"))
+sys.path.insert(0, str(_RACINE / "dev1" / "code"))
+sys.path.insert(0, str(_RACINE / "dev2" / "code"))
 
 from ihr_ros import config  # noqa: E402
 from ihr_ros.backends.base import Twist  # noqa: E402
