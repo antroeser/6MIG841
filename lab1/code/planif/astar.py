@@ -62,9 +62,40 @@ def planifier(monde: World, depart: Cellule, but: Cellule) -> ResultatPlanificat
     # chemin.
     # Indice : tas priorise par cout f = cout_venu + heuristique, fermer avant d'expandre
     # Tests : test_chemin_en_ligne_droite_sans_obstacle_ne_fait_aucun_detour, test_obstacle_contourne_le_chemin_existe_et_s_allonge, test_arrivee_enfermee_ne_rend_rien
-    raise NotImplementedError(
-        "fonction 'astar.planifier' a implementer (voir l'enonce et les tests cites)"
-    )
+    compteur = itertools.count()
+    file: list[tuple[float, int, Cellule]] = []
+    heapq.heappush(file, (monde.distance_heuristique(depart, but), next(compteur), depart))
+
+    cout_venu: dict[Cellule, float] = {depart: 0.0}
+    parent: dict[Cellule, Cellule] = {depart: depart}
+    fermes: set[Cellule] = set()
+    cellules_examinees = 0
+
+    while file:
+        _, _, actuelle = heapq.heappop(file)
+        if actuelle in fermes:
+            continue
+        fermes.add(actuelle)
+        cellules_examinees += 1
+
+        if actuelle == but:
+            return ResultatPlanification(
+                chemin=_reconstruire(parent, depart, but),
+                longueur=cout_venu[actuelle],
+                cellules_examinees=cellules_examinees,
+            )
+
+        for voisine in monde.voisins(actuelle):
+            if voisine in fermes:
+                continue
+            nouveau_cout = cout_venu[actuelle] + monde.cout_deplacement(actuelle, voisine)
+            if nouveau_cout < cout_venu.get(voisine, float("inf")):
+                cout_venu[voisine] = nouveau_cout
+                parent[voisine] = actuelle
+                priorite = nouveau_cout + monde.distance_heuristique(voisine, but)
+                heapq.heappush(file, (priorite, next(compteur), voisine))
+
+    return ResultatPlanification(chemin=None, longueur=float("inf"), cellules_examinees=cellules_examinees)
 
 
 def _reconstruire(parent: dict[Cellule, Cellule], depart: Cellule, but: Cellule) -> list[Cellule]:

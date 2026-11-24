@@ -121,9 +121,30 @@ class DStarLite:
         """
         # Indice : depiler tant que la cle du sommet est inferieure a celle du depart, propager g/rhs aux voisins potentiels
         # Tests : test_moins_de_cellules_reexaminees_qu_une_replanification_complete, test_premier_calcul_dstarlite_egale_la_longueur_d_astar
-        raise NotImplementedError(
-            "fonction 'DStarLite._calculer_chemin_le_plus_court' a implementer (voir l'enonce et les tests cites)"
-        )
+        while True:
+            cle, cellule = self._sommet_haut()
+            if cle is None or cellule is None:
+                break
+            if cle >= self._cle(self.depart) and self._g_de(self.depart) == self._rhs_de(self.depart):
+                break
+
+            heapq.heappop(self._file)
+            self._dans_file.pop(cellule)
+            self.cellules_reexaminees += 1
+
+            nouvelle_cle = self._cle(cellule)
+            if cle < nouvelle_cle:
+                self._dans_file[cellule] = nouvelle_cle
+                heapq.heappush(self._file, (nouvelle_cle, cellule))
+            elif self._g_de(cellule) > self._rhs_de(cellule):
+                self._g[cellule] = self._rhs_de(cellule)
+                for voisine in self.monde.voisins_potentiels(cellule):
+                    self._mettre_a_jour_sommet(voisine)
+            else:
+                self._g[cellule] = _INFINI
+                self._mettre_a_jour_sommet(cellule)
+                for voisine in self.monde.voisins_potentiels(cellule):
+                    self._mettre_a_jour_sommet(voisine)
 
     # --------------------------------------------------------------------------- public
 

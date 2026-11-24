@@ -103,9 +103,19 @@ def _mettre_a_jour_sommet(
     """
     # Indice : regle de Nash et al. : si le grand-parent voit voisine en ligne directe, rattacher au grand-parent plutot qu'a actuelle
     # Tests : test_thetastar_a_moins_de_points_de_passage_qu_astar_sur_la_meme_grille, test_chemin_theta_reste_libre_de_collision
-    raise NotImplementedError(
-        "fonction 'thetastar._mettre_a_jour_sommet' a implementer (voir l'enonce et les tests cites)"
-    )
+    grand_parent = parent[actuelle]
+    if monde.ligne_de_vue_libre(grand_parent, voisine):
+        precedent = grand_parent
+    else:
+        precedent = actuelle
+
+    nouveau_cout = cout_venu[precedent] + monde.cout_deplacement(precedent, voisine)
+    if nouveau_cout < cout_venu.get(voisine, float("inf")):
+        cout_venu[voisine] = nouveau_cout
+        parent[voisine] = precedent
+        # L'heuristique euclidienne convient aux segments a angle libre.
+        priorite = nouveau_cout + monde.cout_deplacement(voisine, but)
+        heapq.heappush(file, (priorite, next(compteur), voisine))
 
 
 def _reconstruire(parent: dict[Cellule, Cellule], depart: Cellule, but: Cellule) -> list[Cellule]:

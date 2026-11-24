@@ -325,9 +325,44 @@ class World:
         self._verifier_dans_la_grille(b)
         # Indice : parcours exact de grille (DDA/Amanatides-Woo) : avancer cellule par cellule vers la frontiere la plus proche, tester l'occupation a chaque cellule visitee sauf aux deux extremites
         # Tests : test_ligne_de_vue_libre_a_cote_de_l_obstacle_mais_pas_a_travers, test_ligne_de_vue_libre_diagonale_qui_traverse_une_cellule_occupee_est_bloquee, test_ligne_de_vue_libre_refuse_le_coin_partage_par_deux_cellules_occupees_en_diagonale
-        raise NotImplementedError(
-            "fonction 'World.ligne_de_vue_libre' a implementer (voir l'enonce et les tests cites)"
-        )
+        colonne, ligne = a
+        dc = abs(b[0] - colonne)
+        dl = abs(b[1] - ligne)
+        pas_c = (b[0] > colonne) - (b[0] < colonne)
+        pas_l = (b[1] > ligne) - (b[1] < ligne)
+        frontiere_c = 1
+        frontiere_l = 1
+
+        while (colonne, ligne) != b:
+            # Comparaison exacte des distances parametriques aux frontieres :
+            # frontiere_c / (2 * dc) et frontiere_l / (2 * dl).
+            # Les produits croises evitent les divisions et les erreurs d'arrondi.
+            croisement_c = frontiere_c * dl
+            croisement_l = frontiere_l * dc
+
+            if croisement_c < croisement_l:
+                colonne += pas_c
+                frontiere_c += 2
+            elif croisement_l < croisement_c:
+                ligne += pas_l
+                frontiere_l += 2
+            else:
+                # Meme convention que voisins() : un coin est bloque seulement
+                # si les deux cellules laterales sont occupees.
+                cote_a = (colonne + pas_c, ligne)
+                cote_b = (colonne, ligne + pas_l)
+                if self.est_occupee(cote_a) and self.est_occupee(cote_b):
+                    return False
+                colonne += pas_c
+                ligne += pas_l
+                frontiere_c += 2
+                frontiere_l += 2
+
+            cellule = (colonne, ligne)
+            if cellule != b and self.est_occupee(cellule):
+                return False
+
+        return True
 
     def cellules_obstacle(self) -> frozenset[Cellule]:
         """Copie immuable des cellules actuellement occupees, pour l'affichage."""
