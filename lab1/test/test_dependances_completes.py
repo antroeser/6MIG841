@@ -98,6 +98,10 @@ def _modules_importes_dans_code_source(texte: str) -> set[str]:
 # l'etudiant ne les execute jamais pour faire un travail, precision de
 # l'enseignant du 2026-09-19).
 SOLUTION_DIRS = (
+    "lab1/code",
+    "dev1/code",
+    "dev2/code",
+    "projet/code",
     "Lab1/code",
     "Devoir1/code",
     "Devoir2/code",

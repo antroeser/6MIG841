@@ -229,7 +229,7 @@
       "cellule_colonne": 6,
       "cellule_ligne": 7,
       "echelle_grille_vers_turtlesim": 0.924,
-      "rayon": 0.5,
+      "rayon": 30,
       "nom_tortue": "obstacle",
       "spawn_timeout_par_tentative_s": 2.0,
       "spawn_tentatives_max": 5
